@@ -28,7 +28,7 @@ class TaskListScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Trojúhelníky test"),
+        title: Text("Pyramidy test"),
       ),
       body: SafeArea(
         child: Container(

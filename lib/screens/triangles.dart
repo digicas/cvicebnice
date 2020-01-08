@@ -1,32 +1,30 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:pyramida/models/triangle_levels.dart';
 //import 'package:zoom_widget/zoom_widget.dart';
 
+import 'package:pyramida/widgets/virtual_keyboard.dart';
+import 'package:flutter/services.dart'; // for virtual keyboard keys definitions
+
 class TaskScreen extends StatefulWidget {
   final Level level;
-//  bool maskOn;
 
   TaskScreen({this.level});
-  // { maskOn = false; }
 
   @override
   _TaskScreenState createState() => _TaskScreenState();
 }
 
 class _TaskScreenState extends State<TaskScreen> {
-  bool _maskOn;
+  bool _hintOn;
   bool _showBackground;
-  static const int SHOWBACKGROUND =0;
-  static const int MASKON = 1;
-  List<bool> _isSelected  = [true, true];
 
   @override
   void initState() {
 //    print("hu $_maskOn");
-//    _maskOn ??= true;
-//    _showBackground ??= true;
-//    _isSelected = [true, false];
+    _hintOn ??= false;
+    _showBackground ??= true;
     super.initState();
   }
 
@@ -40,52 +38,71 @@ class _TaskScreenState extends State<TaskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-            "#${widget.level.levelIndex}: ${widget.level.allMasksToString()}"),
-        actions: <Widget>[
-
-          ToggleButtons(
-            color: Colors.grey[800],
-            selectedColor: Colors.white,
-            fillColor: Colors.lightBlueAccent,
-            children: <Widget>[
-              Icon(Icons.image),
-              Icon(Icons.pageview),
-            ],
-            onPressed: (int index) {
-              setState(() {
-                _isSelected[index] = !_isSelected[index];
-              });
-            },
-            isSelected: _isSelected,
-          ),
-          IconButton(
-              icon: Icon(Icons.refresh),
-              onPressed: () {
-                setState(() {
-                  widget.level.regenerate();
-                });
-              }),
-        ],
+        title: Text("2. třída - říjen #${widget.level.levelIndex}"),
       ),
       body: SafeArea(
         child: Container(
           color: Colors.grey,
           child: Center(
-            child: Funnel(level: widget.level, maskOn: _isSelected[MASKON], showBackground: _isSelected[SHOWBACKGROUND]),
+            child: Funnel(
+              level: widget.level,
+              hint: _hintOn,
+              showBackground: _showBackground,
+            ),
           ),
         ),
       ),
-      bottomNavigationBar: Text(widget.level.toString()),
+      bottomNavigationBar: VirtualKeyboard(
+        optionBackground: _showBackground,
+        hintSwitch: _hintOn,
+        onPressedKey: (LogicalKeyboardKey key) {
+          debugPrint("pressed $key");
+
+          if (key.keyId > 0x2f && key.keyId < 0x3a) {
+            // entered digit number
+            final int digit = key.keyId & 0x0f;
+            debugPrint(digit.toString());
+          } else if (key == LogicalKeyboardKey.keyR) {
+            // reload/erase level
+            debugPrint("reload/erase level");
+          } else if (key == LogicalKeyboardKey.mediaTrackNext) {
+            // next task => regenerate level
+            debugPrint("next task");
+            setState(() {
+              widget.level.regenerate();
+            });
+          } else if (key == LogicalKeyboardKey.keyF) {
+            // focus wanted -> switch off background
+            debugPrint("focus wanted -> switch off background");
+            setState(() {
+              _showBackground = false;
+            });
+          } else if (key == LogicalKeyboardKey.keyG) {
+            // switch on background graphics
+            debugPrint("switch on background graphics");
+            setState(() {
+              _showBackground = true;
+            });
+          } else if (key == LogicalKeyboardKey.help) {
+            // switch off mask (show help)
+            debugPrint("switch hint / show help");
+            setState(() {
+              _hintOn = !_hintOn;
+            });
+          }
+        },
+      ),
     );
   }
+
 }
 
 class Funnel extends StatelessWidget {
   final Level level;
-  final bool maskOn;
+  final bool hint;
   final bool showBackground;
-  Funnel({Key key, this.level, this.maskOn, this.showBackground}) : super(key: key);
+  Funnel({Key key, this.level, this.hint, this.showBackground})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +119,7 @@ class Funnel extends StatelessWidget {
         cells.add(Cell(
             value: level.solution[i],
             masked: !level.solutionMask.mask[i],
-            maskOn: maskOn));
+            hint: hint));
       }
 
       // insert for funnel
@@ -145,6 +162,8 @@ class Funnel extends StatelessWidget {
   }
 }
 
+
+// background painting
 class TrianglePainter extends CustomPainter {
   Paint _paintL;
   Paint _paintR;
@@ -156,7 +175,6 @@ class TrianglePainter extends CustomPainter {
     _paintR = Paint()
       ..color = Color(0xFFC0A36B)
       ..style = PaintingStyle.fill;
-
   }
 
   @override
@@ -184,8 +202,8 @@ class TrianglePainter extends CustomPainter {
 class Cell extends StatelessWidget {
   final int value;
   final bool masked;
-  final bool maskOn;
-  Cell({Key key, @required this.value, this.masked = false, this.maskOn})
+  final bool hint;
+  Cell({Key key, @required this.value, this.masked = false, this.hint})
       : super(key: key);
 
   @override
@@ -217,7 +235,7 @@ class Cell extends StatelessWidget {
         ),
         child: Center(
           child: Text(
-            (this.maskOn && this.masked) ? "" : value.toString(),
+            (!this.hint && this.masked) ? "" : value.toString(),
             overflow: TextOverflow.fade,
             softWrap: false,
             style: TextStyle(

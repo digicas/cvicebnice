@@ -74,7 +74,7 @@ class Level {
   static Random rng = Random();
   int _selectedTaskMask = 0;
   List<int> _solution;
-  List<int> _task; // task has applied mask
+//  List<int> _task; // task has applied mask - in fact not used - only solution is used
 
   Level({this.levelIndex, this.maxTotal, List<List<int>> masks}) {
 //    this._masks = masks;
