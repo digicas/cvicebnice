@@ -18,11 +18,11 @@ class LevelSelect extends StatefulWidget {
 class _LevelSelectState extends State<LevelSelect> {
   double schoolYear = 1;
   double schoolMonth = 0;
-  int level = 0;
+  int levelIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    level = Level.schoolClassToLevel(schoolYear.toInt(), schoolMonth.toInt());
+    levelIndex = LevelTree.schoolClassToLevelIndex(schoolYear.toInt(), schoolMonth.toInt());
     return SingleChildScrollView(
       child: Column(
 //              mainAxisSize: MainAxisSize.max,
@@ -91,9 +91,11 @@ class _LevelSelectState extends State<LevelSelect> {
               height: 32,
             ),
             ListTile(
-              contentPadding: EdgeInsets.fromLTRB(20, 0, 32, 0),
+              contentPadding: EdgeInsets.fromLTRB(20, 0, 42, 0),
+              leading: LevelTree.getLevelByLevelIndex(levelIndex) == null
+                  ? Icon(Icons.block) : Icon(Icons.assignment_turned_in),
               title: Text("Úroveň:", style: Theme.of(context).textTheme.title),
-              trailing: Text("$level", style: Theme.of(context).textTheme.title),
+              trailing: Text("$levelIndex", style: Theme.of(context).textTheme.title),
             ),
             Container(
               height: 32,
@@ -105,7 +107,7 @@ class _LevelSelectState extends State<LevelSelect> {
 
                 icon: Icon(Icons.play_circle_outline, size: 40,),
 //                color: Colors.blue,
-                onPressed: () {widget.onPlay(level);},
+                onPressed: () {widget.onPlay(levelIndex);},
                 label: Text("Procvičit", style: TextStyle(fontSize: 28)),
               ),
             ),

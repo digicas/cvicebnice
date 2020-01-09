@@ -25,6 +25,7 @@ class _TaskScreenState extends State<TaskScreen> {
 //    print("hu $_maskOn");
     _hintOn ??= false;
     _showBackground ??= true;
+    widget.level.generate();
     super.initState();
   }
 
