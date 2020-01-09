@@ -1,6 +1,11 @@
 import 'dart:math';
 
-List<Level> levels = [
+class LevelTree{
+
+}
+
+
+final List<Level> levels = [
   Level(levelIndex: 2, maxTotal: 10, masks: [
     [0, 1, 1],
   ]),
@@ -64,6 +69,18 @@ List<Level> levels = [
     [0, 1, 1, 0, 0, 0, 0, 0, 1, 1],
     [0, 1, 1, 0, 0, 0, 0, 1, 1, 0],
   ]),
+];
+
+// each row is the schoolClass (0-5)
+// each column is the schoolMonth (0-9)
+List<List<int>> schoolClassToLevelMap = [
+// 09  10  11  12  01  02  03  04  05  06 -- months in the school year
+  [00, 00, 00, 00, 00, 00, 00, 00, 00, 00], // 0 class => tutorial
+  [02, 02, 02, 02, 08, 12, 16, 20, 24, 24], // 1st class
+  [21, 30, 39, 39, 48, 48, 57, 57, 61, 61], // 2nd
+  [60, 60, 60, 62, 64, 64, 64, 64, 67, 67], // 3rd
+  [66, 66, 66, 72, 72, 72, 78, 78, 85, 85], // 4th
+  [84, 84, 84, 90, 90, 90, 96, 96, 96, 96], // 5th
 ];
 
 class Level {
@@ -185,6 +202,20 @@ class Level {
   }
 
   void regenerate() => generate();
+
+  String levelToSchoolClass() {
+    // issue - 2 classes for 1 level
+    return "XXXX";
+  }
+
+  static int schoolClassToLevel(int schoolClass, int monthInSchool) {
+    assert(schoolClass > -1); // 0 schoolClass is tutorial
+    assert(monthInSchool > -1 && monthInSchool < 10); // 0..Sept, 9..June
+    schoolClass = (schoolClass > 5) ? 5 : schoolClass; // highest defined schoolClass
+
+    return schoolClassToLevelMap[schoolClass][monthInSchool];
+  }
+
 
   @override
   String toString() =>

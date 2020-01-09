@@ -38,7 +38,7 @@ class _TaskScreenState extends State<TaskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("2. třída - říjen #${widget.level.levelIndex}"),
+        title: Text("Úroveň: ${widget.level.levelIndex}"),
       ),
       body: SafeArea(
         child: Container(
