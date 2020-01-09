@@ -43,7 +43,7 @@ class _TaskScreenState extends State<TaskScreen> {
       ),
       body: SafeArea(
         child: Container(
-          color: Colors.grey,
+          color: Color(0xffECE6E9),
           child: Center(
             child: Funnel(
               level: widget.level,

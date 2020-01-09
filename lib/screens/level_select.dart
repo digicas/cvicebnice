@@ -19,10 +19,18 @@ class _LevelSelectState extends State<LevelSelect> {
   double schoolYear = 1;
   double schoolMonth = 0;
   int levelIndex = 0;
+  final levelFieldController = TextEditingController();
+
+  @override
+  void dispose() {
+    levelFieldController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    levelIndex = LevelTree.schoolClassToLevelIndex(schoolYear.toInt(), schoolMonth.toInt());
+//    levelIndex = LevelTree.schoolClassToLevelIndex(schoolYear.toInt(), schoolMonth.toInt());
+    levelFieldController.text = levelIndex.toString();
     return SingleChildScrollView(
       child: Column(
 //              mainAxisSize: MainAxisSize.max,
@@ -42,6 +50,7 @@ class _LevelSelectState extends State<LevelSelect> {
                 onChanged: (double newValue) {
                   setState(() {
                     schoolYear = newValue;
+                    levelIndex = LevelTree.schoolClassToLevelIndex(schoolYear.toInt(), schoolMonth.toInt());
                   });
                 },
                 min: 1.0,
@@ -63,6 +72,7 @@ class _LevelSelectState extends State<LevelSelect> {
                 onChanged: (double newValue) {
                   setState(() {
                     schoolMonth = newValue;
+                    levelIndex = LevelTree.schoolClassToLevelIndex(schoolYear.toInt(), schoolMonth.toInt());
                   });
                 },
                 mapValueToString: (double value) {
@@ -95,7 +105,18 @@ class _LevelSelectState extends State<LevelSelect> {
               leading: LevelTree.getLevelByLevelIndex(levelIndex) == null
                   ? Icon(Icons.block) : Icon(Icons.assignment_turned_in),
               title: Text("Úroveň:", style: Theme.of(context).textTheme.title),
-              trailing: Text("$levelIndex", style: Theme.of(context).textTheme.title),
+//              trailing: Text("$levelIndex", style: Theme.of(context).textTheme.title),
+              trailing: SizedBox(
+                width: 32,
+                child: TextField(
+                  style: Theme.of(context).textTheme.title,
+                  controller: levelFieldController,
+                  keyboardType: TextInputType.number,
+                  onSubmitted: (text) {setState(() {levelIndex = int.parse(text);});},
+                ),
+              ),
+
+
             ),
             Container(
               height: 32,

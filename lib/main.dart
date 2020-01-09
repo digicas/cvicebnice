@@ -46,33 +46,80 @@ class TaskListScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text("Pyramidy (prototyp)"),
       ),
-      body: Builder(builder: (context) {
-        return SafeArea(
-          child: Container(
+
+      body: SafeArea(
+        child: Container(
 //          color: Colors.pink,
-            child: LevelSelect(
-              onPlay: (int selectedLevelIndex) {
-                print("selected level $selectedLevelIndex");
-                // if level not yet implemented, just Toast
+          child: LevelSelect(
+            onPlay: (int selectedLevelIndex) {
+              print("selected level $selectedLevelIndex");
+              // if level not yet implemented, just Toast
 
-                var level = LevelTree.getLevelByLevelIndex(selectedLevelIndex);
+              var level = LevelTree.getLevelByLevelIndex(selectedLevelIndex);
 
-                if (level == null) {
-                  Scaffold.of(context).showSnackBar(SnackBar(
-                    content: Text(
-                        "Úroveň $selectedLevelIndex není ještě naimplemetovaná."),
-                  ));
-                } else {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            TaskScreen(level: level)),
-                  );
-                }
-              },
-            ),
+              if (level == null) {
+// must use builder function
+//                Scaffold.of(context).showSnackBar(SnackBar(
+//                  content: Text(
+//                      "Úroveň $selectedLevelIndex není ještě naimplemetovaná."),
+//                ));
 
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          TaskScreen(level: level)),
+                );
+              }
+            },
+          ),
+
+        ),
+      ),
+
+//      body: Builder(builder: (context) {
+//        return SafeArea(
+//          child: Container(
+////          color: Colors.pink,
+//            child: LevelSelect(
+//              onPlay: (int selectedLevelIndex) {
+//                print("selected level $selectedLevelIndex");
+//                // if level not yet implemented, just Toast
+//
+//                var level = LevelTree.getLevelByLevelIndex(selectedLevelIndex);
+//
+//                if (level == null) {
+//                  Scaffold.of(context).showSnackBar(SnackBar(
+//                    content: Text(
+//                        "Úroveň $selectedLevelIndex není ještě naimplemetovaná."),
+//                  ));
+//                } else {
+//                  Navigator.push(
+//                    context,
+//                    MaterialPageRoute(
+//                        builder: (context) =>
+//                            TaskScreen(level: level)),
+//                  );
+//                }
+//              },
+//            ),
+//
+//          ),
+//        );
+//      }),
+//
+
+
+      bottomNavigationBar: Text(
+          " Úrovní: ${LevelTree.levels.length} Masek: $mm Zadání cca: $totalTasks"),
+    );
+  }
+}
+
+// total combinations:
+// jen odhad vzhledem k algoritmum generovani
+//
 //          child: ListView(
 //            children: levels
 //                .map(
@@ -91,15 +138,3 @@ class TaskListScreen extends StatelessWidget {
 //                )
 //                .toList(),
 //          ),
-          ),
-        );
-      }),
-      bottomNavigationBar: Text(
-          " Implemented levels: ${LevelTree.levels.length} Masks: $mm Zadání cca: $totalTasks"),
-    );
-  }
-}
-
-// total combinations:
-// jen odhad vzhledem k algoritmum generovani
-//
