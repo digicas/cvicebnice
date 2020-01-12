@@ -95,13 +95,13 @@ class _TaskScreenState extends State<TaskScreen> {
       ),
     );
   }
-
 }
 
 class Funnel extends StatelessWidget {
   final Level level;
   final bool hint;
   final bool showBackground;
+
   Funnel({Key key, this.level, this.hint, this.showBackground})
       : super(key: key);
 
@@ -163,7 +163,6 @@ class Funnel extends StatelessWidget {
   }
 }
 
-
 // background painting
 class TrianglePainter extends CustomPainter {
   Paint _paintL;
@@ -204,6 +203,7 @@ class Cell extends StatelessWidget {
   final int value;
   final bool masked;
   final bool hint;
+
   Cell({Key key, @required this.value, this.masked = false, this.hint})
       : super(key: key);
 
@@ -235,15 +235,46 @@ class Cell extends StatelessWidget {
                 ],
         ),
         child: Center(
-          child: Text(
-            (!this.hint && this.masked) ? "" : value.toString(),
-            overflow: TextOverflow.fade,
-            softWrap: false,
-            style: TextStyle(
-              color: !this.masked ? Colors.black : Colors.black12,
-              fontSize: 24,
-            ),
-          ),
+          child: !this.masked
+              ? Text(value.toString(),
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                  ))
+              : TextField(
+                  onChanged: (text) {
+                    // TODO dat hodnotu do solution pole
+                  },
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+                  cursorColor: Color(0xffa02b5f),
+                  autocorrect: false,
+                  maxLength: 4,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                  ),
+//            readOnly: true,
+//            showCursor: true,
+                  // hide length counter and underline
+                  decoration: null,
+                  buildCounter: (BuildContext context,
+                          {int currentLength, int maxLength, bool isFocused}) =>
+                      null,
+                ),
+
+//          child: Text(
+//            (!this.hint && this.masked) ? "" : value.toString(),
+//            overflow: TextOverflow.fade,
+//            softWrap: false,
+//            style: TextStyle(
+//              color: !this.masked ? Colors.black : Colors.black12,
+//              fontSize: 24,
+//            ),
+//          ),
         ),
       ),
     );
