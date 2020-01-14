@@ -20,6 +20,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  cool_ui: "^0.4.0"
+
   zoom_widget:
 
   # The following adds the Cupertino Icons font to your application.

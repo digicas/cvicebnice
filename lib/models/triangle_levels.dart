@@ -1,5 +1,107 @@
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
+
+
+/// Placeholder for submission data
+///
+class SubmissionController extends ChangeNotifier{
+
+  /// data placeholder for up to 10 cells indexed 0.. solution length
+  List<TextEditingController> cells;
+
+  /// whether the submission is correct
+  bool isSolved;
+
+  /// whether all to be filled cells have some value
+  bool isFilled;
+
+  /// related level, which must be generated up front
+  Level _level;
+
+  SubmissionController({Level level}) : _level = level {
+
+    cells = new List<TextEditingController>(_level.solution.length);
+
+    for (int i = 0; i<cells.length; i++) {
+      cells[i]=(TextEditingController());
+      cells[i].addListener(onChanged);
+    }
+
+    initiateForLevel(_level);
+
+    isSolved = false;
+    isFilled = false;
+
+  }
+
+  /// called when any of the text cells is updated
+  /// notifies listeners
+  onChanged(){
+    isSolved = checkSolution();
+    isFilled = checkIfAllFilled();
+    notifyListeners();
+//    _printLatestValue();
+  }
+
+//  _printLatestValue() {
+//    print("Submission: ${toString()}");
+//  }
+
+
+  /// empties the submission and initiates with the predefined (visible) values
+  /// for those cells where mask allows visibility to user
+  void eraseSubmission(){
+    cells.forEach((tController) => tController.clear());
+  }
+
+  /// apply level data to submission
+  /// level [_solution] must be generated before this call!
+  void initiateForLevel(Level level) {
+    for (int i = 0; i<level.solution.length; i++){
+      cells[i].text = level.solutionMask.mask[i]
+          ? level.solution[i].toString()
+          : "";
+    }
+  }
+
+  /// disposes all resources as required by [TextEditingController]
+  void dispose() {
+    cells.forEach((tController) => tController.dispose());
+    super.dispose();
+  }
+
+  String toString(){
+    return (cells.map((cell) => cell.text).join(", "));
+  }
+
+  /// checks whether the submitted solution is equal to generated solution
+  bool checkSolution() {
+    bool done = true;
+    for (int i = 0; i<_level.solution.length; i++){
+      if (int.tryParse(cells[i].text) != _level.solution[i])
+        done = false;
+    }
+    return done;
+  }
+
+  /// checks whether all to be submitted cells are non empty
+  bool checkIfAllFilled() {
+    bool filled = true;
+    for (int i = 0; i<_level.solution.length; i++){
+      // consider only editable cells
+      if (_level.solutionMask.mask[i] == false) {
+        // if some editable cell is empty
+        if (cells[i].text == "") {
+          filled = false;
+        }
+      }
+    }
+    return filled;
+  }
+
+}
+
 //////////////////////////////////////////////// Level generator //////////////////////////////
 
 class Level {
@@ -37,22 +139,18 @@ class Level {
     return _masks.map((mask) => mask.toPrettyString()).join(", ");
   }
 
-//
-//  gets the amount of rows of the highest pyramid
-//
+  ///
+  ///  gets the amount of rows of the highest pyramid
+  ///
   int get maxRows {
     return _masks
         .map((mask) => mask.rows)
         .reduce((curr, next) => curr > next ? curr : next);
   }
 
-  static int whichEnterLevel(int czSchoolClass, int monthOfSchoolYear) {
-    return 0;
-  }
-
-//
-//  generates number 0..maximum : inclusive
-//
+  ///
+  ///  generates number 0..maximum : inclusive
+  ///
   static int random(int maximum) {
     if (maximum == 0) return 0;
     return rng.nextInt(maximum + 1);
@@ -122,16 +220,15 @@ class Level {
 
   void regenerate() => generate();
 
-  String levelToSchoolClass() {
-    // issue - 2 classes for 1 level
-    return "XXXX";
-  }
-
   @override
   String toString() =>
       "max: $maxTotal $_solution ${_masks[_selectedTaskMask].toPrettyString()} $solutionRows";
 } // Level
 
+
+///
+/// Mask defining the to be edited cells within task/solution
+///
 class PyramidMask {
   PyramidMask(this._mask);
 
@@ -141,9 +238,9 @@ class PyramidMask {
 
   List<bool> get mask => _mask.map((v) => v == 1 ? true : false).toList();
 
-//
-// get the amount of rows given the length of the pyramid
-//
+  ///
+  /// get the amount of rows given the length of the pyramid
+  ///
   int get rows {
     int length = _mask.length;
     assert(length >= 0 && length < 11);
@@ -180,8 +277,9 @@ class PyramidMask {
   }
 }
 
-//////////////////////////// Tree of levels (incl. definitions) //////////////////////////////
-
+///
+/// ///////////////////////// Tree of levels (incl. definitions) //////////////////////////////
+///
 class LevelTree {
   static Level getLevelByLevelIndex(int levelIndex) {
     return LevelTree.levels.singleWhere(

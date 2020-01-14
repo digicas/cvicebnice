@@ -7,6 +7,8 @@ import 'package:pyramida/models/triangle_levels.dart';
 import 'package:pyramida/widgets/virtual_keyboard.dart';
 import 'package:flutter/services.dart'; // for virtual keyboard keys definitions
 
+//import 'package:cool_ui/cool_ui.dart';
+
 class TaskScreen extends StatefulWidget {
   final Level level;
 
@@ -20,13 +22,33 @@ class _TaskScreenState extends State<TaskScreen> {
   bool _hintOn;
   bool _showBackground;
 
+  SubmissionController submissionController;
+
   @override
   void initState() {
 //    print("hu $_maskOn");
     _hintOn ??= false;
     _showBackground ??= true;
     widget.level.generate();
+    submissionController = SubmissionController(level: widget.level);
+//    submissionController.initiateForLevel(widget.level);
+    submissionController.addListener(_checkSolution);
+
     super.initState();
+
+  }
+
+  _checkSolution(){
+    print("Submission: ${submissionController.toString()} : ${submissionController.isSolved}");
+    setState(() {
+
+    });
+  }
+
+  @override
+  void dispose(){
+    submissionController.dispose();
+    super.dispose();
   }
 
   @override
@@ -40,6 +62,15 @@ class _TaskScreenState extends State<TaskScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Úroveň: ${widget.level.levelIndex}"),
+        bottom: PreferredSize(
+            preferredSize: Size.fromHeight(20),
+            child: Text("${
+            submissionController.isFilled
+                ? submissionController.isSolved
+                  ? "Hotovo!"
+                  : "Není to ono"
+                : "Něco chybí"
+            }: ${submissionController.toString()}")),
       ),
       body: SafeArea(
         child: Container(
@@ -47,62 +78,71 @@ class _TaskScreenState extends State<TaskScreen> {
           child: Center(
             child: Funnel(
               level: widget.level,
+              submissionController: submissionController,
               hint: _hintOn,
               showBackground: _showBackground,
             ),
           ),
         ),
       ),
-      bottomNavigationBar: VirtualKeyboard(
-        optionBackground: _showBackground,
-        hintSwitch: _hintOn,
-        onPressedKey: (LogicalKeyboardKey key) {
-          debugPrint("pressed $key");
 
-          if (key.keyId > 0x2f && key.keyId < 0x3a) {
-            // entered digit number
-            final int digit = key.keyId & 0x0f;
-            debugPrint(digit.toString());
-          } else if (key == LogicalKeyboardKey.keyR) {
-            // reload/erase level
-            debugPrint("reload/erase level");
-          } else if (key == LogicalKeyboardKey.mediaTrackNext) {
-            // next task => regenerate level
-            debugPrint("next task");
-            setState(() {
-              widget.level.regenerate();
-            });
-          } else if (key == LogicalKeyboardKey.keyF) {
-            // focus wanted -> switch off background
-            debugPrint("focus wanted -> switch off background");
-            setState(() {
-              _showBackground = false;
-            });
-          } else if (key == LogicalKeyboardKey.keyG) {
-            // switch on background graphics
-            debugPrint("switch on background graphics");
-            setState(() {
-              _showBackground = true;
-            });
-          } else if (key == LogicalKeyboardKey.help) {
-            // switch off mask (show help)
-            debugPrint("switch hint / show help");
-            setState(() {
-              _hintOn = !_hintOn;
-            });
-          }
-        },
-      ),
+//      bottomNavigationBar: VirtualKeyboard(
+//        optionBackground: _showBackground,
+//        hintSwitch: _hintOn,
+//        onPressedKey: (LogicalKeyboardKey key) {
+//          debugPrint("pressed $key");
+//
+//          if (key.keyId > 0x2f && key.keyId < 0x3a) {
+//            // entered digit number
+//            final int digit = key.keyId & 0x0f;
+//            debugPrint(digit.toString());
+//          } else if (key == LogicalKeyboardKey.keyR) {
+//            // reload/erase level
+//            debugPrint("reload/erase level");
+//          } else if (key == LogicalKeyboardKey.mediaTrackNext) {
+//            // next task => regenerate level
+//            debugPrint("next task");
+//            setState(() {
+//              widget.level.regenerate();
+//            });
+//          } else if (key == LogicalKeyboardKey.keyF) {
+//            // focus wanted -> switch off background
+//            debugPrint("focus wanted -> switch off background");
+//            setState(() {
+//              _showBackground = false;
+//            });
+//          } else if (key == LogicalKeyboardKey.keyG) {
+//            // switch on background graphics
+//            debugPrint("switch on background graphics");
+//            setState(() {
+//              _showBackground = true;
+//            });
+//          } else if (key == LogicalKeyboardKey.help) {
+//            // switch off mask (show help)
+//            debugPrint("switch hint / show help");
+//            setState(() {
+//              _hintOn = !_hintOn;
+//            });
+//          }
+//        },
+//      ),
+//
     );
   }
 }
 
 class Funnel extends StatelessWidget {
   final Level level;
+  final SubmissionController submissionController;
   final bool hint;
   final bool showBackground;
 
-  Funnel({Key key, this.level, this.hint, this.showBackground})
+  Funnel(
+      {Key key,
+      this.level,
+      this.submissionController,
+      this.hint,
+      this.showBackground})
       : super(key: key);
 
   @override
@@ -119,6 +159,7 @@ class Funnel extends StatelessWidget {
       for (int i = _rowStartIndex[row]; i < _rowStartIndex[row] + row; i++) {
         cells.add(Cell(
             value: level.solution[i],
+            textController: submissionController.cells[i],
             masked: !level.solutionMask.mask[i],
             hint: hint));
       }
@@ -204,7 +245,14 @@ class Cell extends StatelessWidget {
   final bool masked;
   final bool hint;
 
-  Cell({Key key, @required this.value, this.masked = false, this.hint})
+  final TextEditingController textController;
+
+  Cell(
+      {Key key,
+      @required this.value,
+      this.masked = false,
+      this.hint,
+      this.textController})
       : super(key: key);
 
   @override
@@ -244,11 +292,9 @@ class Cell extends StatelessWidget {
                     fontSize: 24,
                   ))
               : TextField(
-                  onChanged: (text) {
-                    // TODO dat hodnotu do solution pole
-                  },
                   keyboardType: TextInputType.number,
                   inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+                  controller: textController,
                   cursorColor: Color(0xffa02b5f),
                   autocorrect: false,
                   maxLength: 4,
