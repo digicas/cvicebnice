@@ -108,47 +108,6 @@ class _TaskScreenState extends State<TaskScreen> {
               ),
             ),
 
-//      bottomNavigationBar: VirtualKeyboard(
-//        optionBackground: _showBackground,
-//        hintSwitch: _hintOn,
-//        onPressedKey: (LogicalKeyboardKey key) {
-//          debugPrint("pressed $key");
-//
-//          if (key.keyId > 0x2f && key.keyId < 0x3a) {
-//            // entered digit number
-//            final int digit = key.keyId & 0x0f;
-//            debugPrint(digit.toString());
-//          } else if (key == LogicalKeyboardKey.keyR) {
-//            // reload/erase level
-//            debugPrint("reload/erase level");
-//          } else if (key == LogicalKeyboardKey.mediaTrackNext) {
-//            // next task => regenerate level
-//            debugPrint("next task");
-//            setState(() {
-//              widget.level.regenerate();
-//            });
-//          } else if (key == LogicalKeyboardKey.keyF) {
-//            // focus wanted -> switch off background
-//            debugPrint("focus wanted -> switch off background");
-//            setState(() {
-//              _showBackground = false;
-//            });
-//          } else if (key == LogicalKeyboardKey.keyG) {
-//            // switch on background graphics
-//            debugPrint("switch on background graphics");
-//            setState(() {
-//              _showBackground = true;
-//            });
-//          } else if (key == LogicalKeyboardKey.help) {
-//            // switch off mask (show help)
-//            debugPrint("switch hint / show help");
-//            setState(() {
-//              _hintOn = !_hintOn;
-//            });
-//          }
-//        },
-//      ),
-//
           );
         }),
       ),
@@ -162,7 +121,8 @@ class _TaskScreenState extends State<TaskScreen> {
       KeyboardManager.hideKeyboard();
       b = false;
     }
-    return Future.value(b);
+//    return Future.value(true); // go screen back immediately - nefunguje @web :(
+    return Future.value(b); // first hide keyboard, go screen back next time
   }
 }
 

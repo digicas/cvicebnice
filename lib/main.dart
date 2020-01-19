@@ -1,11 +1,14 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+//import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:pyramida/screens/triangles.dart';
 
 import 'package:pyramida/screens/level_select.dart';
 
 import 'package:pyramida/models/triangle_levels.dart';
+//import 'package:pyramida/widgets/launchurl.dart';
+//import 'package:url_launcher/url_launcher.dart';
 
 void main() => runApp(MyApp());
 
@@ -15,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false, // dev banner on/off
-      title: 'Pyramidy',
+      title: 'Pyramidy / EduKids',
       theme: ThemeData(
         buttonTheme: ButtonThemeData(
           buttonColor: Color(0xffa02b5f),
@@ -44,7 +47,23 @@ class TaskListScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Pyramidy (prototyp)"),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text("Pyramidy (prototyp)"),
+            Text("/EduKids.cz"),
+//            Linkify(text: "www.edukids.cz"),
+//            GestureDetector(
+//                behavior: HitTestBehavior.translucent,
+//                onTap: () async {
+//                  await launchURL("https://www.edukids.cz");
+//                },
+//                child: Text(
+//                  "EduKids",
+//                  style: TextStyle(color: Color(0xffeeeeee)),
+//                )),
+          ],
+        ),
       ),
 
       body: SafeArea(
@@ -68,13 +87,11 @@ class TaskListScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          TaskScreen(level: level)),
+                      builder: (context) => TaskScreen(level: level)),
                 );
               }
             },
           ),
-
         ),
       ),
 
@@ -109,7 +126,6 @@ class TaskListScreen extends StatelessWidget {
 //        );
 //      }),
 //
-
 
       bottomNavigationBar: Text(
           " Úrovní: ${LevelTree.levels.length} Masek: $mm Zadání cca: $totalTasks"),
