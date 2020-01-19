@@ -327,7 +327,7 @@ class Cell extends StatelessWidget {
                     fontSize: 24,
                   ))
               : TextField(
-                  keyboardType: SecurityKeyboard.text,
+                  keyboardType: SmallNumericKeyboard.text,
 //                  keyboardType: TextInputType.number,
                   inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                   controller: textController,

@@ -6,18 +6,18 @@ typedef KeyboardSwitch = Function(SecurityKeyboardType type);
 
 enum SecurityKeyboardType { text }
 
-class SecurityKeyboard extends StatefulWidget {
+class SmallNumericKeyboard extends StatefulWidget {
   ///Controller for keyboard output
   final KeyboardController controller;
 
   ///Keyboard type - default is text
   final SecurityKeyboardType keyboardType;
 
-  const SecurityKeyboard({this.controller, this.keyboardType});
+  const SmallNumericKeyboard({this.controller, this.keyboardType});
 
   ///Text input type
   static SecurityTextInputType text =
-      SecurityKeyboard._inputKeyboard(SecurityKeyboardType.text);
+      SmallNumericKeyboard._inputKeyboard(SecurityKeyboardType.text);
 
   ///Initialization of the keyboard type and returns type of the text input field
   static SecurityTextInputType _inputKeyboard(
@@ -31,13 +31,13 @@ class SecurityKeyboard extends StatefulWidget {
       securityTextInputType,
       KeyboardConfig(
         builder: (context, controller) {
-          return SecurityKeyboard(
+          return SmallNumericKeyboard(
             controller: controller,
             keyboardType: securityKeyboardType,
           );
         },
         getHeight: () {
-          return SecurityKeyboard.getHeight(securityKeyboardType);
+          return SmallNumericKeyboard.getHeight(securityKeyboardType);
         },
       ),
     );
@@ -54,10 +54,10 @@ class SecurityKeyboard extends StatefulWidget {
   }
 
   @override
-  _SecurityKeyboardState createState() => _SecurityKeyboardState();
+  _SmallNumericKeyboardState createState() => _SmallNumericKeyboardState();
 }
 
-class _SecurityKeyboardState extends State<SecurityKeyboard> {
+class _SmallNumericKeyboardState extends State<SmallNumericKeyboard> {
   ///Holds and broadcasts actual keyboard type
   SecurityKeyboardType currentKeyboardType;
 
