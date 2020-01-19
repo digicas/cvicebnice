@@ -19,7 +19,14 @@ class _LevelSelectState extends State<LevelSelect> {
   double schoolYear = 1;
   double schoolMonth = 0;
   int levelIndex = 0;
-  final levelFieldController = TextEditingController();
+
+  TextEditingController levelFieldController;
+
+  @override
+  void initState() {
+    levelFieldController = TextEditingController();
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -43,14 +50,15 @@ class _LevelSelectState extends State<LevelSelect> {
                   style: Theme.of(context).textTheme.title),
             ),
             Padding(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
               child: FluidSlider(
                 sliderColor: Color(0xff2ba06b),
                 value: schoolYear,
                 onChanged: (double newValue) {
                   setState(() {
                     schoolYear = newValue;
-                    levelIndex = LevelTree.schoolClassToLevelIndex(schoolYear.toInt(), schoolMonth.toInt());
+                    levelIndex = LevelTree.schoolClassToLevelIndex(
+                        schoolYear.toInt(), schoolMonth.toInt());
                   });
                 },
                 min: 1.0,
@@ -58,21 +66,22 @@ class _LevelSelectState extends State<LevelSelect> {
               ),
             ),
             Container(
-              height: 32,
+              height: 24,
             ),
             ListTile(
               title: Text("Měsíc ve školním roce",
                   style: Theme.of(context).textTheme.title),
             ),
             Padding(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
               child: FluidSlider(
                 sliderColor: Color(0xff2ba06b),
                 value: schoolMonth,
                 onChanged: (double newValue) {
                   setState(() {
                     schoolMonth = newValue;
-                    levelIndex = LevelTree.schoolClassToLevelIndex(schoolYear.toInt(), schoolMonth.toInt());
+                    levelIndex = LevelTree.schoolClassToLevelIndex(
+                        schoolYear.toInt(), schoolMonth.toInt());
                   });
                 },
                 mapValueToString: (double value) {
@@ -98,44 +107,80 @@ class _LevelSelectState extends State<LevelSelect> {
               ),
             ),
             Container(
-              height: 32,
+              height: 24,
             ),
             ListTile(
-              contentPadding: EdgeInsets.fromLTRB(20, 0, 42, 0),
+              contentPadding: EdgeInsets.fromLTRB(20, 0, 20, 0),
               leading: LevelTree.getLevelByLevelIndex(levelIndex) == null
-                  ? Icon(Icons.block) : Icon(Icons.assignment_turned_in),
+                  ? Icon(Icons.block)
+                  : Icon(Icons.assignment_turned_in),
               title: Text("Úroveň:", style: Theme.of(context).textTheme.title),
 //              trailing: Text("$levelIndex", style: Theme.of(context).textTheme.title),
-              trailing: SizedBox(
-                width: 32,
-                child: TextField(
-                  style: Theme.of(context).textTheme.title,
-                  controller: levelFieldController,
-                  keyboardType: TextInputType.number,
-                  onSubmitted: (text) {setState(() {levelIndex = int.parse(text);});},
-                ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.remove_circle_outline),
+                    color: Color(0xff2ba06b),
+                    onPressed: () {
+                      setState(() {
+                        if (levelIndex > 0) levelIndex--;
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    width: 32,
+                    child: Text(levelIndex.toString(),
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.title),
+
+//                    child: TextField(
+//                      style: Theme.of(context).textTheme.title,
+//                      textAlign: TextAlign.end,
+//                      controller: levelFieldController,
+//                      keyboardType: TextInputType.number,
+//                      onSubmitted: (text) {
+//                        setState(() {
+//                          levelIndex = int.parse(text);
+//                        });
+//                      },
+//                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.add_circle_outline),
+                    color: Color(0xff2ba06b),
+                    onPressed: () {
+                      setState(() {
+                        levelIndex++;
+                      });
+                    },
+                  ),
+                ],
               ),
-
-
             ),
             Container(
-              height: 32,
+              height: 24,
             ),
             SizedBox(
               height: 62,
 //              width: 180,
               child: RaisedButton.icon(
-
-                icon: Icon(Icons.play_circle_outline, size: 40,),
+                icon: Icon(
+                  Icons.play_circle_outline,
+                  size: 40,
+                ),
 //                color: Colors.blue,
-                onPressed: () {widget.onPlay(levelIndex);},
+                onPressed: LevelTree.getLevelByLevelIndex(levelIndex) == null
+                    ? null
+                    : () {
+                        widget.onPlay(levelIndex);
+                      },
                 label: Text("Procvičit", style: TextStyle(fontSize: 28)),
               ),
             ),
             Container(
               height: 32,
             ),
-
           ]),
     );
   }

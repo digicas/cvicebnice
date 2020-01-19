@@ -5,10 +5,9 @@ import 'package:pyramida/models/triangle_levels.dart';
 import 'package:pyramida/widgets/secure_keyboard.dart';
 //import 'package:zoom_widget/zoom_widget.dart';
 
-import 'package:pyramida/widgets/virtual_keyboard.dart';
 import 'package:flutter/services.dart';
 import 'package:security_keyboard/keyboard_manager.dart';
-import 'package:security_keyboard/keyboard_media_query.dart'; // for virtual keyboard keys definitions
+import 'package:security_keyboard/keyboard_media_query.dart';
 
 //import 'package:cool_ui/cool_ui.dart';
 
@@ -67,10 +66,33 @@ class _TaskScreenState extends State<TaskScreen> {
           return Scaffold(
             appBar: AppBar(
               title: Text("Úroveň: ${widget.level.levelIndex}"),
+              actions: <Widget>[
+                _showBackground ?
+                RaisedButton(
+                  color: Color(0xff2ba06b),
+                  child: Icon(Icons.image, color: Color(0xff415a70), size: 32),
+                  onPressed: () {
+                    setState(() {
+                      _showBackground = false;
+                    });
+                  },
+                )
+                :
+                RaisedButton(
+//                  color: Colors.black,
+                  child: Icon(Icons.image, size: 32),
+                  onPressed: () {
+                    setState(() {
+                      _showBackground = true;
+                    });
+                  },
+                )
+
+              ],
               bottom: PreferredSize(
                   preferredSize: Size.fromHeight(20),
                   child: Text(
-                      "${submissionController.isFilled ? submissionController.isSolved ? "Hotovo!" : "Není to ono" : "Něco chybí"}: ${submissionController.toString()}")),
+                      "${submissionController.isFilled ? submissionController.isSolved ? "SUPER!" : "Není to ono" : "Něco chybí"}: ${submissionController.toString()}")),
             ),
             body: SafeArea(
               child: Container(

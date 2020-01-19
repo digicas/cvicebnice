@@ -7,25 +7,26 @@ typedef KeyboardSwitch = Function(SecurityKeyboardType type);
 enum SecurityKeyboardType { text }
 
 class SecurityKeyboard extends StatefulWidget {
-  ///用于控制键盘输出的Controller
+  ///Controller for keyboard output
   final KeyboardController controller;
 
-  ///键盘类型,默认文本
+  ///Keyboard type - default is text
   final SecurityKeyboardType keyboardType;
 
   const SecurityKeyboard({this.controller, this.keyboardType});
 
-  ///文本输入类型
+  ///Text input type
   static SecurityTextInputType text =
       SecurityKeyboard._inputKeyboard(SecurityKeyboardType.text);
 
-  ///初始化键盘类型，返回输入框类型
+  ///Initialization of the keyboard type and returns type of the text input field
   static SecurityTextInputType _inputKeyboard(
       SecurityKeyboardType securityKeyboardType) {
-    ///设置输入框类型对应的键盘
+    ///Set keyboard corresponding to the text input field
     String inputType = securityKeyboardType.toString();
     SecurityTextInputType securityTextInputType =
         SecurityTextInputType(name: inputType);
+
     KeyboardManager.addKeyboard(
       securityTextInputType,
       KeyboardConfig(
@@ -44,12 +45,12 @@ class SecurityKeyboard extends StatefulWidget {
     return securityTextInputType;
   }
 
-  ///键盘类型
+  ///Keyboard type
   SecurityKeyboardType get _keyboardType => keyboardType;
 
-  ///编写获取高度的方法
+  ///Method to get the height based on keyboard type
   static double getHeight(SecurityKeyboardType securityKeyboardType) {
-    return 36;
+    return 48;
   }
 
   @override
@@ -57,7 +58,7 @@ class SecurityKeyboard extends StatefulWidget {
 }
 
 class _SecurityKeyboardState extends State<SecurityKeyboard> {
-  ///当前键盘类型
+  ///Holds and broadcasts actual keyboard type
   SecurityKeyboardType currentKeyboardType;
 
   @override
@@ -77,21 +78,16 @@ class _SecurityKeyboardState extends State<SecurityKeyboard> {
                 fontSize: 18.0),
             child: Center(
               child: Container(
-                  height: 36,
+                  height: 50,
                   width: mediaQuery.size.width,
                   color: Color(0xffECE6E9),
                   child: GridView.count(
-                    childAspectRatio: (mediaQuery.size.width / 12) / 36,
+                    childAspectRatio: (mediaQuery.size.width / 11) / 48,
                     mainAxisSpacing: 0,
                     crossAxisSpacing: 2,
                     padding: EdgeInsets.symmetric(horizontal: 2),
-                    crossAxisCount: 12,
+                    crossAxisCount: 11,
                     children: <Widget>[
-
-                      buildKeyboardButton("D",
-                          icon: Icon(Icons.done_outline),
-                          onTapAction: widget.controller.doneAction),
-
                       buildKeyboardButton('1'),
                       buildKeyboardButton('2'),
                       buildKeyboardButton('3'),
@@ -105,12 +101,10 @@ class _SecurityKeyboardState extends State<SecurityKeyboard> {
                       buildKeyboardButton("X",
                           icon: Icon(Icons.backspace),
                           onTapAction: widget.controller.deleteOne),
-
                     ],
                   )),
             )));
   }
-
 
   /// label .. text rendered to button
   /// value .. value entered to editbox controller (if not given action)
@@ -125,7 +119,7 @@ class _SecurityKeyboardState extends State<SecurityKeyboard> {
   }) {
     value ??= label;
     return Container(
-      height: 36,
+      height: 48,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
         color: Colors.white70,
@@ -135,8 +129,7 @@ class _SecurityKeyboardState extends State<SecurityKeyboard> {
         child: Center(
           child: icon == null
               ? Text(label)
-              : Icon(icon.icon, size: 18, color: Color(0xff415a70)
-          ),
+              : Icon(icon.icon, size: 18, color: Color(0xff415a70)),
         ),
         onTap: () {
           onTapAction == null
