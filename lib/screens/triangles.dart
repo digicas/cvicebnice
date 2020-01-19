@@ -2,10 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:pyramida/models/triangle_levels.dart';
+import 'package:pyramida/widgets/secure_keyboard.dart';
 //import 'package:zoom_widget/zoom_widget.dart';
 
 import 'package:pyramida/widgets/virtual_keyboard.dart';
-import 'package:flutter/services.dart'; // for virtual keyboard keys definitions
+import 'package:flutter/services.dart';
+import 'package:security_keyboard/keyboard_manager.dart';
+import 'package:security_keyboard/keyboard_media_query.dart'; // for virtual keyboard keys definitions
 
 //import 'package:cool_ui/cool_ui.dart';
 
@@ -35,18 +38,16 @@ class _TaskScreenState extends State<TaskScreen> {
     submissionController.addListener(_checkSolution);
 
     super.initState();
-
   }
 
-  _checkSolution(){
-    print("Submission: ${submissionController.toString()} : ${submissionController.isSolved}");
-    setState(() {
-
-    });
+  _checkSolution() {
+    print(
+        "Submission: ${submissionController.toString()} : ${submissionController.isSolved}");
+    setState(() {});
   }
 
   @override
-  void dispose(){
+  void dispose() {
     submissionController.dispose();
     super.dispose();
   }
@@ -59,32 +60,31 @@ class _TaskScreenState extends State<TaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Úroveň: ${widget.level.levelIndex}"),
-        bottom: PreferredSize(
-            preferredSize: Size.fromHeight(20),
-            child: Text("${
-            submissionController.isFilled
-                ? submissionController.isSolved
-                  ? "Hotovo!"
-                  : "Není to ono"
-                : "Něco chybí"
-            }: ${submissionController.toString()}")),
-      ),
-      body: SafeArea(
-        child: Container(
-          color: Color(0xffECE6E9),
-          child: Center(
-            child: Funnel(
-              level: widget.level,
-              submissionController: submissionController,
-              hint: _hintOn,
-              showBackground: _showBackground,
+    return WillPopScope(
+      child: KeyboardMediaQuery(
+        child: Builder(builder: (context) {
+          KeyboardManager.init(context);
+          return Scaffold(
+            appBar: AppBar(
+              title: Text("Úroveň: ${widget.level.levelIndex}"),
+              bottom: PreferredSize(
+                  preferredSize: Size.fromHeight(20),
+                  child: Text(
+                      "${submissionController.isFilled ? submissionController.isSolved ? "Hotovo!" : "Není to ono" : "Něco chybí"}: ${submissionController.toString()}")),
             ),
-          ),
-        ),
-      ),
+            body: SafeArea(
+              child: Container(
+                color: Color(0xffECE6E9),
+                child: Center(
+                  child: Funnel(
+                    level: widget.level,
+                    submissionController: submissionController,
+                    hint: _hintOn,
+                    showBackground: _showBackground,
+                  ),
+                ),
+              ),
+            ),
 
 //      bottomNavigationBar: VirtualKeyboard(
 //        optionBackground: _showBackground,
@@ -127,7 +127,20 @@ class _TaskScreenState extends State<TaskScreen> {
 //        },
 //      ),
 //
+          );
+        }),
+      ),
+      onWillPop: _requestPop,
     );
+  }
+
+  Future<bool> _requestPop() {
+    bool b = true;
+    if (KeyboardManager.isShowKeyboard) {
+      KeyboardManager.hideKeyboard();
+      b = false;
+    }
+    return Future.value(b);
   }
 }
 
@@ -292,7 +305,8 @@ class Cell extends StatelessWidget {
                     fontSize: 24,
                   ))
               : TextField(
-                  keyboardType: TextInputType.number,
+                  keyboardType: SecurityKeyboard.text,
+//                  keyboardType: TextInputType.number,
                   inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                   controller: textController,
                   cursorColor: Color(0xffa02b5f),
@@ -301,7 +315,7 @@ class Cell extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 24,
+                    fontSize: 22,
                   ),
 //            readOnly: true,
 //            showCursor: true,

@@ -20,7 +20,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cool_ui: "^0.4.0"
+  security_keyboard: ^1.0.2
 
   zoom_widget:
 
