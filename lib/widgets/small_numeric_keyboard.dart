@@ -1,149 +1,142 @@
-//import 'package:cool_ui/cool_ui.dart';
-//import 'package:flutter/material.dart';
-//
-//class SmallNumericKeyboard extends StatelessWidget {
-//  static const CKTextInputType inputType =
-//      const CKTextInputType(name: 'CKNumberKeyboard');
-//
-//  static double getHeight(BuildContext ctx) {
-//    MediaQueryData mediaQuery = MediaQuery.of(ctx);
-//    return mediaQuery.size.width / 6 ;
-////    return 128.0;
-//  }
-//
-//  final KeyboardController controller;
-//
-//  const SmallNumericKeyboard({this.controller});
-//
-//  static register() {
-//    CoolKeyboard.addKeyboard(
-//        SmallNumericKeyboard.inputType,
-//        KeyboardConfig(
-//            builder: (context, controller, params) {
-//              return SmallNumericKeyboard(controller: controller);
-//            },
-//            getHeight: SmallNumericKeyboard.getHeight));
-//  }
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    MediaQueryData mediaQuery = MediaQuery.of(context);
-//    return Material(
-//        child: DefaultTextStyle(
-//            style: TextStyle(
-//                fontWeight: FontWeight.w500,
-//                color: Color(0xffa02b5f),
-//                fontSize: 20.0),
-//            child: Container(
-////              height: 128,
-//              width: mediaQuery.size.width,
-//              color: Color(0xffECE6E9),
-////              color: Color(0xff334455),
-//              child: GridView.count(
-//                childAspectRatio: 2 / 1,
-//                mainAxisSpacing: 0.5,
-//                crossAxisSpacing: 0.5,
-//                padding: EdgeInsets.all(0.0),
-//                crossAxisCount: 6,
-//                children: <Widget>[
-//                  buildButton('1'),
-//                  buildButton('2'),
-//                  buildButton('3'),
-//                  buildButton('4'),
-//                  buildButton('5'),
-//                  buildButton('X'),
-//                  buildButton('6'),
-//                  buildButton('7'),
-//                  buildButton('8'),
-//                  buildButton('9'),
-//                  buildButton('0'),
-//                  buildButton('E'),
-//
-//                ],
-//
-//              )
-//
-//            )));
-//  }
-//
-////  @override
-////  Widget build(BuildContext context) {
-////    MediaQueryData mediaQuery = MediaQuery.of(context);
-////    return Material(
-////      child: DefaultTextStyle(
-////          style: TextStyle(
-////              fontWeight: FontWeight.w500, color: Colors.pinkAccent, fontSize: 23.0),
-////          child: Container(
-////            height: getHeight(context),
-//////            width: mediaQuery.size.width,
-////            decoration: BoxDecoration(
-////              color: Color(0xffafafaf),
-////            ),
-////            child: GridView.count(
-////                childAspectRatio: 2 / 1,
-////                mainAxisSpacing: 0.5,
-////                crossAxisSpacing: 0.5,
-////                padding: EdgeInsets.all(0.0),
-////                crossAxisCount: 3,
-////                children: <Widget>[
-////                  buildButton('1'),
-////                  buildButton('2'),
-////                  buildButton('3'),
-////                  buildButton('4'),
-////                  buildButton('5'),
-////                  buildButton('6'),
-////                  buildButton('7'),
-////                  buildButton('8'),
-////                  buildButton('9'),
-////                  Container(
-////                    color: Color(0xFFd3d6dd),
-////                    child: GestureDetector(
-////                      behavior: HitTestBehavior.translucent,
-////                      child: Center(
-////                        child: Icon(Icons.expand_more),
-////                      ),
-////                      onTap: () {
-////                        controller.doneAction();
-////                      },
-////                    ),
-////                  ),
-////                  buildButton('0'),
-////                  Container(
-////                    color: Color(0xFFd3d6dd),
-////                    child: GestureDetector(
-////                      behavior: HitTestBehavior.translucent,
-////                      child: Center(
-////                        child: Text('X'),
-////                      ),
-////                      onTap: () {
-////                        controller.deleteOne();
-////                      },
-////                    ),
-////                  ),
-////                ]),
-////          )),
-////    );
-////  }
-//
-//  Widget buildButton(String title, {String value}) {
-//    if (value == null) {
-//      value = title;
-//    }
-//    return Container(
-//      color: Colors.white,
-//      child: GestureDetector(
-//        behavior: HitTestBehavior.translucent,
-//        child: Center(
-//          child: Text(title),
-//        ),
-//        onTap: () {
-//          controller.addText(value);
-//        },
-//      ),
-//    );
-//  }
-//}
-//
-////onTap: () {
-////controller.addText(value);
-////},
+import 'package:flutter/material.dart';
+import 'package:security_keyboard/keyboard_controller.dart';
+import 'package:security_keyboard/keyboard_manager.dart';
+
+typedef KeyboardSwitch = Function(SecurityKeyboardType type);
+
+enum SecurityKeyboardType { text }
+
+class SecurityKeyboard extends StatefulWidget {
+  ///Controller for keyboard output
+  final KeyboardController controller;
+
+  ///Keyboard type - default is text
+  final SecurityKeyboardType keyboardType;
+
+  const SecurityKeyboard({this.controller, this.keyboardType});
+
+  ///Text input type
+  static SecurityTextInputType text =
+      SecurityKeyboard._inputKeyboard(SecurityKeyboardType.text);
+
+  ///Initialization of the keyboard type and returns type of the text input field
+  static SecurityTextInputType _inputKeyboard(
+      SecurityKeyboardType securityKeyboardType) {
+    ///Set keyboard corresponding to the text input field
+    String inputType = securityKeyboardType.toString();
+    SecurityTextInputType securityTextInputType =
+        SecurityTextInputType(name: inputType);
+
+    KeyboardManager.addKeyboard(
+      securityTextInputType,
+      KeyboardConfig(
+        builder: (context, controller) {
+          return SecurityKeyboard(
+            controller: controller,
+            keyboardType: securityKeyboardType,
+          );
+        },
+        getHeight: () {
+          return SecurityKeyboard.getHeight(securityKeyboardType);
+        },
+      ),
+    );
+
+    return securityTextInputType;
+  }
+
+  ///Keyboard type
+  SecurityKeyboardType get _keyboardType => keyboardType;
+
+  ///Method to get the height based on keyboard type
+  static double getHeight(SecurityKeyboardType securityKeyboardType) {
+    return 48;
+  }
+
+  @override
+  _SecurityKeyboardState createState() => _SecurityKeyboardState();
+}
+
+class _SecurityKeyboardState extends State<SecurityKeyboard> {
+  ///Holds and broadcasts actual keyboard type
+  SecurityKeyboardType currentKeyboardType;
+
+  @override
+  void initState() {
+    super.initState();
+    currentKeyboardType = widget._keyboardType;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    MediaQueryData mediaQuery = MediaQuery.of(context);
+    return Material(
+        child: DefaultTextStyle(
+            style: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Color(0xffa02b5f),
+                fontSize: 18.0),
+            child: Center(
+              child: Container(
+                  height: 50,
+                  width: mediaQuery.size.width,
+                  color: Color(0xffECE6E9),
+                  child: GridView.count(
+                    childAspectRatio: (mediaQuery.size.width / 11) / 48,
+                    mainAxisSpacing: 0,
+                    crossAxisSpacing: 2,
+                    padding: EdgeInsets.symmetric(horizontal: 2),
+                    crossAxisCount: 11,
+                    children: <Widget>[
+                      buildKeyboardButton('1'),
+                      buildKeyboardButton('2'),
+                      buildKeyboardButton('3'),
+                      buildKeyboardButton('4'),
+                      buildKeyboardButton('5'),
+                      buildKeyboardButton('6'),
+                      buildKeyboardButton('7'),
+                      buildKeyboardButton('8'),
+                      buildKeyboardButton('9'),
+                      buildKeyboardButton('0'),
+                      buildKeyboardButton("X",
+                          icon: Icon(Icons.backspace),
+                          onTapAction: widget.controller.deleteOne),
+                    ],
+                  )),
+            )));
+  }
+
+  /// label .. text rendered to button
+  /// value .. value entered to editbox controller (if not given action)
+  /// icon .. icon rendered to button instead of label
+  /// onTapAction .. callback function, such as controller.deleteOne
+  ///   default is addText(value)
+  Widget buildKeyboardButton(
+    String label, {
+    String value,
+    Icon icon,
+    Function onTapAction,
+  }) {
+    value ??= label;
+    return Container(
+      height: 48,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        color: Colors.white70,
+      ),
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        child: Center(
+          child: icon == null
+              ? Text(label)
+              : Icon(icon.icon, size: 18, color: Color(0xff415a70)),
+        ),
+        onTap: () {
+          onTapAction == null
+              ? widget.controller.addText(value)
+              : onTapAction();
+        },
+      ),
+    );
+  }
+}
