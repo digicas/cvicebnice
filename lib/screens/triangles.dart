@@ -23,25 +23,39 @@ class TaskScreen extends StatefulWidget {
 class _TaskScreenState extends State<TaskScreen> {
   bool _hintOn;
   bool _showBackground;
+  bool taskSubmitted;
+  Level _level;
 
   SubmissionController submissionController;
 
   @override
   void initState() {
+    _level = widget.level;
 //    print("hu $_maskOn");
     _hintOn ??= false;
     _showBackground ??= true;
-    widget.level.generate();
-    submissionController = SubmissionController(level: widget.level);
-//    submissionController.initiateForLevel(widget.level);
-    submissionController.addListener(_checkSolution);
+    taskSubmitted ??= false;
+    levelInit();
 
     super.initState();
   }
 
+  void levelInit() {
+    _level.generate();
+    submissionController = SubmissionController(level: _level);
+    submissionController.addListener(_checkSolution);
+    taskSubmitted = false;
+  }
+
+  void levelRegenerate() {
+//    submissionController.dispose();
+    levelInit();
+//  initState();
+  }
+
   _checkSolution() {
     print(
-        "Submission: ${submissionController.toString()} : ${submissionController.isSolved}");
+        "Submission: ${submissionController.toString()} : solved: ${submissionController.isSolved}");
     setState(() {});
   }
 
@@ -65,49 +79,128 @@ class _TaskScreenState extends State<TaskScreen> {
           KeyboardManager.init(context);
           return Scaffold(
             appBar: AppBar(
-              title: Text("Úroveň: ${widget.level.levelIndex}"),
+              title: Text("Úroveň: ${_level.levelIndex}"),
               actions: <Widget>[
-                _showBackground ?
-                RaisedButton(
-                  color: Color(0xff2ba06b),
-                  child: Icon(Icons.image, color: Color(0xff415a70), size: 32),
-                  onPressed: () {
-                    setState(() {
-                      _showBackground = false;
-                    });
-                  },
-                )
-                :
-                RaisedButton(
+                _showBackground
+                    ? RaisedButton(
+                        color: Color(0xff2ba06b),
+                        child: Icon(Icons.image,
+                            color: Color(0xff415a70), size: 32),
+                        onPressed: () {
+                          setState(() {
+                            _showBackground = false;
+                          });
+                        },
+                      )
+                    : RaisedButton(
 //                  color: Colors.black,
-                  child: Icon(Icons.image, size: 32),
-                  onPressed: () {
-                    setState(() {
-                      _showBackground = true;
-                    });
-                  },
-                )
-
+                        child: Icon(Icons.image, size: 32),
+                        onPressed: () {
+                          setState(() {
+                            _showBackground = true;
+                          });
+                        },
+                      )
               ],
-              bottom: PreferredSize(
-                  preferredSize: Size.fromHeight(20),
-                  child: Text(
-                      "${submissionController.isFilled ? submissionController.isSolved ? "SUPER!" : "Není to ono" : "Něco chybí"}: ${submissionController.toString()}")),
+//              bottom: PreferredSize(
+//                  preferredSize: Size.fromHeight(20),
+//                  child: Text(
+//                      "${submissionController.isFilled ? submissionController.isSolved ? "SUPER!" : "Není to ono" : "Něco chybí"}: ${submissionController.toString()}")),
             ),
             body: SafeArea(
               child: Container(
                 color: Color(0xffECE6E9),
-                child: Center(
-                  child: Funnel(
-                    level: widget.level,
-                    submissionController: submissionController,
-                    hint: _hintOn,
-                    showBackground: _showBackground,
-                  ),
+                child: Stack(
+                  children: <Widget>[
+                    Center(
+                      child: Funnel(
+                        level: _level,
+                        submissionController: submissionController,
+                        hint: _hintOn,
+                        showBackground: _showBackground,
+                      ),
+                    ),
+
+                    /// edu guide and its speech / buttons over task screen
+                    Positioned(
+                      left: 20,
+                      top: 20,
+                      right: 20,
+                      child: Row(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            GestureDetector(
+                              onTap: () {},
+                              child: Image.asset(
+                                "assets/ada_head_only.png",
+                                width: 100,
+                              ),
+                            ),
+//                          Container(width: 20),
+
+                            submissionController.isFilled
+                                ? RaisedButton(
+                                    shape: StadiumBorder(),
+                                    child: Text("HOTOVO?"),
+                                    onPressed: () {
+                                      setState(() {
+                                        taskSubmitted = true;
+                                        FocusScopeNode currentFocus =
+                                            FocusScope.of(context);
+                                        if (!currentFocus.hasPrimaryFocus) {
+                                          currentFocus.unfocus();
+                                        }
+//                                        KeyboardManager.hideKeyboard();
+                                      });
+                                    },
+                                  )
+                                : Container(),
+                          ]),
+                    ),
+
+                    ///
+                    /// Overlay for options and task submission
+                    ///
+                    !taskSubmitted
+
+                        /// task is not submitted -> check if option overlay was requested
+                        ? Container()
+
+
+                        : submissionController.isSolved
+
+                            /// task is submitted and solved successfully
+                            ? DoneSuccessOverlay(
+                                onNextUpLevel: () {
+                                  setState(() {
+                                    _level = LevelTree.getNextLevel(_level);
+                                    levelRegenerate();
+                                  });
+                                },
+                                onNextSameLevel: () {
+                                  setState(() {
+                                    levelRegenerate();
+                                  });
+                                },
+                                onBack: () {
+                                  Navigator.of(context).pop();
+                                },
+                              )
+
+                            /// task is submitted, but not solved
+                            : DoneWrongOverlay(
+                                onBackToLevel: () {
+                                  setState(() {
+                                    taskSubmitted = false;
+//                                    KeyboardManager.openKeyboard();
+                                  });
+                                },
+                              ),
+                  ],
                 ),
               ),
             ),
-
           );
         }),
       ),
@@ -123,6 +216,136 @@ class _TaskScreenState extends State<TaskScreen> {
     }
 //    return Future.value(true); // go screen back immediately - nefunguje @web :(
     return Future.value(b); // first hide keyboard, go screen back next time
+  }
+}
+
+/// Overlay screen when successful submission (incl. buttons to navigate next)
+class DoneSuccessOverlay extends StatelessWidget {
+  const DoneSuccessOverlay(
+      {Key key, this.onNextUpLevel, this.onNextSameLevel, this.onBack})
+      : super(key: key);
+
+  final VoidCallback onNextUpLevel;
+  final VoidCallback onNextSameLevel;
+  final VoidCallback onBack;
+
+  @override
+  Widget build(BuildContext context) {
+    return ShaderOverlay(
+      child: Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Image.asset(
+                "assets/ada_full_body.png",
+                width: 100,
+              ),
+              Container(width: 16),
+              Expanded(
+                  child: Container(
+                child: Text(
+                  "Výborně. Tak a můžeš pokračovat.",
+                ),
+                margin: EdgeInsets.only(top: 20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                ),
+                padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+              )),
+            ],
+          ),
+          RaisedButton.icon(
+            label: Text("ZKUSIT TĚŽŠÍ"),
+            icon: Icon(Icons.file_upload),
+            shape: StadiumBorder(),
+            onPressed: onNextUpLevel,
+          ),
+          RaisedButton.icon(
+            label: Text("JEŠTĚ JEDNOU STEJNĚ TĚŽKOU"),
+            icon: Icon(Icons.compare_arrows),
+            shape: StadiumBorder(),
+            onPressed: onNextSameLevel,
+          ),
+          RaisedButton.icon(
+            label: Text("ZPĚT NA VÝBĚR TŘÍDY"),
+            icon: Icon(Icons.arrow_back_ios),
+            shape: StadiumBorder(),
+            onPressed: onBack,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class DoneWrongOverlay extends StatelessWidget {
+  const DoneWrongOverlay({Key key, this.onBackToLevel}) : super(key: key);
+
+  final VoidCallback onBackToLevel;
+
+  @override
+  Widget build(BuildContext context) {
+    return ShaderOverlay(
+      child: Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Image.asset(
+                "assets/ada_full_body.png",
+                width: 100,
+              ),
+              Container(width: 16),
+              Expanded(
+                  child: Container(
+                child: Text(
+                  "Ajajajaj.",
+                ),
+                margin: EdgeInsets.only(top: 20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                ),
+                padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+              )),
+            ],
+          ),
+          Container(height: 20),
+          RaisedButton.icon(
+            autofocus: true,
+            label: Text("ZKUS TO ZNOVA"),
+            icon: Icon(Icons.repeat),
+            shape: StadiumBorder(),
+            onPressed: onBackToLevel,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ShaderOverlay extends StatelessWidget {
+  ShaderOverlay({Key key, this.child}) : super(key: key);
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return FractionallySizedBox(
+      widthFactor: 1,
+      heightFactor: 1,
+      child: Container(
+        color: Color(0xbb000000),
+        padding: const EdgeInsets.fromLTRB(20.0, 20, 20, 20),
+        child: child,
+      ),
+    );
   }
 }
 

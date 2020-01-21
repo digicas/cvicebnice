@@ -222,7 +222,7 @@ class Level {
 
   @override
   String toString() =>
-      "max: $maxTotal $_solution ${_masks[_selectedTaskMask].toPrettyString()} $solutionRows";
+      "$levelIndex: max: $maxTotal $_solution ${_masks[_selectedTaskMask].toPrettyString()} $solutionRows";
 } // Level
 
 
@@ -285,6 +285,13 @@ class LevelTree {
     return LevelTree.levels.singleWhere(
         (level) => level.levelIndex == levelIndex,
         orElse: () => null);
+  }
+
+  /// returns more difficult level
+  static Level getNextLevel(Level level) {
+    /// max level -> return the same level
+    if (level.levelIndex == 100 ) return level;
+    return getLevelByLevelIndex(level.levelIndex + 1);
   }
 
   static int schoolClassToLevelIndex(int schoolClass, int monthInSchool) {
