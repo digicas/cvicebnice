@@ -127,48 +127,53 @@ class _TaskScreenState extends State<TaskScreen> {
                     ),
 
                     /// edu guide and its speech / buttons over task screen
-                    Positioned(
-                      left: 20,
-                      top: 20,
-                      right: 20,
-                      child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  /// must hide keyboard before option overlay is shown
-                                  removeEditableFocus(context);
-                                  optionsRequested = true;
-                                });
-                              },
-                              child: Image.asset(
-                                "assets/ada_head_only.png",
-                                width: 100,
-                              ),
-                            ),
-//                          Container(width: 20),
-
-                            submissionController.isFilled
-                                ? RaisedButton(
-                                    shape: StadiumBorder(),
-                                    child: Text("HOTOVO?"),
-                                    onPressed: () {
+                    (optionsRequested || taskSubmitted)
+                        /// do not show it, when overlay is above
+                        ? Container()
+                        : Positioned(
+                            left: 20,
+                            top: 20,
+                            right: 20,
+                            child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  GestureDetector(
+                                    onTap: () {
                                       setState(() {
-                                        taskSubmitted = true;
-                                        FocusScopeNode currentFocus =
-                                            FocusScope.of(context);
-                                        if (!currentFocus.hasPrimaryFocus) {
-                                          currentFocus.unfocus();
-                                        }
-//                                        KeyboardManager.hideKeyboard();
+                                        /// must hide keyboard before option overlay is shown
+                                        removeEditableFocus(context);
+                                        optionsRequested = true;
                                       });
                                     },
-                                  )
-                                : Container(),
-                          ]),
-                    ),
+                                    child: Image.asset(
+                                      "assets/ada_head_only.png",
+                                      width: 100,
+                                    ),
+                                  ),
+//                          Container(width: 20),
+
+                                  submissionController.isFilled
+                                      ? RaisedButton(
+                                          shape: StadiumBorder(),
+                                          child: Text("HOTOVO?"),
+                                          onPressed: () {
+                                            setState(() {
+                                              taskSubmitted = true;
+                                              FocusScopeNode currentFocus =
+                                                  FocusScope.of(context);
+                                              if (!currentFocus
+                                                  .hasPrimaryFocus) {
+                                                currentFocus.unfocus();
+                                              }
+//                                        KeyboardManager.hideKeyboard();
+                                            });
+                                          },
+                                        )
+                                      : Container(),
+                                ]),
+                          ),
 
                     ///
                     /// Overlay for options and task submission
@@ -196,7 +201,8 @@ class _TaskScreenState extends State<TaskScreen> {
                                 },
                                 onRestartLevel: () {
                                   setState(() {
-                                    submissionController.initiateForLevel(_level);
+                                    submissionController
+                                        .initiateForLevel(_level);
                                     optionsRequested = false;
                                   });
                                 },
@@ -281,6 +287,8 @@ class DoneSuccessOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     return ShaderOverlay(
       child: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -288,8 +296,8 @@ class DoneSuccessOverlay extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Image.asset(
-                "assets/ada_full_body.png",
-                width: 100,
+                "assets/ada_full_body_correct.png",
+                width: 120,
               ),
               Container(width: 16),
               Expanded(
@@ -307,6 +315,7 @@ class DoneSuccessOverlay extends StatelessWidget {
               )),
             ],
           ),
+//          Container(height: 20,),
           RaisedButton.icon(
             label: Text("ZKUSIT TĚŽŠÍ"),
             icon: Icon(Icons.file_upload),
@@ -340,6 +349,7 @@ class DoneWrongOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     return ShaderOverlay(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -365,7 +375,6 @@ class DoneWrongOverlay extends StatelessWidget {
               )),
             ],
           ),
-          Container(height: 20),
           RaisedButton.icon(
             autofocus: true,
             label: Text("ZKUS TO OPRAVIT"),
@@ -373,6 +382,7 @@ class DoneWrongOverlay extends StatelessWidget {
             shape: StadiumBorder(),
             onPressed: onBackToLevel,
           ),
+          Container(height: 20),
         ],
       ),
     );
@@ -417,6 +427,7 @@ class OptionsOverlay extends StatelessWidget {
 
     return ShaderOverlay(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
