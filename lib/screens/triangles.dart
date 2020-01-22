@@ -1,3 +1,5 @@
+//import 'dart:ffi';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -24,6 +26,7 @@ class _TaskScreenState extends State<TaskScreen> {
   bool _hintOn;
   bool _showBackground;
   bool taskSubmitted;
+  bool optionsRequested;
   Level _level;
 
   SubmissionController submissionController;
@@ -35,6 +38,7 @@ class _TaskScreenState extends State<TaskScreen> {
     _hintOn ??= false;
     _showBackground ??= true;
     taskSubmitted ??= false;
+    optionsRequested ??= false;
     levelInit();
 
     super.initState();
@@ -45,6 +49,7 @@ class _TaskScreenState extends State<TaskScreen> {
     submissionController = SubmissionController(level: _level);
     submissionController.addListener(_checkSolution);
     taskSubmitted = false;
+    optionsRequested = false;
   }
 
   void levelRegenerate() {
@@ -78,35 +83,35 @@ class _TaskScreenState extends State<TaskScreen> {
         child: Builder(builder: (context) {
           KeyboardManager.init(context);
           return Scaffold(
-            appBar: AppBar(
-              title: Text("Úroveň: ${_level.levelIndex}"),
-              actions: <Widget>[
-                _showBackground
-                    ? RaisedButton(
-                        color: Color(0xff2ba06b),
-                        child: Icon(Icons.image,
-                            color: Color(0xff415a70), size: 32),
-                        onPressed: () {
-                          setState(() {
-                            _showBackground = false;
-                          });
-                        },
-                      )
-                    : RaisedButton(
-//                  color: Colors.black,
-                        child: Icon(Icons.image, size: 32),
-                        onPressed: () {
-                          setState(() {
-                            _showBackground = true;
-                          });
-                        },
-                      )
-              ],
-//              bottom: PreferredSize(
-//                  preferredSize: Size.fromHeight(20),
-//                  child: Text(
-//                      "${submissionController.isFilled ? submissionController.isSolved ? "SUPER!" : "Není to ono" : "Něco chybí"}: ${submissionController.toString()}")),
-            ),
+//            appBar: AppBar(
+//              title: Text("Úroveň: ${_level.levelIndex}"),
+////              actions: <Widget>[
+////                _showBackground
+////                    ? RaisedButton(
+////                        color: Color(0xff2ba06b),
+////                        child: Icon(Icons.image,
+////                            color: Color(0xff415a70), size: 32),
+////                        onPressed: () {
+////                          setState(() {
+////                            _showBackground = false;
+////                          });
+////                        },
+////                      )
+////                    : RaisedButton(
+//////                  color: Colors.black,
+////                        child: Icon(Icons.image, size: 32),
+////                        onPressed: () {
+////                          setState(() {
+////                            _showBackground = true;
+////                          });
+////                        },
+////                      )
+////              ],
+////              bottom: PreferredSize(
+////                  preferredSize: Size.fromHeight(20),
+////                  child: Text(
+////                      "${submissionController.isFilled ? submissionController.isSolved ? "SUPER!" : "Není to ono" : "Něco chybí"}: ${submissionController.toString()}")),
+//            ),
             body: SafeArea(
               child: Container(
                 color: Color(0xffECE6E9),
@@ -131,7 +136,13 @@ class _TaskScreenState extends State<TaskScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                setState(() {
+                                  /// must hide keyboard before option overlay is shown
+                                  removeEditableFocus(context);
+                                  optionsRequested = true;
+                                });
+                              },
                               child: Image.asset(
                                 "assets/ada_head_only.png",
                                 width: 100,
@@ -165,16 +176,53 @@ class _TaskScreenState extends State<TaskScreen> {
                     !taskSubmitted
 
                         /// task is not submitted -> check if option overlay was requested
-                        ? Container()
+                        ? !optionsRequested
 
+                            /// no shade overlay needed
+                            ? Container()
 
+                            /// Options menu requested
+                            : OptionsOverlay(
+                                canDecreaseLevel: (_level.levelIndex > 2),
+                                levelInfoText: _level.levelIndex.toString(),
+                                showBackground: _showBackground,
+                                onBackToLevel: () {
+                                  setState(() {
+                                    optionsRequested = false;
+                                  });
+                                },
+                                onBack: () {
+                                  Navigator.of(context).pop();
+                                },
+                                onRestartLevel: () {
+                                  setState(() {
+                                    submissionController.initiateForLevel(_level);
+                                    optionsRequested = false;
+                                  });
+                                },
+                                onSwitchBackgroundImage: () {
+                                  setState(() {
+                                    _showBackground = !_showBackground;
+                                    optionsRequested = false;
+                                  });
+                                },
+                                onDecreaseLevel: () {
+                                  setState(() {
+                                    _level =
+                                        LevelTree.getLessDifficultLevel(_level);
+                                    levelRegenerate();
+                                    optionsRequested = false;
+                                  });
+                                },
+                              )
                         : submissionController.isSolved
 
                             /// task is submitted and solved successfully
                             ? DoneSuccessOverlay(
                                 onNextUpLevel: () {
                                   setState(() {
-                                    _level = LevelTree.getNextLevel(_level);
+                                    _level =
+                                        LevelTree.getMoreDifficultLevel(_level);
                                     levelRegenerate();
                                   });
                                 },
@@ -247,7 +295,8 @@ class DoneSuccessOverlay extends StatelessWidget {
               Expanded(
                   child: Container(
                 child: Text(
-                  "Výborně. Tak a můžeš pokračovat.",
+                  "VÝBORNĚ!\n\nTak a můžeš pokračovat.",
+                  softWrap: true,
                 ),
                 margin: EdgeInsets.only(top: 20),
                 decoration: BoxDecoration(
@@ -272,7 +321,7 @@ class DoneSuccessOverlay extends StatelessWidget {
           ),
           RaisedButton.icon(
             label: Text("ZPĚT NA VÝBĚR TŘÍDY"),
-            icon: Icon(Icons.arrow_back_ios),
+            icon: Icon(Icons.assignment),
             shape: StadiumBorder(),
             onPressed: onBack,
           ),
@@ -298,14 +347,14 @@ class DoneWrongOverlay extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Image.asset(
-                "assets/ada_full_body.png",
+                "assets/ada_full_body_wrong.png",
                 width: 100,
               ),
               Container(width: 16),
               Expanded(
                   child: Container(
                 child: Text(
-                  "Ajajajaj.",
+                  "AJAJAJAJ!",
                 ),
                 margin: EdgeInsets.only(top: 20),
                 decoration: BoxDecoration(
@@ -319,7 +368,7 @@ class DoneWrongOverlay extends StatelessWidget {
           Container(height: 20),
           RaisedButton.icon(
             autofocus: true,
-            label: Text("ZKUS TO ZNOVA"),
+            label: Text("ZKUS TO OPRAVIT"),
             icon: Icon(Icons.repeat),
             shape: StadiumBorder(),
             onPressed: onBackToLevel,
@@ -330,6 +379,133 @@ class DoneWrongOverlay extends StatelessWidget {
   }
 }
 
+class OptionsOverlay extends StatelessWidget {
+  const OptionsOverlay({
+    Key key,
+    this.levelInfoText,
+    this.showBackground,
+    this.onBackToLevel,
+    this.onBack,
+    this.onRestartLevel,
+    this.onDecreaseLevel,
+    this.onSwitchBackgroundImage,
+    this.canDecreaseLevel = true,
+    this.canIncreaseLevel = true,
+  }) : super(key: key);
+
+  final VoidCallback onBackToLevel;
+  final VoidCallback onBack;
+  final VoidCallback onRestartLevel;
+  final VoidCallback onDecreaseLevel;
+  final VoidCallback onSwitchBackgroundImage;
+
+  /// text (typically number) to show
+  final String levelInfoText;
+
+  /// Visibility for image in background
+  final bool showBackground;
+
+  /// Whether to show button to decrease level
+  final bool canDecreaseLevel;
+
+  /// Whether to show button to increase level
+  final bool canIncreaseLevel;
+
+  @override
+  Widget build(BuildContext context) {
+    removeEditableFocus(context);
+
+    return ShaderOverlay(
+      child: Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              GestureDetector(
+                onTap: onBackToLevel,
+                child: Image.asset(
+                  "assets/ada_full_body.png",
+                  width: 100,
+                ),
+              ),
+              Container(width: 16),
+              Expanded(
+                  child: Container(
+                child: Text(
+                  "JSI NA ÚROVNI $levelInfoText.\n\nCO MŮŽU PRO TEBE UDĚLAT?",
+                ),
+                margin: EdgeInsets.only(top: 20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                ),
+                padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+              )),
+            ],
+          ),
+          Container(height: 0),
+          RaisedButton.icon(
+            autofocus: true,
+            label: Text("NIC, CHCI ZPĚT"),
+            icon: Icon(Icons.arrow_back_ios),
+            shape: StadiumBorder(),
+            onPressed: onBackToLevel,
+          ),
+          showBackground
+              ? RaisedButton.icon(
+                  autofocus: true,
+                  label: Text("VYPNOUT OBRÁZEK"),
+                  icon: Icon(Icons.image),
+                  shape: StadiumBorder(),
+                  onPressed: onSwitchBackgroundImage,
+                )
+              : RaisedButton.icon(
+                  autofocus: true,
+                  label: Text("UKAZOVAT OBRÁZEK"),
+                  icon: Icon(Icons.add_photo_alternate),
+                  shape: StadiumBorder(),
+                  onPressed: onSwitchBackgroundImage,
+                ),
+          RaisedButton.icon(
+            autofocus: true,
+            label: Text("VYČISTIT A ZAČÍT ZNOVU"),
+            icon: Icon(Icons.refresh),
+            shape: StadiumBorder(),
+            onPressed: onRestartLevel,
+          ),
+
+          /// show only if we can decrease level
+          canDecreaseLevel
+              ? RaisedButton.icon(
+                  label: Text("TO JE MOC TĚŽKÉ, CHCI LEHČÍ"),
+                  icon: Icon(Icons.file_download),
+                  shape: StadiumBorder(),
+                  onPressed: onDecreaseLevel,
+                )
+              : Container(),
+          RaisedButton.icon(
+            label: Text("ZPĚT NA VÝBĚR TŘÍDY"),
+            icon: Icon(Icons.assignment),
+            shape: StadiumBorder(),
+            onPressed: onBack,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+void removeEditableFocus(BuildContext context) {
+  FocusScopeNode currentFocus = FocusScope.of(context);
+  if (!currentFocus.hasPrimaryFocus) {
+    currentFocus.unfocus();
+  }
+// KeyboardManager.hideKeyboard();
+}
+
+/// Overlay widget to be used in [Stack]. Creates shade and container for child padded by 20.
 class ShaderOverlay extends StatelessWidget {
   ShaderOverlay({Key key, this.child}) : super(key: key);
 
@@ -510,6 +686,7 @@ class Cell extends StatelessWidget {
                     fontSize: 24,
                   ))
               : TextField(
+                  enableInteractiveSelection: false,
                   keyboardType: SmallNumericKeyboard.text,
 //                  keyboardType: TextInputType.number,
                   inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],

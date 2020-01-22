@@ -49,10 +49,11 @@ class SubmissionController extends ChangeNotifier{
 //  }
 
 
-  /// empties the submission and initiates with the predefined (visible) values
+  /// empties the submission but does NOT initiates with the predefined (visible) values
   /// for those cells where mask allows visibility to user
   void eraseSubmission(){
     cells.forEach((tController) => tController.clear());
+
   }
 
   /// apply level data to submission
@@ -287,13 +288,41 @@ class LevelTree {
         orElse: () => null);
   }
 
-  /// returns more difficult level
-  static Level getNextLevel(Level level) {
-    /// max level -> return the same level
-    if (level.levelIndex == 100 ) return level;
-    return getLevelByLevelIndex(level.levelIndex + 1);
+  /// returns more difficult level if there is any
+  static Level getMoreDifficultLevel(Level level) {
+    Level newLevel;
+    int newLevelIndex = level.levelIndex;
+
+    /// avoid not implemented levels
+    while (newLevel == null){
+      newLevelIndex++;
+      /// max level -> return the same level
+      /// TODO improve to check the last level in Level Tree collection
+      if (level.levelIndex == 100 ) return level;
+      newLevel = getLevelByLevelIndex(newLevelIndex);
+    }
+    return newLevel;
+
+//    return getLevelByLevelIndex(level.levelIndex + 1);
   }
 
+  /// returns less difficult level if there is any
+  static Level getLessDifficultLevel(Level level) {
+    int newLevelIndex = level.levelIndex;
+    Level newLevel;
+
+    /// avoid not implemented levels
+    while (newLevel == null){
+      newLevelIndex--;
+      /// min level -> return the same level
+      if (newLevelIndex == 0) return level;
+      newLevel = getLevelByLevelIndex(newLevelIndex);
+    }
+    return newLevel;
+  }
+
+
+  /// returns levelIndex number based
   static int schoolClassToLevelIndex(int schoolClass, int monthInSchool) {
     assert(schoolClass > -1); // 0 schoolClass is tutorial
     assert(monthInSchool > -1 && monthInSchool < 10); // 0..Sept, 9..June
