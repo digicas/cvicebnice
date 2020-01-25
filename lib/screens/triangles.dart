@@ -697,7 +697,8 @@ class Cell extends StatelessWidget {
                     fontSize: 24,
                   ))
               : TextField(
-                  enableInteractiveSelection: false,
+                  /// enableInteractiveSelection must NOT be false, otherwise KeyboardController error
+//                  enableInteractiveSelection: false,
                   keyboardType: SmallNumericKeyboard.text,
 //                  keyboardType: TextInputType.number,
                   inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
