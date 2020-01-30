@@ -13,10 +13,13 @@ import 'package:security_keyboard/keyboard_media_query.dart';
 
 //import 'package:cool_ui/cool_ui.dart';
 
+/// triangles ... matematicke prostredi: souctove trojuhelniky
+
 class TaskScreen extends StatefulWidget {
   final Level level;
+  final TriangleTaskType taskType;
 
-  TaskScreen({this.level});
+  TaskScreen({this.level, this.taskType = TriangleTaskType.Funnel});
 
   @override
   _TaskScreenState createState() => _TaskScreenState();
@@ -118,16 +121,21 @@ class _TaskScreenState extends State<TaskScreen> {
                 child: Stack(
                   children: <Widget>[
                     Center(
-                      child: Funnel(
-                        level: _level,
-                        submissionController: submissionController,
-                        hint: _hintOn,
-                        showBackground: _showBackground,
+                      child: SingleChildScrollView(
+                        padding: EdgeInsets.fromLTRB(0, 40, 0, 80),
+                        child: Funnel(
+                          level: _level,
+                          submissionController: submissionController,
+                          hint: _hintOn,
+                          showBackground: _showBackground,
+                          renderType: widget.taskType,
+                        ),
                       ),
                     ),
 
                     /// edu guide and its speech / buttons over task screen
                     (optionsRequested || taskSubmitted)
+
                         /// do not show it, when overlay is above
                         ? Container()
                         : Positioned(
@@ -189,7 +197,8 @@ class _TaskScreenState extends State<TaskScreen> {
                             /// Options menu requested
                             : OptionsOverlay(
                                 canDecreaseLevel: (_level.levelIndex > 2),
-                                levelInfoText: _level.levelIndex.toString(),
+                                levelInfoText:
+                                    _level.levelIndex.toString() + " ze 100",
                                 showBackground: _showBackground,
                                 onBackToLevel: () {
                                   setState(() {
@@ -445,7 +454,7 @@ class OptionsOverlay extends StatelessWidget {
               Expanded(
                   child: Container(
                 child: Text(
-                  "JSI NA ÚROVNI $levelInfoText.\n\nCO MŮŽU PRO TEBE UDĚLAT?",
+                  "JSI NA ÚROVNI $levelInfoText.\n\nCO PRO TEBE MŮŽU UDĚLAT?",
                 ),
                 margin: EdgeInsets.only(top: 20),
                 decoration: BoxDecoration(
@@ -536,18 +545,26 @@ class ShaderOverlay extends StatelessWidget {
   }
 }
 
+/// type of the task for rendering
+enum TriangleTaskType { Pyramid, Funnel }
+
+/// renders the pyramid or funnel widget based on the RenderType
 class Funnel extends StatelessWidget {
   final Level level;
   final SubmissionController submissionController;
   final bool hint;
   final bool showBackground;
 
+  /// task type to render (RenderType.Pyramid or RenderType.Funnel)
+  final TriangleTaskType renderType;
+
   Funnel(
       {Key key,
       this.level,
       this.submissionController,
       this.hint,
-      this.showBackground})
+      this.showBackground,
+      this.renderType = TriangleTaskType.Funnel})
       : super(key: key);
 
   @override
@@ -563,28 +580,55 @@ class Funnel extends StatelessWidget {
 
       for (int i = _rowStartIndex[row]; i < _rowStartIndex[row] + row; i++) {
         cells.add(Cell(
-            value: level.solution[i],
-            textController: submissionController.cells[i],
-            masked: !level.solutionMask.mask[i],
-            hint: hint));
+          value: level.solution[i],
+          textController: submissionController.cells[i],
+          masked: !level.solutionMask.mask[i],
+          hint: hint,
+          cellType: renderType == TriangleTaskType.Funnel
+              ? CellType.Bubble
+              : CellType.Box,
+        ));
       }
 
-      // insert for funnel
-      // add for pyramid
-//      renderRows.insert(
-//          0,
-//          Row(
-//            mainAxisAlignment: MainAxisAlignment.center,
-//            children: cells,
-//          ));
+      if (renderType == TriangleTaskType.Funnel) {
+        // INSERT row for funnel rendering
+        renderRows.insert(
+            0,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: cells,
+            ));
+      }
 
-      renderRows.add(Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: cells,
-      ));
+      if (renderType == TriangleTaskType.Pyramid) {
+        // ADD row for pyramid rendering
+        renderRows.add(Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: cells,
+        ));
+      }
+    } // end for loop build rows
+
+    if (renderType == TriangleTaskType.Funnel) {
+      return Center(
+          child: Container(
+//              color: Color(0xff9C4D82),
+              padding: EdgeInsets.fromLTRB(0, 64, 0, 0),
+              child: CustomPaint(
+                painter: showBackground ? FunnelPainter() : null,
+                child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: renderRows,
+                    )),
+              )));
     }
 
+    /// render pyramid
     return Stack(
       children: <Widget>[
         Center(
@@ -592,7 +636,7 @@ class Funnel extends StatelessWidget {
             child: CustomPaint(
               // https://api.flutter.dev/flutter/widgets/CustomPaint-class.html
 //              size: Size(200,200),
-              painter: showBackground ? TrianglePainter() : null,
+              painter: showBackground ? PyramidPainter() : null,
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
                 child: Column(
@@ -609,12 +653,12 @@ class Funnel extends StatelessWidget {
   }
 }
 
-// background painting
-class TrianglePainter extends CustomPainter {
+/// background painting for Pyramid
+class PyramidPainter extends CustomPainter {
   Paint _paintL;
   Paint _paintR;
 
-  TrianglePainter() {
+  PyramidPainter() {
     _paintL = Paint()
       ..color = Color(0xFFA88B5A)
       ..style = PaintingStyle.fill;
@@ -645,10 +689,44 @@ class TrianglePainter extends CustomPainter {
   }
 }
 
+/// Background painting for Funnel
+class FunnelPainter extends CustomPainter {
+  Paint _paint;
+
+  FunnelPainter() {
+    _paint = Paint()
+      ..color = Color(0xff829c4d)
+      ..style = PaintingStyle.fill;
+  }
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    var path = Path()
+      ..moveTo(-20, 8)
+      ..lineTo(size.width + 20, 8)
+      ..lineTo(size.width / 2 + 30, size.height - 5)
+      ..lineTo(size.width / 2 + 30, size.height + 68)
+      ..lineTo(size.width / 2 - 30, size.height + 48)
+      ..lineTo(size.width / 2 - 30, size.height - 5 )
+      ..close();
+
+    canvas.drawPath(path, _paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
+  }
+}
+
+/// type of the Cell for rendering
+enum CellType { Box, Bubble }
+
 class Cell extends StatelessWidget {
   final int value;
   final bool masked;
   final bool hint;
+  final CellType cellType;
 
   final TextEditingController textController;
 
@@ -657,11 +735,79 @@ class Cell extends StatelessWidget {
       @required this.value,
       this.masked = false,
       this.hint,
-      this.textController})
+      this.textController,
+      this.cellType = CellType.Box})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    /// widgets for Funnel's bubble
+    if (cellType == CellType.Bubble) {
+      return Padding(
+          padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
+          child: Container(
+              width: 64,
+              height: 64,
+              decoration: BoxDecoration(
+                  color: !this.masked ? Color(0xff9C4D82) : Color(0xffeeeeee),
+                  borderRadius: BorderRadius.circular(32.0),
+                  border: Border.all(
+                    color: Color(0xff9C4D82),
+                    width: 4,
+                    style: BorderStyle.solid,
+                  ),
+                  boxShadow: !this.masked
+                      ? []
+                      : [
+                          BoxShadow(
+                            color: Colors.black54,
+                            blurRadius: 8.0,
+                            spreadRadius: 2.0,
+                            offset: Offset(4.0, 4.0),
+                          ),
+                        ]),
+              child: Center(
+                child: !this.masked
+                    ? Text(value.toString(),
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                        style: TextStyle(
+                          color: Color(0xffeeeeee),
+                          fontSize: 24,
+                        ))
+                    : TextField(
+                        /// enableInteractiveSelection must NOT be false, otherwise KeyboardController error
+//                  enableInteractiveSelection: false,
+                        keyboardType: SmallNumericKeyboard.text,
+//                  keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          WhitelistingTextInputFormatter.digitsOnly
+                        ],
+                        controller: textController,
+                        cursorColor: Color(0xffa02b5f),
+                        autocorrect: false,
+                        maxLength: 4,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 22,
+                        ),
+//            readOnly: true,
+//            showCursor: true,
+                        // hide length counter and underline
+                        decoration: null,
+                        buildCounter: (BuildContext context,
+                                {int currentLength,
+                                int maxLength,
+                                bool isFocused}) =>
+                            null,
+                      ),
+
+                //
+              )));
+    }
+
+    /// basic rendering - Boxes for Pyramid
     return Padding(
       padding: const EdgeInsets.all(2.0),
       child: Container(

@@ -1,12 +1,14 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+
 //import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:pyramida/screens/triangles.dart';
 
 import 'package:pyramida/screens/level_select.dart';
 
 import 'package:pyramida/models/triangle_levels.dart';
+
 //import 'package:pyramida/widgets/launchurl.dart';
 //import 'package:url_launcher/url_launcher.dart';
 
@@ -34,7 +36,21 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class TaskListScreen extends StatelessWidget {
+class TaskListScreen extends StatefulWidget {
+  @override
+  _TaskListScreenState createState() => _TaskListScreenState();
+}
+
+class _TaskListScreenState extends State<TaskListScreen> {
+  /// holder for togglebuttons - pyramid or funnel
+  List<bool> triangleTaskSelection;
+
+  @override
+  void initState() {
+    triangleTaskSelection = [true, false];
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     int mm = LevelTree.levels.fold(0, (p, e) => p + e.masksAmount);
@@ -69,28 +85,78 @@ class TaskListScreen extends StatelessWidget {
       body: SafeArea(
         child: Container(
 //          color: Colors.pink,
-          child: LevelSelect(
-            onPlay: (int selectedLevelIndex) {
-              print("selected level $selectedLevelIndex");
-              // if level not yet implemented, just Toast
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Container(height: 32),
+                ToggleButtons(
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                  children: <Widget>[
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Image.asset(
+                          "assets/menu_pyramid.png",
+                          width: 128,
+                        ),
+                        Text("Pyramidy"),
+                        Container(height: 8),
+                      ],
+                    ),
+                    Column(
+                      children: <Widget>[
+                        Image.asset(
+                          "assets/menu_funnel.png",
+                          width: 128,
+                        ),
+                        Text("Trychtýř"),
+                        Container(height: 8)
+                      ],
+                    ),
+                  ],
+                  onPressed: (int index) {
+                    setState(() {
+                      for (int buttonIndex = 0;
+                          buttonIndex < triangleTaskSelection.length;
+                          buttonIndex++) {
+                        triangleTaskSelection[buttonIndex] =
+                            buttonIndex == index;
+                      }
+                    });
+                  },
+                  isSelected: triangleTaskSelection,
+                ),
+                LevelSelect(
+                  onPlay: (int selectedLevelIndex) {
+                    print("selected level $selectedLevelIndex");
+                    // if level not yet implemented, just Toast
 
-              var level = LevelTree.getLevelByLevelIndex(selectedLevelIndex);
+                    var level =
+                        LevelTree.getLevelByLevelIndex(selectedLevelIndex);
 
-              if (level == null) {
+                    if (level == null) {
 // must use builder function
 //                Scaffold.of(context).showSnackBar(SnackBar(
 //                  content: Text(
 //                      "Úroveň $selectedLevelIndex není ještě naimplemetovaná."),
 //                ));
 
-              } else {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => TaskScreen(level: level)),
-                );
-              }
-            },
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TaskScreen(
+                                  level: level,
+                                  taskType: triangleTaskSelection[0]
+                                      ? TriangleTaskType.Pyramid
+                                      : TriangleTaskType.Funnel,
+                                )),
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
