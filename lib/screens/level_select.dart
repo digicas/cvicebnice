@@ -3,6 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:pyramida/models/triangle_levels.dart';
 import 'package:pyramida/widgets/fluid_slider.dart';
 
+import '../widgets/fluid_slider.dart';
+
+final List<String> schoolMonths = [
+  "Září",
+  "Říjen",
+  "Listopad",
+  "Prosinec",
+  "Leden",
+  "Únor",
+  "Březen",
+  "Duben",
+  "Květen",
+  "Červen",
+];
+
 class LevelSelect extends StatefulWidget {
   const LevelSelect({
     Key key,
@@ -85,25 +100,15 @@ class _LevelSelectState extends State<LevelSelect> {
                   });
                 },
                 mapValueToString: (double value) {
-                  List<String> _map = [
-                    "Září",
-                    "Říjen",
-                    "Listopad",
-                    "Prosinec",
-                    "Leden",
-                    "Únor",
-                    "Březen",
-                    "Duben",
-                    "Květen",
-                    "Červen",
-                  ];
-                  return _map[value.toInt()];
+                  return schoolMonths[value.toInt()];
                 },
                 min: 0.0,
                 max: 9.0,
-                start: Text("Září"),
-                end: Text("Červen"),
-                valueTextStyle: Theme.of(context).textTheme.caption,
+                start: Text(
+                    schoolMonths.first, style: _fluidSliderTextStyle(context)),
+                end: Text(
+                    schoolMonths.last, style: _fluidSliderTextStyle(context)),
+                valueTextStyle: Theme.of(context).textTheme.subtitle,
               ),
             ),
             Container(
@@ -184,4 +189,10 @@ class _LevelSelectState extends State<LevelSelect> {
           ]),
     );
   }
+
+  TextStyle _fluidSliderTextStyle(BuildContext context) =>
+      Theme
+          .of(context)
+          .accentTextTheme
+          .subtitle;
 }
