@@ -9,6 +9,8 @@ import 'package:pyramida/screens/level_select.dart';
 
 import 'package:pyramida/models/triangle_levels.dart';
 
+import 'screens/triangles.dart';
+
 //import 'package:pyramida/widgets/launchurl.dart';
 //import 'package:url_launcher/url_launcher.dart';
 
@@ -47,7 +49,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
 
   @override
   void initState() {
-    triangleTaskSelection = [true, false];
+    triangleTaskSelection = [true, false, false];
     super.initState();
   }
 
@@ -113,15 +115,20 @@ class _TaskListScreenState extends State<TaskListScreen> {
                         Container(height: 8)
                       ],
                     ),
+                    Column(
+                      children: <Widget>[
+                        Image.asset(
+                          "assets/menu_funnel.png",
+                          width: 128,
+                        ),
+                        Text("Pavučina"),
+                        Container(height: 8)
+                      ],
+                    )
                   ],
                   onPressed: (int index) {
                     setState(() {
-                      for (int buttonIndex = 0;
-                          buttonIndex < triangleTaskSelection.length;
-                          buttonIndex++) {
-                        triangleTaskSelection[buttonIndex] =
-                            buttonIndex == index;
-                      }
+                      triangleTaskSelection = selectOnlyLast(triangleTaskSelection,index);
                     });
                   },
                   isSelected: triangleTaskSelection,
@@ -147,9 +154,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                         MaterialPageRoute(
                             builder: (context) => TaskScreen(
                                   level: level,
-                                  taskType: triangleTaskSelection[0]
-                                      ? TriangleTaskType.Pyramid
-                                      : TriangleTaskType.Funnel,
+                                  taskType: getTaskType(triangleTaskSelection),
                                 )),
                       );
                     }
@@ -196,6 +201,24 @@ class _TaskListScreenState extends State<TaskListScreen> {
       bottomNavigationBar: Text(
           " Úrovní: ${LevelTree.levels.length} Masek: $mm Zadání cca: $totalTasks"),
     );
+  }
+
+  TriangleTaskType getTaskType(List<bool> triangleTaskSelection) {
+    return {
+      0: TriangleTaskType.Pyramid,
+      1: TriangleTaskType.Funnel,
+      2: TriangleTaskType.SpiderWeb
+    }[triangleTaskSelection.indexOf(true)];
+  }
+
+  List<bool> selectOnlyLast(List<bool> triangleTaskSelection, int selectedIndex) {
+    for (int buttonIndex = 0;
+        buttonIndex < triangleTaskSelection.length;
+        buttonIndex++) {
+      triangleTaskSelection[buttonIndex] =
+          buttonIndex == selectedIndex;
+    }
+    return triangleTaskSelection;
   }
 }
 

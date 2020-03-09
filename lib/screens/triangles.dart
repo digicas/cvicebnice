@@ -2,6 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:pyramida/models/triangle_levels.dart';
 import 'package:pyramida/widgets/small_numeric_keyboard.dart';
@@ -18,8 +19,9 @@ import 'package:security_keyboard/keyboard_media_query.dart';
 class TaskScreen extends StatefulWidget {
   final Level level;
   final TriangleTaskType taskType;
+  final Widget taskWidget;
 
-  TaskScreen({this.level, this.taskType = TriangleTaskType.Funnel});
+  TaskScreen({this.level, this.taskType = TriangleTaskType.Funnel, this.taskWidget});
 
   @override
   _TaskScreenState createState() => _TaskScreenState();
@@ -123,13 +125,7 @@ class _TaskScreenState extends State<TaskScreen> {
                     Center(
                       child: SingleChildScrollView(
                         padding: EdgeInsets.fromLTRB(0, 40, 0, 80),
-                        child: Funnel(
-                          level: _level,
-                          submissionController: submissionController,
-                          hint: _hintOn,
-                          showBackground: _showBackground,
-                          renderType: widget.taskType,
-                        ),
+                        child: getTaskWidget(),
                       ),
                     ),
 
@@ -269,6 +265,25 @@ class _TaskScreenState extends State<TaskScreen> {
       ),
       onWillPop: _requestPop,
     );
+  }
+
+  Widget getTaskWidget() {
+    if(widget.taskType == TriangleTaskType.SpiderWeb){
+      return SpiderWeb(
+        level: _level,
+        submissionController: submissionController,
+        hint: _hintOn,
+        showBackground: _showBackground,
+        renderType: widget.taskType,
+      );
+    }
+    return Funnel(
+                        level: _level,
+                        submissionController: submissionController,
+                        hint: _hintOn,
+                        showBackground: _showBackground,
+                        renderType: widget.taskType,
+                      );
   }
 
   Future<bool> _requestPop() {
@@ -546,7 +561,7 @@ class ShaderOverlay extends StatelessWidget {
 }
 
 /// type of the task for rendering
-enum TriangleTaskType { Pyramid, Funnel }
+enum TriangleTaskType { Pyramid, Funnel, SpiderWeb }
 
 /// renders the pyramid or funnel widget based on the RenderType
 class Funnel extends StatelessWidget {
@@ -560,11 +575,11 @@ class Funnel extends StatelessWidget {
 
   Funnel(
       {Key key,
-      this.level,
-      this.submissionController,
-      this.hint,
-      this.showBackground,
-      this.renderType = TriangleTaskType.Funnel})
+        this.level,
+        this.submissionController,
+        this.hint,
+        this.showBackground,
+        this.renderType = TriangleTaskType.Funnel})
       : super(key: key);
 
   @override
@@ -880,3 +895,163 @@ class Cell extends StatelessWidget {
     );
   }
 }
+
+class SpiderWeb extends StatelessWidget {
+  final Level level;
+  final SubmissionController submissionController;
+  final bool hint;
+  final bool showBackground;
+
+  /// task type to render (RenderType.Pyramid or RenderType.Funnel)
+  final TriangleTaskType renderType;
+
+  SpiderWeb(
+      {Key key,
+        this.level,
+        this.submissionController,
+        this.hint,
+        this.showBackground,
+        this.renderType = TriangleTaskType.Funnel})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+//    print(level);
+
+    const List<int> _rowStartIndex = [null, 0, 1, 3, 6, 10];
+
+    List<Widget> renderRows = [];
+
+    for (int row = 1; row <= level.solutionRows; row++) {
+      List<Cell> cells = [];
+
+      for (int i = _rowStartIndex[row]; i < _rowStartIndex[row] + row; i++) {
+        cells.add(Cell(
+          value: level.solution[i],
+          textController: submissionController.cells[i],
+          masked: !level.solutionMask.mask[i],
+          hint: hint,
+          cellType: renderType == TriangleTaskType.Funnel
+              ? CellType.Bubble
+              : CellType.Box,
+        ));
+      }
+
+      if (renderType == TriangleTaskType.Funnel) {
+        // INSERT row for funnel rendering
+        renderRows.insert(
+            0,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: cells,
+            ));
+      }
+
+      if (renderType == TriangleTaskType.Pyramid) {
+        // ADD row for pyramid rendering
+        renderRows.add(Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: cells,
+        ));
+      }
+    } // end for loop build rows
+
+    /// render pyramid
+    return Stack(
+      children: <Widget>[
+        Center(
+          child: Container(
+            child: CustomPaint(
+              // https://api.flutter.dev/flutter/widgets/CustomPaint-class.html
+//              size: Size(200,200),
+              painter: showBackground ? SpiderWebPainter() : null,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Center(
+                      child: Cell(
+                        value: 0,
+                        textController: submissionController.cells[0],
+                        masked: !level.solutionMask.mask[0],
+                        hint: hint,
+                        cellType: CellType.Bubble,
+                      )
+                      ,
+                    ),
+                    Center(
+                      child: Cell(
+                        value: 0,
+                        textController: submissionController.cells[0],
+                        masked: !level.solutionMask.mask[0],
+                        hint: hint,
+                        cellType: CellType.Bubble,
+                      )
+                      ,
+                    ),
+                    Row(
+                      children: <Widget>[Cell(
+                        value: 0,
+                        textController: submissionController.cells[0],
+                        masked: !level.solutionMask.mask[0],
+                        hint: hint,
+                        cellType: CellType.Bubble,
+                      ), Cell(
+                        value: 0,
+                        textController: submissionController.cells[0],
+                        masked: !level.solutionMask.mask[0],
+                        hint: hint,
+                        cellType: CellType.Bubble,
+                      )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+enum ArrowDirection {
+  Up,
+  Down,
+  Right,
+  Left,
+  UpRight,
+  UpLeft,
+  DownRight,
+  DownLeft,
+}
+
+abstract class SpiderWebShape{
+}
+
+class TriangleWithCenter extends SpiderWebShape{}
+class SquareWithCenter extends SpiderWebShape{}
+class Grid extends SpiderWebShape{
+  final width;
+  final height;
+
+  Grid(this.width, this.height);
+}
+
+class SpiderWebPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    // TODO: implement paint
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
+  }
+}
+
