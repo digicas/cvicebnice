@@ -110,7 +110,7 @@ class Level {
   int maxTotal;
   List<PyramidMask> _masks;
 
-  static Random rng = Random();
+  static Random rnd = Random();
   int _selectedTaskMask = 0;
   List<int> _solution;
 
@@ -154,11 +154,11 @@ class Level {
   ///
   static int random(int maximum) {
     if (maximum == 0) return 0;
-    return rng.nextInt(maximum + 1);
+    return rnd.nextInt(maximum + 1);
   }
 
   void generate() {
-    _selectedTaskMask = rng.nextInt(_masks.length);
+    _selectedTaskMask = rnd.nextInt(_masks.length);
 
 //    Regenerate, if conditions are not fulfilled
 //    conditions: base numbers contain max one 0
