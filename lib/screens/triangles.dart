@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:pyramida/models/triangle_levels.dart';
 import 'package:pyramida/widgets/small_numeric_keyboard.dart';
 //import 'package:zoom_widget/zoom_widget.dart';
@@ -958,64 +959,118 @@ class SpiderWeb extends StatelessWidget {
       }
     } // end for loop build rows
 
-    /// render pyramid
-    return Stack(
-      children: <Widget>[
-        Center(
-          child: Container(
-            child: CustomPaint(
-              // https://api.flutter.dev/flutter/widgets/CustomPaint-class.html
+    const tableCellPadding = 16.0;
+    return Center(
+      child: Container(
+        child: CustomPaint(
+          // https://api.flutter.dev/flutter/widgets/CustomPaint-class.html
 //              size: Size(200,200),
-              painter: showBackground ? SpiderWebPainter() : null,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Center(
-                      child: Cell(
-                        value: 0,
-                        textController: submissionController.cells[0],
-                        masked: !level.solutionMask.mask[0],
-                        hint: hint,
-                        cellType: CellType.Bubble,
-                      )
-                      ,
+          painter: showBackground ? SpiderWebPainter() : null,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
+            child: Table(
+              children: [
+              TableRow(children: [
+                Container(),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(tableCellPadding,tableCellPadding,tableCellPadding,tableCellPadding + 15),
+                  child: Center(
+                    child: Cell(
+                      value: 0,
+                      textController: submissionController.cells[0],
+                      masked: !level.solutionMask.mask[0],
+                      hint: hint,
+                      cellType: CellType.Bubble,
                     ),
-                    Center(
-                      child: Cell(
-                        value: 0,
-                        textController: submissionController.cells[0],
-                        masked: !level.solutionMask.mask[0],
-                        hint: hint,
-                        cellType: CellType.Bubble,
-                      )
-                      ,
-                    ),
-                    Row(
-                      children: <Widget>[Cell(
-                        value: 0,
-                        textController: submissionController.cells[0],
-                        masked: !level.solutionMask.mask[0],
-                        hint: hint,
-                        cellType: CellType.Bubble,
-                      ), Cell(
-                        value: 0,
-                        textController: submissionController.cells[0],
-                        masked: !level.solutionMask.mask[0],
-                        hint: hint,
-                        cellType: CellType.Bubble,
-                      )
-                      ],
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
+                Container()
+              ]),
+              TableRow(children: [
+                Container(),
+                Padding(
+                  padding: const EdgeInsets.all(tableCellPadding),
+                  child: Center(
+                    child: Cell(
+                      value: 0,
+                      textController: submissionController.cells[1],
+                      masked: !level.solutionMask.mask[1],
+                      hint: hint,
+                      cellType: CellType.Bubble,
+                    ),
+                  ),
+                ),
+                Container()
+              ]),
+                TableRow(children: [
+                  Padding(
+                    padding: const EdgeInsets.all(tableCellPadding),
+                    child: Center(
+                      child: Cell(
+                        value: 0,
+                        textController: submissionController.cells[2],
+                        masked: !level.solutionMask.mask[2],
+                        hint: hint,
+                        cellType: CellType.Bubble,
+                      ),
+                    ),
+                  ),
+                  Container(),
+                  Padding(
+                    padding: const EdgeInsets.all(tableCellPadding),
+                    child: Center(
+                      child: Cell(
+                        value: 0,
+                        textController: submissionController.cells[3],
+                        masked: !level.solutionMask.mask[3],
+                        hint: hint,
+                        cellType: CellType.Bubble,
+                      ),
+                    ),
+                  )              ])
+,                TableRow(children: [
+                  Padding(
+                    padding: const EdgeInsets.all(tableCellPadding),
+                    child: Center(
+                      child: Cell(
+                        value: 0,
+                        textController: submissionController.cells[2],
+                        masked: !level.solutionMask.mask[2],
+                        hint: hint,
+                        cellType: CellType.Box,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(tableCellPadding),
+                    child: Center(
+                      child: Cell(
+                        value: 0,
+                        textController: submissionController.cells[2],
+                        masked: !level.solutionMask.mask[2],
+                        hint: hint,
+                        cellType: CellType.Box,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(tableCellPadding),
+                    child: Center(
+                      child: Cell(
+                        value: 0,
+                        textController: submissionController.cells[3],
+                        masked: !level.solutionMask.mask[3],
+                        hint: hint,
+                        cellType: CellType.Box,
+                      ),
+                    ),
+                  )              ])
+                ,
+            ],)
+            ,
           ),
         ),
-      ],
+      ),
     );
   }
 }
