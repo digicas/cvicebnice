@@ -1,17 +1,22 @@
 //import 'dart:ffi';
 
+import 'package:arrow_path/arrow_path.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pyramida/models/triangle_levels.dart';
 import 'package:pyramida/widgets/small_numeric_keyboard.dart';
+import 'package:pyramida/extension_methods.dart';
 //import 'package:zoom_widget/zoom_widget.dart';
 
 import 'package:flutter/services.dart';
 import 'package:security_keyboard/keyboard_manager.dart';
 import 'package:security_keyboard/keyboard_media_query.dart';
+
+import 'package:vector_math/vector_math.dart'as vm;
 
 //import 'package:cool_ui/cool_ui.dart';
 
@@ -1074,14 +1079,21 @@ class LayoutParams {
 
 }
 
+class RectUtils{
+  static Rect fromOffsetSize(Offset offset, Size size) {
+    return Rect.fromLTWH(offset.dx,offset.dy, size.width,size.height);
+  }
+}
+
+
 class _DependentWidgetState extends State<StatefulWidget>  {
 
   final GlobalKey from;
   final GlobalKey to;
   final Function onPostFrame;
 
-  LayoutParams _fromLP;
-  LayoutParams _toLP;
+  Rect _fromRect = Rect.zero;
+  Rect _toRect = Rect.zero;
 
   String _text = "OLEEEEEEEEEEE";
 
@@ -1096,55 +1108,46 @@ class _DependentWidgetState extends State<StatefulWidget>  {
 
   onPostFrameState(_) {
     setState(() {
-      _toLP = getLayoutParams(to);
-      _fromLP = getLayoutParams(from);
-      _text = "-to:${_toLP.size} ${_toLP.offset}\n-from:${_fromLP.size} ${_fromLP.offset} ";
+      _fromRect = getRect(from);
+      _toRect = getRect(to);
+      _text = "-to:${_toRect.size} ${_toRect.topLeft}\n-from:${_fromRect.size} ${_fromRect.topLeft} ";
     });
 
   }
 
-  LayoutParams getLayoutParams(GlobalKey key) {
-    var depBox = key.currentContext?.findRenderObject() as RenderBox;
+  Rect getRect(GlobalKey depKey) {
+    var depBox = depKey.currentContext?.findRenderObject() as RenderBox;
     if (depBox != null && depBox.hasSize) {
-      return LayoutParams(getChildOffset(depBox), depBox.size);
-    }else return LayoutParams.zero();
+      var offset = getChildOffset(this.context,depBox);
+      var size = depBox.size;
+      return RectUtils.fromOffsetSize(offset, size);
+    }else return Rect.zero;
   }
 
-  Offset getChildOffset(RenderBox depBox) => findRenderBox(this).globalToLocal(depBox.localToGlobal(Offset.zero));
 
-  RenderBox findRenderBox(State<StatefulWidget> widgetState) => (widgetState.context.findRenderObject() as RenderBox);
+
+
+  Offset getChildOffset(BuildContext parent,RenderBox child) {
+    return findRenderBox(parent).globalToLocal(child.localToGlobal(Offset.zero));
+  }
+
+  RenderBox findRenderBox(BuildContext context) => (context.findRenderObject() as RenderBox);
 
   var targetKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
+    var centerRect = Rect.fromPoints(_fromRect.center, _toRect.center);
+//    centerRect = centerRect.deflate(_fromRect.height/2);
+//    centerRect = Rect.fromCenter(center: centerRect.center,width: 60, height: centerRect.height);
 
-    return Positioned(left: toCenterX(targetKey), top: toCenterY(targetKey),
-      child: Transform.rotate(angle: 0,
-          child: SizedBox.fromSize(child: Text(_text,key:targetKey))),
+    var angle = vm.Vector2(0,1).angleTo(vm.Vector2(_toRect.center.dx,_toRect.center.dy));
+
+    return Positioned.fromRect(rect: centerRect,
+      child: Transform.rotate(angle: angle,
+          child: CustomPaint( painter: ArrowPainter())
+      ),
     );
-  }
-
-  double toCenterX(GlobalKey<State<StatefulWidget>> targetKey) {
-    var targetSize = (targetKey.currentContext?.findRenderObject() as RenderBox)
-        ?.size;
-    if (targetSize == null) return 0;
-    var width = targetSize.width;
-    var toLPCenterX = _toLP.offset.dx + _toLP.size.width / 2;
-    var fromLPCenterX = _fromLP.offset.dx + _fromLP.size.width / 2;
-    var cx = (toLPCenterX + fromLPCenterX )/ 2 - width / 2;
-    return cx;
-  }
-
-  double toCenterY(GlobalKey<State<StatefulWidget>> targetKey) {
-    var targetSize = (targetKey.currentContext?.findRenderObject() as RenderBox)
-        ?.size;
-    if (targetSize == null) return 0;
-    var height = targetSize.height;
-    var toLPCenterY = _toLP.offset.dy + _toLP.size.height / 2;
-    var fromLPCenterY = _fromLP.offset.dy + _fromLP.size.height / 2;
-    var cy = (toLPCenterY + fromLPCenterY) / 2 - height / 2;
-    return cy;
   }
 }
 
@@ -1182,6 +1185,37 @@ class SpiderWebPainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
     return false;
+  }
+}
+
+class ArrowPainter extends CustomPainter {
+
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    var rect = RectUtils.fromOffsetSize(Offset.zero, size);
+    var path = Path();
+
+    path.moveTo(rect.bottomCenter.dx, rect.bottomCenter.dy);
+    path.lineTo(rect.topCenter.dx, rect.topCenter.dy);
+    path = ArrowPath.make(path: path, isAdjusted: false);
+
+    Paint paint = Paint()
+      ..color = Colors.redAccent
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.square
+      ..strokeJoin = StrokeJoin.round
+      ..strokeWidth = 8.0;
+
+    canvas.drawPath(path, paint);
+
+
+    print("ASDASD: $rect");
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
   }
 }
 
