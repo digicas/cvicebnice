@@ -1,6 +1,5 @@
 //import 'dart:ffi';
 
-import 'dart:html';
 
 import 'package:arrow_path/arrow_path.dart';
 import 'package:flutter/cupertino.dart';
@@ -934,10 +933,6 @@ class SpiderWeb extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-
-
-    var longArrowShrink = 20.0;
-    var shortArrowShrink = 10.0;
     return Center(
       child: Container(
         child: CustomPaint(
@@ -946,122 +941,138 @@ class SpiderWeb extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
             child: Stack(
               children: [
-                Column(
-                  children: [
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(
-                            _tableCellPadding, _tableCellPadding,
-                            _tableCellPadding,
-                            _tableCellPadding + 35),
-                        child: Center(
-                          child: Cell(key: _cellKeys[0],
-                            value: 0,
-                            textController: submissionController.cells[0],
-                            masked: !level.solutionMask.mask[0],
-                            hint: hint,
-                            cellType: CellType.Bubble,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(_tableCellPadding),
-                        child: Center(
-                          child: Cell(key: _cellKeys[1],
-                            value: 0,
-                            textController: submissionController.cells[1],
-                            masked: !level.solutionMask.mask[1],
-                            hint: hint,
-                            cellType: CellType.Bubble,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(_tableCellPadding),
-                            child: Center(
-                              child: Cell(key: _cellKeys[2],
-                                value: 0,
-                                textController: submissionController.cells[2],
-                                masked: !level.solutionMask.mask[2],
-                                hint: hint,
-                                cellType: CellType.Bubble,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(_tableCellPadding),
-                            child: Center(
-                              child: Cell(key: _cellKeys[3],
-                                value: 0,
-                                textController: submissionController.cells[3],
-                                masked: !level.solutionMask.mask[3],
-                                hint: hint,
-                                cellType: CellType.Bubble,
-                              ),
-                            ),
-                          )
-                        ])
-                    ,
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      Padding(
-                        padding: const EdgeInsets.all(_tableCellPadding),
-                        child: Center(
-                          child: Cell(
-                            value: 0,
-                            textController: submissionController.cells[2],
-                            masked: !level.solutionMask.mask[2],
-                            hint: hint,
-                            cellType: CellType.Box,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(_tableCellPadding),
-                        child: Center(
-                          child: Cell(
-                            value: 0,
-                            textController: submissionController.cells[2],
-                            masked: !level.solutionMask.mask[2],
-                            hint: hint,
-                            cellType: CellType.Box,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(_tableCellPadding),
-                        child: Center(
-                          child: Cell(
-                            value: 0,
-                            textController: submissionController.cells[2],
-                            masked: !level.solutionMask.mask[2],
-                            hint: hint,
-                            cellType: CellType.Box,
-                          ),
-                        ),
-                      )
-                    ])
-                    ,
-                  ],
-                ),
-                ArrowWidget(fromKey: _cellKeys[0], toKey: _cellKeys[1],shrink: shortArrowShrink),
-                ArrowWidget(fromKey: _cellKeys[0], toKey: _cellKeys[2],shrink: longArrowShrink,),
-                ArrowWidget(fromKey: _cellKeys[0], toKey: _cellKeys[3],shrink: longArrowShrink),
-                ArrowWidget(fromKey: _cellKeys[1], toKey: _cellKeys[2],shrink: shortArrowShrink),
-                ArrowWidget(fromKey: _cellKeys[1], toKey: _cellKeys[3],shrink: shortArrowShrink),
-                ArrowWidget(fromKey: _cellKeys[2], toKey: _cellKeys[3],shrink: longArrowShrink),
-
-              ],
+                cellFieldWidget(),
+              ] + ArrowWidgets(_cellKeys),
             )
             ,
           ),
         ),
       ),
     );
+  }
+
+  List<Widget> ArrowWidgets(List<GlobalKey> _cellKeys) {
+    var longArrowShrink = 20.0;
+    var shortArrowShrink = 10.0;
+    return [
+      ArrowWidget(
+          fromKey: _cellKeys[0], toKey: _cellKeys[1], shrink: shortArrowShrink),
+      ArrowWidget(
+        fromKey: _cellKeys[0], toKey: _cellKeys[2], shrink: longArrowShrink,),
+      ArrowWidget(
+          fromKey: _cellKeys[0], toKey: _cellKeys[3], shrink: longArrowShrink),
+      ArrowWidget(
+          fromKey: _cellKeys[1], toKey: _cellKeys[2], shrink: shortArrowShrink),
+      ArrowWidget(
+          fromKey: _cellKeys[1], toKey: _cellKeys[3], shrink: shortArrowShrink),
+      ArrowWidget(
+          fromKey: _cellKeys[2], toKey: _cellKeys[3], shrink: longArrowShrink),
+    ];
+  }
+
+  Widget cellFieldWidget() {
+    return Column(
+              children: [
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                        _tableCellPadding, _tableCellPadding,
+                        _tableCellPadding,
+                        _tableCellPadding + 35),
+                    child: Center(
+                      child: Cell(key: _cellKeys[0],
+                        value: 0,
+                        textController: submissionController.cells[0],
+                        masked: !level.solutionMask.mask[0],
+                        hint: hint,
+                        cellType: CellType.Bubble,
+                      ),
+                    ),
+                  ),
+                ),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(_tableCellPadding),
+                    child: Center(
+                      child: Cell(key: _cellKeys[1],
+                        value: 0,
+                        textController: submissionController.cells[1],
+                        masked: !level.solutionMask.mask[1],
+                        hint: hint,
+                        cellType: CellType.Bubble,
+                      ),
+                    ),
+                  ),
+                ),
+                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(_tableCellPadding),
+                        child: Center(
+                          child: Cell(key: _cellKeys[2],
+                            value: 0,
+                            textController: submissionController.cells[2],
+                            masked: !level.solutionMask.mask[2],
+                            hint: hint,
+                            cellType: CellType.Bubble,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(_tableCellPadding),
+                        child: Center(
+                          child: Cell(key: _cellKeys[3],
+                            value: 0,
+                            textController: submissionController.cells[3],
+                            masked: !level.solutionMask.mask[3],
+                            hint: hint,
+                            cellType: CellType.Bubble,
+                          ),
+                        ),
+                      )
+                    ])
+                ,
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Padding(
+                    padding: const EdgeInsets.all(_tableCellPadding),
+                    child: Center(
+                      child: Cell(
+                        value: 0,
+                        textController: submissionController.cells[2],
+                        masked: !level.solutionMask.mask[2],
+                        hint: hint,
+                        cellType: CellType.Box,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(_tableCellPadding),
+                    child: Center(
+                      child: Cell(
+                        value: 0,
+                        textController: submissionController.cells[2],
+                        masked: !level.solutionMask.mask[2],
+                        hint: hint,
+                        cellType: CellType.Box,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(_tableCellPadding),
+                    child: Center(
+                      child: Cell(
+                        value: 0,
+                        textController: submissionController.cells[2],
+                        masked: !level.solutionMask.mask[2],
+                        hint: hint,
+                        cellType: CellType.Box,
+                      ),
+                    ),
+                  )
+                ])
+                ,
+              ],
+            );
   }
 }
 
