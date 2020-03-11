@@ -1,5 +1,7 @@
 //import 'dart:ffi';
 
+import 'dart:html';
+
 import 'package:arrow_path/arrow_path.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -931,6 +933,9 @@ class SpiderWeb extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+
+
     var longArrowShrink = 20.0;
     var shortArrowShrink = 10.0;
     return Center(
@@ -1093,9 +1098,9 @@ class _ArrowWidgetState extends State<StatefulWidget>  {
   final GlobalKey fromKey;
   final GlobalKey toKey;
   Color color;
+  /// pixels
   double shrink;
 
-  ///
   /// Paints arrows in direction from center to center Widgets specified by fromKey toKey
   _ArrowWidgetState(this.fromKey, this.toKey, {this.color = Colors.black26
     , this.shrink = 0
@@ -1136,14 +1141,36 @@ class _ArrowWidgetState extends State<StatefulWidget>  {
 
   @override
   Widget build(BuildContext context) {
-    Line shrinkedLine = shrinkLine(_fromRect.longestSide*0.5 + this.shrink);
+    Line shrinkedLine = Line(_fromRect.center, _toRect.center)
+        .shrink(
+        _fromRect.longestSide * 0.5 + this.shrink
+    );
 
     return CustomPaint( painter: ArrowPainter.fromLine(shrinkedLine, color));
   }
+  
+}
 
+Offset toOffset(vm.Vector2 shrinkedStart) {
+  return Offset(shrinkedStart.x,shrinkedStart.y);
+}
 
-  Line shrinkLine(double byLogicalPixels) {
-    var lineVec = fromOffset(_toRect.center) - fromOffset(_fromRect.center) ;
+vm.Vector2 fromOffset(Offset offset) {
+  return vm.Vector2(offset.dx,offset.dy);
+}
+
+class Line {
+  final Offset start;
+  final Offset end;
+
+  Line(Offset this.start, Offset this.end);
+
+  Line shrink(double byLogicalPixels){
+    return shrinkLine(this, byLogicalPixels);
+  }
+
+  static Line shrinkLine(Line line,double byLogicalPixels) {
+    var lineVec = fromOffset(line.end) - fromOffset(line.start) ;
     var lineVecLen = lineVec.length;
 
     var shrinkedEnd = lineVec.scaled((lineVecLen - byLogicalPixels)/ lineVecLen) + fromOffset(_fromRect.center);
@@ -1153,22 +1180,6 @@ class _ArrowWidgetState extends State<StatefulWidget>  {
     var shrinkedLine = Line(toOffset(shrinkedStart),toOffset(shrinkedEnd));
     return shrinkedLine;
   }
-
-  Offset toOffset(vm.Vector2 shrinkedStart) {
-    return Offset(shrinkedStart.x,shrinkedStart.y);
-  }
-
-  vm.Vector2 fromOffset(Offset offset) {
-    return vm.Vector2(offset.dx,offset.dy);
-  }
-  
-}
-
-class Line {
-  final Offset start;
-  final Offset end;
-
-  Line(Offset this.start, Offset this.end);
 }
 
 
