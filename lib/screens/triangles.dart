@@ -1173,9 +1173,9 @@ class Line {
     var lineVec = fromOffset(line.end) - fromOffset(line.start) ;
     var lineVecLen = lineVec.length;
 
-    var shrinkedEnd = lineVec.scaled((lineVecLen - byLogicalPixels)/ lineVecLen) + fromOffset(_fromRect.center);
+    var shrinkedEnd = lineVec.scaled((lineVecLen - byLogicalPixels)/ lineVecLen) + fromOffset(line.start);
 
-    var shrinkedStart = lineVec.scaled((byLogicalPixels)/ lineVecLen) + fromOffset(_fromRect.center);
+    var shrinkedStart = lineVec.scaled((byLogicalPixels)/ lineVecLen) + fromOffset(line.start);
 
     var shrinkedLine = Line(toOffset(shrinkedStart),toOffset(shrinkedEnd));
     return shrinkedLine;
