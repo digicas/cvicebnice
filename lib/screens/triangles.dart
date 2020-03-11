@@ -911,32 +911,34 @@ class SpiderWeb extends StatelessWidget {
   /// task type to render (RenderType.Pyramid or RenderType.Funnel)
   final TriangleTaskType renderType;
 
-  SpiderWeb(
-      {Key key,
-        this.level,
-        this.submissionController,
-        this.hint,
-        this.showBackground,
-        this.renderType = TriangleTaskType.Funnel})
+  SpiderWeb({Key key,
+    this.level,
+    this.submissionController,
+    this.hint,
+    this.showBackground,
+    this.renderType = TriangleTaskType.Funnel})
       : super(key: key);
 
   static const _tableCellPadding = 16.0;
-  final _cellKeys = [GlobalKey(),GlobalKey(),GlobalKey()];
+  final _cellKeys = [
+    GlobalKey(),
+    GlobalKey(),
+    GlobalKey(),
+    GlobalKey(),
+    GlobalKey(),
+    GlobalKey()
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Container(
         child: CustomPaint(
-          // https://api.flutter.dev/flutter/widgets/CustomPaint-class.html
-//              size: Size(200,200),
           painter: showBackground ? SpiderWebPainter() : null,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
             child: Stack(
               children: [
-                Text("  1"),
-
                 Column(
                   children: [
                     Center(
@@ -960,7 +962,7 @@ class SpiderWeb extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(_tableCellPadding),
                         child: Center(
-                          child: Cell(
+                          child: Cell(key: _cellKeys[1],
                             value: 0,
                             textController: submissionController.cells[1],
                             masked: !level.solutionMask.mask[1],
@@ -970,12 +972,12 @@ class SpiderWeb extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Row(mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(_tableCellPadding),
                             child: Center(
-                              child: Cell( key: _cellKeys[1],
+                              child: Cell(key: _cellKeys[2],
                                 value: 0,
                                 textController: submissionController.cells[2],
                                 masked: !level.solutionMask.mask[2],
@@ -987,10 +989,10 @@ class SpiderWeb extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.all(_tableCellPadding),
                             child: Center(
-                              child: Cell(
+                              child: Cell(key: _cellKeys[3],
                                 value: 0,
-                                textController: submissionController.cells[2],
-                                masked: !level.solutionMask.mask[2],
+                                textController: submissionController.cells[3],
+                                masked: !level.solutionMask.mask[3],
                                 hint: hint,
                                 cellType: CellType.Bubble,
                               ),
@@ -1039,10 +1041,13 @@ class SpiderWeb extends StatelessWidget {
                     ,
                   ],
                 ),
-                DependentWidget(from: _cellKeys[0], to:_cellKeys[1], onPostFrame: () {
+                ArrowWidget(from: _cellKeys[0], to: _cellKeys[1]),
+                ArrowWidget(from: _cellKeys[0], to: _cellKeys[2]),
+                ArrowWidget(from: _cellKeys[0], to: _cellKeys[3]),
+                ArrowWidget(from: _cellKeys[1], to: _cellKeys[2]),
+                ArrowWidget(from: _cellKeys[1], to: _cellKeys[3]),
+                ArrowWidget(from: _cellKeys[2], to: _cellKeys[3]),
 
-
-                }),
               ],
             )
             ,
@@ -1053,29 +1058,16 @@ class SpiderWeb extends StatelessWidget {
   }
 }
 
-class DependentWidget extends StatefulWidget{
-  final Function onPostFrame;
+class ArrowWidget extends StatefulWidget{
   final GlobalKey from;
   final GlobalKey to;
 
-  const DependentWidget({Key key, this.from, this.to,this.onPostFrame, }) : super(key: key);
+  const ArrowWidget({Key key, this.from, this.to, }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _DependentWidgetState(from,to,onPostFrame);
+    return _ArrowWidgetState(from,to);
   }
-
-}
-
-class LayoutParams {
-  final Offset offset;
-  final Size size;
-
-  LayoutParams(this.offset, this.size);
-  LayoutParams.zero() : this(
-      Offset.zero,
-      Size.zero,
-  );
 
 }
 
@@ -1083,21 +1075,26 @@ class RectUtils{
   static Rect fromOffsetSize(Offset offset, Size size) {
     return Rect.fromLTWH(offset.dx,offset.dy, size.width,size.height);
   }
+
+  static Rect fromRect(Rect rect) {
+    return Rect.fromLTWH(rect.left, rect.top, rect.width, rect.height);
+  }
 }
 
 
-class _DependentWidgetState extends State<StatefulWidget>  {
+class _ArrowWidgetState extends State<StatefulWidget>  {
 
-  final GlobalKey from;
-  final GlobalKey to;
-  final Function onPostFrame;
+  final GlobalKey fromKey;
+  final GlobalKey toKey;
 
   Rect _fromRect = Rect.zero;
   Rect _toRect = Rect.zero;
 
-  String _text = "OLEEEEEEEEEEE";
+  Color color;
 
-  _DependentWidgetState(this.from,this.to,this.onPostFrame);
+  ///
+  /// Paints arrow from center to center Widgets specified by fromKeym toKey
+  _ArrowWidgetState(this.fromKey,this.toKey, {this.color = Colors.black26});
 
   @override
   void initState() {
@@ -1108,9 +1105,8 @@ class _DependentWidgetState extends State<StatefulWidget>  {
 
   onPostFrameState(_) {
     setState(() {
-      _fromRect = getRect(from);
-      _toRect = getRect(to);
-      _text = "-to:${_toRect.size} ${_toRect.topLeft}\n-from:${_fromRect.size} ${_fromRect.topLeft} ";
+      _fromRect = getRect(fromKey);
+      _toRect = getRect(toKey);
     });
 
   }
@@ -1124,31 +1120,47 @@ class _DependentWidgetState extends State<StatefulWidget>  {
     }else return Rect.zero;
   }
 
-
-
-
   Offset getChildOffset(BuildContext parent,RenderBox child) {
     return findRenderBox(parent).globalToLocal(child.localToGlobal(Offset.zero));
   }
 
   RenderBox findRenderBox(BuildContext context) => (context.findRenderObject() as RenderBox);
 
-  var targetKey = GlobalKey();
-
   @override
   Widget build(BuildContext context) {
-    var centerRect = Rect.fromPoints(_fromRect.center, _toRect.center);
-//    centerRect = centerRect.deflate(_fromRect.height/2);
-//    centerRect = Rect.fromCenter(center: centerRect.center,width: 60, height: centerRect.height);
+    Line shrinkedLine = shrinkLine(_fromRect.longestSide/2);
 
-    var angle = vm.Vector2(0,1).angleTo(vm.Vector2(_toRect.center.dx,_toRect.center.dy));
-
-    return Positioned.fromRect(rect: centerRect,
-      child: Transform.rotate(angle: angle,
-          child: CustomPaint( painter: ArrowPainter())
-      ),
-    );
+    return CustomPaint( painter: ArrowPainter.fromLine(shrinkedLine, color));
   }
+
+
+  Line shrinkLine(double byLogicalPixels) {
+    var lineVec = fromOffset(_toRect.center) - fromOffset(_fromRect.center) ;
+    var lineVecLen = lineVec.length;
+
+    var shrinkedEnd = lineVec.scaled((lineVecLen - byLogicalPixels)/ lineVecLen) + fromOffset(_fromRect.center);
+
+    var shrinkedStart = lineVec.scaled((byLogicalPixels)/ lineVecLen) + fromOffset(_fromRect.center);
+
+    var shrinkedLine = Line(toOffset(shrinkedStart),toOffset(shrinkedEnd));
+    return shrinkedLine;
+  }
+
+  Offset toOffset(vm.Vector2 shrinkedStart) {
+    return Offset(shrinkedStart.x,shrinkedStart.y);
+  }
+
+  vm.Vector2 fromOffset(Offset offset) {
+    return vm.Vector2(offset.dx,offset.dy);
+  }
+  
+}
+
+class Line {
+  final Offset start;
+  final Offset end;
+
+  Line(Offset this.start, Offset this.end);
 }
 
 
@@ -1189,33 +1201,39 @@ class SpiderWebPainter extends CustomPainter {
 }
 
 class ArrowPainter extends CustomPainter {
+  Offset to;
+  Offset from;
+  final Color color;
 
+  ArrowPainter(Offset this.from, Offset this.to, this.color);
+
+  ArrowPainter.fromLine(Line line, this.color){
+    this.from = line.start;
+    this.to = line.end;
+  }
 
   @override
   void paint(Canvas canvas, Size size) {
-    var rect = RectUtils.fromOffsetSize(Offset.zero, size);
     var path = Path();
 
-    path.moveTo(rect.bottomCenter.dx, rect.bottomCenter.dy);
-    path.lineTo(rect.topCenter.dx, rect.topCenter.dy);
-    path = ArrowPath.make(path: path, isAdjusted: false);
+    path.moveTo(from.dx, from.dy);
+    path.lineTo(to.dx, to.dy);
+    path = ArrowPath.make(path: path, isAdjusted: false, tipLength: 15);
+
 
     Paint paint = Paint()
-      ..color = Colors.redAccent
+      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.square
-      ..strokeJoin = StrokeJoin.round
-      ..strokeWidth = 8.0;
+      ..strokeJoin = StrokeJoin.bevel
+      ..strokeWidth = 5.0;
 
     canvas.drawPath(path, paint);
-
-
-    print("ASDASD: $rect");
   }
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
+    return false;
   }
 }
 
