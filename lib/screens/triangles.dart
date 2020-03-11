@@ -931,6 +931,8 @@ class SpiderWeb extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var longArrowShrink = 20.0;
+    var shortArrowShrink = 10.0;
     return Center(
       child: Container(
         child: CustomPaint(
@@ -946,7 +948,7 @@ class SpiderWeb extends StatelessWidget {
                         padding: const EdgeInsets.fromLTRB(
                             _tableCellPadding, _tableCellPadding,
                             _tableCellPadding,
-                            _tableCellPadding + 15),
+                            _tableCellPadding + 35),
                         child: Center(
                           child: Cell(key: _cellKeys[0],
                             value: 0,
@@ -1041,12 +1043,12 @@ class SpiderWeb extends StatelessWidget {
                     ,
                   ],
                 ),
-                ArrowWidget(from: _cellKeys[0], to: _cellKeys[1]),
-                ArrowWidget(from: _cellKeys[0], to: _cellKeys[2]),
-                ArrowWidget(from: _cellKeys[0], to: _cellKeys[3]),
-                ArrowWidget(from: _cellKeys[1], to: _cellKeys[2]),
-                ArrowWidget(from: _cellKeys[1], to: _cellKeys[3]),
-                ArrowWidget(from: _cellKeys[2], to: _cellKeys[3]),
+                ArrowWidget(fromKey: _cellKeys[0], toKey: _cellKeys[1],shrink: shortArrowShrink),
+                ArrowWidget(fromKey: _cellKeys[0], toKey: _cellKeys[2],shrink: longArrowShrink,),
+                ArrowWidget(fromKey: _cellKeys[0], toKey: _cellKeys[3],shrink: longArrowShrink),
+                ArrowWidget(fromKey: _cellKeys[1], toKey: _cellKeys[2],shrink: shortArrowShrink),
+                ArrowWidget(fromKey: _cellKeys[1], toKey: _cellKeys[3],shrink: shortArrowShrink),
+                ArrowWidget(fromKey: _cellKeys[2], toKey: _cellKeys[3],shrink: longArrowShrink),
 
               ],
             )
@@ -1059,14 +1061,18 @@ class SpiderWeb extends StatelessWidget {
 }
 
 class ArrowWidget extends StatefulWidget{
-  final GlobalKey from;
-  final GlobalKey to;
+  final GlobalKey fromKey;
+  final GlobalKey toKey;
+  final Color color;
+  /// by pixels
+  final double shrink;
 
-  const ArrowWidget({Key key, this.from, this.to, }) : super(key: key);
+  ArrowWidget({Key key, this.fromKey, this.toKey, this.color = Colors.black26
+    , this.shrink = 0}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _ArrowWidgetState(from,to);
+    return _ArrowWidgetState(fromKey,toKey,color: color,shrink: shrink);
   }
 
 }
@@ -1086,15 +1092,17 @@ class _ArrowWidgetState extends State<StatefulWidget>  {
 
   final GlobalKey fromKey;
   final GlobalKey toKey;
+  Color color;
+  double shrink;
+
+  ///
+  /// Paints arrows in direction from center to center Widgets specified by fromKey toKey
+  _ArrowWidgetState(this.fromKey, this.toKey, {this.color = Colors.black26
+    , this.shrink = 0
+  });
 
   Rect _fromRect = Rect.zero;
   Rect _toRect = Rect.zero;
-
-  Color color;
-
-  ///
-  /// Paints arrow from center to center Widgets specified by fromKeym toKey
-  _ArrowWidgetState(this.fromKey,this.toKey, {this.color = Colors.black26});
 
   @override
   void initState() {
@@ -1128,7 +1136,7 @@ class _ArrowWidgetState extends State<StatefulWidget>  {
 
   @override
   Widget build(BuildContext context) {
-    Line shrinkedLine = shrinkLine(_fromRect.longestSide/2);
+    Line shrinkedLine = shrinkLine(_fromRect.longestSide*0.5 + this.shrink);
 
     return CustomPaint( painter: ArrowPainter.fromLine(shrinkedLine, color));
   }
@@ -1226,7 +1234,7 @@ class ArrowPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.square
       ..strokeJoin = StrokeJoin.bevel
-      ..strokeWidth = 5.0;
+      ..strokeWidth = 7.0;
 
     canvas.drawPath(path, paint);
   }

@@ -10,8 +10,5 @@ extension RectConversions on Rect{
 }
 
 extension VectorConversions on Vector{
-  Rect fromOffsetSize(Offset offset, Size size) {
-    return Rect.fromLTWH(offset.dx,offset.dy, size.width,size.height);
-  }
 
 }
