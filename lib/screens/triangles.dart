@@ -932,6 +932,22 @@ class SpiderWeb extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TriangleWithCenterValues taskValues = TriangleWithCenterValues(
+        [ArrowVal(Colors.red, Val(1)),
+          ArrowVal(Colors.green, Val(2)),
+          ArrowVal(Colors.deepPurple, Val(3))],
+        [Val(1),
+          Val(2),
+          Val(3),
+          Val(4)],
+        [Arrow(Colors.red, Dir4.Down),
+          Arrow(Colors.green, Dir4.Down),
+          Arrow(Colors.red, Dir4.Down),
+          Arrow(Colors.green, Dir4.Down),
+          Arrow(Colors.red, Dir4.Down),
+          Arrow(Colors.deepPurpleAccent, Dir4.Down),
+        ]
+    );
 
     return Center(
       child: Container(
@@ -941,8 +957,8 @@ class SpiderWeb extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
             child: Stack(
               children: [
-                cellFieldWidget(),
-              ] + ArrowWidgets(_cellKeys),
+                cellFieldWidget(_cellKeys, taskValues),
+              ] + ArrowWidgets(_cellKeys,taskValues),
             )
             ,
           ),
@@ -951,26 +967,66 @@ class SpiderWeb extends StatelessWidget {
     );
   }
 
-  List<Widget> ArrowWidgets(List<GlobalKey> _cellKeys) {
+  List<Widget> ArrowWidgets(List<GlobalKey> _cellKeys, TriangleWithCenterValues taskValues) {
+
+
+
+
+
     var longArrowShrink = 20.0;
     var shortArrowShrink = 10.0;
+
     return [
       ArrowWidget(
-          fromKey: _cellKeys[0], toKey: _cellKeys[1], shrink: shortArrowShrink),
+          fromKey: _cellKeys[0],
+          toKey: _cellKeys[1],
+          shrink: shortArrowShrink,
+          color: taskValues.arrows[0].color,
+          reverseDir: reverseDir(taskValues.arrows[0].direction)),
       ArrowWidget(
-        fromKey: _cellKeys[0], toKey: _cellKeys[2], shrink: longArrowShrink,),
+          fromKey: _cellKeys[0],
+          toKey: _cellKeys[2],
+          shrink: longArrowShrink,
+          color: taskValues.arrows[1].color,
+          reverseDir: reverseDir(taskValues.arrows[1].direction)),
       ArrowWidget(
-          fromKey: _cellKeys[0], toKey: _cellKeys[3], shrink: longArrowShrink),
+          fromKey: _cellKeys[0],
+          toKey: _cellKeys[3],
+          shrink: longArrowShrink,
+          color: taskValues.arrows[2].color,
+          reverseDir: reverseDir(taskValues.arrows[2].direction)),
       ArrowWidget(
-          fromKey: _cellKeys[1], toKey: _cellKeys[2], shrink: shortArrowShrink),
+          fromKey: _cellKeys[1],
+          toKey: _cellKeys[2],
+          shrink: shortArrowShrink,
+          color: taskValues.arrows[3].color,
+          reverseDir: reverseDir(taskValues.arrows[3].direction)),
       ArrowWidget(
-          fromKey: _cellKeys[1], toKey: _cellKeys[3], shrink: shortArrowShrink),
+          fromKey: _cellKeys[1],
+          toKey: _cellKeys[3],
+          shrink: shortArrowShrink,
+          color: taskValues.arrows[4].color,
+          reverseDir: reverseDir(taskValues.arrows[4].direction)),
       ArrowWidget(
-          fromKey: _cellKeys[2], toKey: _cellKeys[3], shrink: longArrowShrink),
+          fromKey: _cellKeys[2],
+          toKey: _cellKeys[3],
+          shrink: longArrowShrink,
+          color: taskValues.arrows[5].color,
+          reverseDir: reverseDir(taskValues.arrows[5].direction)),
     ];
   }
 
-  Widget cellFieldWidget() {
+  bool reverseDir(Dir4 direction) {
+    Map dirToReverse = {
+      Dir4.Down : false,
+      Dir4.Up : true,
+      Dir4.Left : false,
+      Dir4.Right : true
+    };
+    return dirToReverse[direction];
+  }
+
+  Widget cellFieldWidget(List<GlobalKey> cellKeys, TriangleWithCenterValues taskValues) {
     return Column(
               children: [
                 Center(
@@ -1035,45 +1091,75 @@ class SpiderWeb extends StatelessWidget {
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   Padding(
                     padding: const EdgeInsets.all(_tableCellPadding),
-                    child: Center(
-                      child: Cell(
-                        value: 0,
-                        textController: submissionController.cells[2],
-                        masked: !level.solutionMask.mask[2],
-                        hint: hint,
-                        cellType: CellType.Box,
-                      ),
-                    ),
+                    child: BoxArrow(taskValues.arrowVals[0].color),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(_tableCellPadding),
-                    child: Center(
-                      child: Cell(
-                        value: 0,
-                        textController: submissionController.cells[2],
-                        masked: !level.solutionMask.mask[2],
-                        hint: hint,
-                        cellType: CellType.Box,
-                      ),
-                    ),
+                    child: BoxArrow(taskValues.arrowVals[1].color),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(_tableCellPadding),
-                    child: Center(
-                      child: Cell(
-                        value: 0,
-                        textController: submissionController.cells[2],
-                        masked: !level.solutionMask.mask[2],
-                        hint: hint,
-                        cellType: CellType.Box,
-                      ),
-                    ),
+                    child: BoxArrow(taskValues.arrowVals[2].color),
                   )
                 ])
                 ,
               ],
             );
   }
+
+  Center BoxArrow(Color color) {
+    return Center(
+                    child: Column(
+                        children: [
+                          Cell(
+                            value: 0,
+                            textController: submissionController.cells[2],
+                            masked: !level.solutionMask.mask[2],
+                            hint: hint,
+                            cellType: CellType.Box,
+                          ),
+                          Container(
+                            width: 40,
+                            height: 40,
+                            child: CustomPaint(painter: ArrowHorizontalPainter(color)),
+                          )
+                        ]),
+                  );
+  }
+}
+
+class Arrow {
+  Dir4 direction;
+  Color color;
+
+  Arrow(Color this.color, Dir4 this.direction);
+}
+
+class TriangleWithCenterValues {
+  List<ArrowVal> arrowVals;
+  List<Arrow> arrows;
+  List<Val> fieldVals;
+
+  TriangleWithCenterValues(
+      List<ArrowVal> this.arrowVals,
+      List<Val> this.fieldVals,
+      List<Arrow> this.arrows
+      );
+
+}
+
+class ArrowVal{
+  final Color color;
+  Val val;
+
+  ArrowVal(Color this.color,Val this.val);
+}
+
+class Val{
+  int value;
+  bool show;
+
+  Val(this.value, [this.show = true]);
 }
 
 class ArrowWidget extends StatefulWidget{
@@ -1083,12 +1169,14 @@ class ArrowWidget extends StatefulWidget{
   /// by pixels
   final double shrink;
 
+  bool reverseDir;
+
   ArrowWidget({Key key, this.fromKey, this.toKey, this.color = Colors.black26
-    , this.shrink = 0}) : super(key: key);
+    , this.shrink = 0, bool this.reverseDir = false}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _ArrowWidgetState(fromKey,toKey,color: color,shrink: shrink);
+    return _ArrowWidgetState(fromKey,toKey,color: color,shrink: shrink, reverseDir:reverseDir);
   }
 
 }
@@ -1112,9 +1200,11 @@ class _ArrowWidgetState extends State<StatefulWidget>  {
   /// pixels
   double shrink;
 
+  bool reverseDir;
+
   /// Paints arrows in direction from center to center Widgets specified by fromKey toKey
   _ArrowWidgetState(this.fromKey, this.toKey, {this.color = Colors.black26
-    , this.shrink = 0
+    , this.shrink = 0, bool this.reverseDir = false
   });
 
   Rect _fromRect = Rect.zero;
@@ -1129,8 +1219,13 @@ class _ArrowWidgetState extends State<StatefulWidget>  {
 
   onPostFrameState(_) {
     setState(() {
-      _fromRect = getRect(fromKey);
-      _toRect = getRect(toKey);
+      if(reverseDir){
+        _fromRect = getRect(toKey);
+        _toRect = getRect(fromKey);
+      }else{
+        _fromRect = getRect(fromKey);
+        _toRect = getRect(toKey);
+      }
     });
 
   }
@@ -1162,8 +1257,8 @@ class _ArrowWidgetState extends State<StatefulWidget>  {
   
 }
 
-Offset toOffset(vm.Vector2 shrinkedStart) {
-  return Offset(shrinkedStart.x,shrinkedStart.y);
+Offset toOffset(vm.Vector2 vec) {
+  return Offset(vec.x,vec.y);
 }
 
 vm.Vector2 fromOffset(Offset offset) {
@@ -1195,7 +1290,7 @@ class Line {
 
 
 
-enum ArrowDirection {
+enum Dir8 {
   Up,
   Down,
   Right,
@@ -1204,6 +1299,13 @@ enum ArrowDirection {
   UpLeft,
   DownRight,
   DownLeft,
+}
+
+enum Dir4 {
+  Up,
+  Down,
+  Right,
+  Left,
 }
 
 abstract class SpiderWebShape{
@@ -1259,6 +1361,23 @@ class ArrowPainter extends CustomPainter {
       ..strokeWidth = 7.0;
 
     canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
+  }
+}
+
+class ArrowHorizontalPainter extends CustomPainter {
+  final Color color;
+
+  ArrowHorizontalPainter( this.color);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    var canvasRect = RectUtils.fromOffsetSize(Offset.zero, size);
+    ArrowPainter(canvasRect.centerLeft,canvasRect.centerRight,color).paint(canvas, size);
   }
 
   @override
