@@ -3,8 +3,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:pyramida/models/triangle_levels.dart';
-import 'package:pyramida/widgets/small_numeric_keyboard.dart';
+import '../models/triangle_levels.dart';
+import '../widgets/small_numeric_keyboard.dart';
 //import 'package:zoom_widget/zoom_widget.dart';
 
 import 'package:flutter/services.dart';

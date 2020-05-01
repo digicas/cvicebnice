@@ -3,11 +3,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 //import 'package:flutter_linkify/flutter_linkify.dart';
-import 'package:pyramida/screens/triangles.dart';
+import './screens/triangles.dart';
 
-import 'package:pyramida/screens/level_select.dart';
+import './screens/level_select.dart';
 
-import 'package:pyramida/models/triangle_levels.dart';
+import './models/triangle_levels.dart';
 
 //import 'package:pyramida/widgets/launchurl.dart';
 //import 'package:url_launcher/url_launcher.dart';
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false, // dev banner on/off
-      title: 'Pyramidy / EduKids',
+      title: 'EduKids: Matika do kapsy',
       theme: ThemeData(
         buttonTheme: ButtonThemeData(
           buttonColor: Color(0xffa02b5f),
@@ -36,18 +36,36 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class TaskSelectionItem {
+  final String imageAssetName;
+  final String text;
+
+  TaskSelectionItem(this.imageAssetName, this.text);
+}
+
 class TaskListScreen extends StatefulWidget {
   @override
   _TaskListScreenState createState() => _TaskListScreenState();
 }
 
 class _TaskListScreenState extends State<TaskListScreen> {
-  /// holder for togglebuttons - pyramid or funnel
-  List<bool> triangleTaskSelection;
+  /// holder for togglebuttons - tasks list
+  List<bool> taskSelection;
+
+  final List<TaskSelectionItem> taskCollection = [
+    TaskSelectionItem("assets/menu_pyramid.png", "Pyramidy"),
+    TaskSelectionItem("assets/menu_funnel.png", "Trychtýř"),
+    TaskSelectionItem("assets/menu_additions.png", "Sčítání"),
+    TaskSelectionItem("assets/menu_subtractions.png", "Odčítání"),
+  ];
 
   @override
   void initState() {
-    triangleTaskSelection = [true, false];
+    // set the togglebuttons for task selection
+//    taskSelection = [true, false, false, false];
+    taskSelection = List<bool>.filled(taskCollection.length, false);
+    taskSelection[0] = true;
+
     super.initState();
   }
 
@@ -66,8 +84,8 @@ class _TaskListScreenState extends State<TaskListScreen> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text("Pyramidy (prototyp)"),
-            Text("/EduKids.cz"),
+            Text("EduKids.cz / Matika do kapsy"),
+            Text("(prototyp)"),
 //            Linkify(text: "www.edukids.cz"),
 //            GestureDetector(
 //                behavior: HitTestBehavior.translucent,
@@ -88,43 +106,42 @@ class _TaskListScreenState extends State<TaskListScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                Container(height: 32),
-                ToggleButtons(
-                  borderRadius: BorderRadius.all(Radius.circular(8)),
-                  children: <Widget>[
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Image.asset(
-                          "assets/menu_pyramid.png",
-                          width: 128,
-                        ),
-                        Text("Pyramidy"),
-                        Container(height: 8),
-                      ],
+                ListTile(
+                  title: Text("Úloha",
+                      style: Theme.of(context).textTheme.headline6),
+                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: ToggleButtons(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    children: List.generate(
+                      taskCollection.length,
+                      (index) => Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Image.asset(
+                            taskCollection[index].imageAssetName,
+//                            "assets/menu_pyramid.png",
+                            width: 128,
+                          ),
+//                          Text("Pyramidy"),
+                          Text(taskCollection[index].text),
+                          Container(height: 8),
+                        ],
+                      ),
                     ),
-                    Column(
-                      children: <Widget>[
-                        Image.asset(
-                          "assets/menu_funnel.png",
-                          width: 128,
-                        ),
-                        Text("Trychtýř"),
-                        Container(height: 8)
-                      ],
-                    ),
-                  ],
-                  onPressed: (int index) {
-                    setState(() {
-                      for (int buttonIndex = 0;
-                          buttonIndex < triangleTaskSelection.length;
-                          buttonIndex++) {
-                        triangleTaskSelection[buttonIndex] =
-                            buttonIndex == index;
-                      }
-                    });
-                  },
-                  isSelected: triangleTaskSelection,
+                    onPressed: (int index) {
+                      setState(() {
+                        for (int buttonIndex = 0;
+                            buttonIndex < taskSelection.length;
+                            buttonIndex++) {
+                          taskSelection[buttonIndex] = buttonIndex == index;
+                        }
+                      });
+                    },
+                    isSelected: taskSelection,
+                  ),
                 ),
                 LevelSelect(
                   onPlay: (int selectedLevelIndex) {
@@ -147,7 +164,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                         MaterialPageRoute(
                             builder: (context) => TaskScreen(
                                   level: level,
-                                  taskType: triangleTaskSelection[0]
+                                  taskType: taskSelection[0]
                                       ? TriangleTaskType.Pyramid
                                       : TriangleTaskType.Funnel,
                                 )),

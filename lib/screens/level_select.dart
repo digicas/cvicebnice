@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pyramida/models/triangle_levels.dart';
-import 'package:pyramida/widgets/fluid_slider.dart';
-
+import '../models/triangle_levels.dart';
 import '../widgets/fluid_slider.dart';
 
 final List<String> schoolMonths = [
@@ -77,7 +75,7 @@ class _LevelSelectState extends State<LevelSelect> {
                   });
                 },
                 min: 1.0,
-                max: 7.0,
+                max: 5.0,
               ),
             ),
             Container(
