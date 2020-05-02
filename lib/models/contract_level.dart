@@ -8,7 +8,6 @@
 ///
 /// ```
 abstract class LevelContract {
-
   /// index of the level within LevelTree
   final int index;
 
@@ -28,5 +27,5 @@ abstract class LevelContract {
   /// Returns a string representation of this object.
   @override
   String toString();
-
 }
+

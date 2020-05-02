@@ -21,10 +21,13 @@ void main() {
               level.solution[1],
               inInclusiveRange(level.valueRange[0],
                   level.valueRange[1])); // test min and max range of y
-          expect(
-              level.solution[3],
-              inInclusiveRange(level.valueRange[0],
-                  level.valueRange[1])); // test min and max range of z
+
+          if (level.solution.length > 3) {
+            expect(
+                level.solution[3],
+                inInclusiveRange(level.valueRange[0],
+                    level.valueRange[1])); // test min and max range of z
+          }
         }
       });
     });
