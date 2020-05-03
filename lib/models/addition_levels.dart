@@ -6,11 +6,11 @@ import 'package:flutter/foundation.dart';
 ///
 
 import 'dart:math';
-import 'contract_level.dart';
+import 'blueprint_level.dart';
 
 //////////////////////////////////////////////// Level generator //////////////////////////////
 
-class Level extends LevelContract {
+class Level extends LevelBlueprint {
   /// callback to generator function, which should return the list of generated values for task and solution
   List<int> Function() onGenerate;
 
@@ -66,26 +66,15 @@ class Level extends LevelContract {
 /// ///////////////////////// Tree of levels (incl. definitions) //////////////////////////////
 ///
 
-class LevelTree{
-  /// random generator initialize
-  static Random rnd = Random();
+class LevelTree extends LevelTreeBlueprint {
+  /// Must be static, so cannot be inherited
+  static int random(int maximum) => LevelTreeBlueprint.random(maximum);
 
-  ///
-  ///  generates int number 0..maximum : inclusive
-  ///
-  static int random(int maximum) {
-    if (maximum == 0) return 0;
-    return rnd.nextInt(maximum + 1);
-  }
+  /// Must be static, so cannot be inherited
+  static int randomMinMax(int minimum, int maximum) =>
+      LevelTreeBlueprint.randomMinMax(minimum, maximum);
 
-  ///  Generates int number minimum..maximum : inclusive
-  ///
-  ///  If max < or = min returns min
-  static int randomMinMax(int minimum, int maximum) {
-    if (maximum <= minimum) return minimum;
-    return rnd.nextInt(maximum - minimum + 1) + minimum;
-  }
-
+  /// Must be static, so cannot be inherited
   static Level getLevelByIndex(int levelIndex) {
     return LevelTree.levels
         .singleWhere((level) => level.index == levelIndex, orElse: () => null);
@@ -114,45 +103,42 @@ class LevelTree{
     Level(
       index: 41,
       onGenerate: () {
-        int k = randomMinMax(1, 9)*10;
+        int k = randomMinMax(1, 9) * 10;
         int x = 100 - k;
         return [k, x];
       },
       masks: ["100=k+X"],
       valueRange: [0, 99],
-      description:
-          "Rozklad čísla 100, kde 1. sčítanec je dělitelný 10.",
+      description: "Rozklad čísla 100, kde 1. sčítanec je dělitelný 10.",
       example: "100 = 60 + x",
     ),
 
     Level(
       index: 42,
       onGenerate: () {
-        int k = randomMinMax(1, 19)*5;
+        int k = randomMinMax(1, 19) * 5;
         int x = 100 - k;
         return [k, x];
       },
       masks: ["100=k+X"],
       valueRange: [0, 99],
-      description:
-      "Rozklad čísla 100, kde 1. sčítanec je dělitelný 5.",
+      description: "Rozklad čísla 100, kde 1. sčítanec je dělitelný 5.",
       example: "100 = 75 + x",
     ),
 
     Level(
       index: 43,
       onGenerate: () {
-        int k = random(1) == 1 ? randomMinMax(1, 19)*5 : randomMinMax(91, 99);
+        int k = random(1) == 1 ? randomMinMax(1, 19) * 5 : randomMinMax(91, 99);
         int x = 100 - k;
         return [k, x];
       },
       masks: ["100=k+X"],
       valueRange: [0, 99],
       description:
-      "Rozklad čísla 100, kde 1. sčítanec je dělitelný 5 a nebo 91-99.",
+          "Rozklad čísla 100, kde 1. sčítanec je dělitelný 5 a nebo 91-99.",
       example: "100 = 92 + x",
     ),
-
 
     Level(
       index: 134,
