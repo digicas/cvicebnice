@@ -140,3 +140,11 @@ class _SmallNumericKeyboardState extends State<SmallNumericKeyboard> {
     );
   }
 }
+
+/// Hides keyboard
+void removeEditableFocus(BuildContext context) {
+  FocusScopeNode currentFocus = FocusScope.of(context);
+  if (!currentFocus.hasPrimaryFocus) {
+    currentFocus.unfocus();
+  }
+}

@@ -142,7 +142,7 @@ class _TaskScreenState extends State<TaskScreen> {
                     /// edu guide and its speech / buttons over task screen
                     (optionsRequested || taskSubmitted)
 
-                        /// do not show it, when overlay is above
+                        /// do not show Guide layer, when overlay is above
                         ? Container()
                         : Positioned(
                             left: 20,

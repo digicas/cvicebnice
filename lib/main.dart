@@ -9,6 +9,8 @@ import './screens/level_select.dart';
 
 import './models/triangle_levels.dart';
 
+import './screens/addition.dart' as addition;
+
 //import 'package:pyramida/widgets/launchurl.dart';
 //import 'package:url_launcher/url_launcher.dart';
 
@@ -162,12 +164,15 @@ class _TaskListScreenState extends State<TaskListScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => TaskScreen(
-                                  level: level,
-                                  taskType: taskSelection[0]
-                                      ? TriangleTaskType.Pyramid
-                                      : TriangleTaskType.Funnel,
-                                )),
+                          builder: (context) => addition.TaskScreen(),
+                        ),
+//                        MaterialPageRoute(
+//                            builder: (context) => TaskScreen(
+//                                  level: level,
+//                                  taskType: taskSelection[0]
+//                                      ? TriangleTaskType.Pyramid
+//                                      : TriangleTaskType.Funnel,
+//                                )),
                       );
                     }
                   },
