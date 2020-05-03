@@ -97,5 +97,11 @@ abstract class LevelTreeBlueprint {
     return LevelTreeBlueprint.rnd.nextInt(maximum - minimum + 1) + minimum;
   }
 
+//
+//  Level getLevelByIndex(int levelIndex) {
+//    return levels
+//        .singleWhere((level) => level.index == levelIndex, orElse: () => null);
+//  }
+
 
 }

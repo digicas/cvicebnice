@@ -1,6 +1,22 @@
-//import 'package:flutter/material.dart';
-//import '../models/addition_levels.dart';
-//
+import 'package:flutter/material.dart';
+import '../models/addition_levels.dart';
+
+class TaskScreen extends StatefulWidget {
+  @override
+  _TaskScreenState createState() => _TaskScreenState();
+}
+
+class _TaskScreenState extends State<TaskScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Color(0xaabbccdd),
+    );
+  }
+}
+
+
+
 //class TaskScreen extends StatefulWidget {
 //  final Level level;
 ////  final TriangleTaskType taskType;

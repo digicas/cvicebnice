@@ -6,8 +6,9 @@ import 'package:cvicebnice/models/addition_levels.dart';
 
 void main() {
   group("When generating levels", () {
+    LevelTree levelTree = LevelTree();
     test("Generated values should:", () {
-      LevelTree.levels.forEach((level) {
+      levelTree.levels.forEach((level) {
 //        var level = LevelTree.getLevelByIndex(135);
         for (var i = 0; i < 2; i++) {
           level.generate();
