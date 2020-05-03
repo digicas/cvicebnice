@@ -297,8 +297,7 @@ class LevelTree {
     while (newLevel == null){
       newLevelIndex++;
       /// max level -> return the same level
-      /// TODO improve to check the last level in Level Tree collection
-      if (level.levelIndex == 100 ) return level;
+      if (level.levelIndex == levels.last.levelIndex ) return level;
       newLevel = getLevelByLevelIndex(newLevelIndex);
     }
     return newLevel;
