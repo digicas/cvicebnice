@@ -9,7 +9,7 @@ import './screens/level_select.dart';
 
 import './models/triangle_levels.dart';
 
-import './screens/addition.dart' as addition;
+import 'tasks/additions/screen.dart' as addition;
 
 //import 'package:pyramida/widgets/launchurl.dart';
 //import 'package:url_launcher/url_launcher.dart';

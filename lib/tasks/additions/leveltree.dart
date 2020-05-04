@@ -1,64 +1,11 @@
 //
-// Level generator for the math additions
+// Level generator for the math additions tasks
 //
 
 import 'dart:core';
-import 'package:flutter/foundation.dart';
-import 'dart:math';
-import 'blueprint_level.dart';
+import '../core/level.dart';
+import 'level.dart';
 
-/// ///////////////////////////////////////////// Level generator //////////////////////////////
-class Level extends LevelBlueprint {
-  /// callback to generator function, which should return the list of generated values for task and solution
-  List<int> Function() onGenerate;
-
-  /// Collection of masks to be applied onto task
-  ///
-  /// Capital letter (e.g. Z in x+y=Z) means input place => x+y=?
-  /// Small letters (x, y, in x+y=Z) means visible number
-  /// If there are more than 1 mask, one of them is selected during the task generation
-  List<String> masks;
-
-  /// Declared range limit on generated values - used in unit tests
-  List<int> valueRange;
-
-  /// Human description
-  String description;
-
-  /// Printable example
-  String example;
-
-  /// Generated values typically x,y,w,z
-  List<int> solution;
-
-  /// Selected mask for UI
-  int _selectedTaskMask = 0;
-
-  /// Constructor
-  Level(
-      {@required index,
-      @required this.onGenerate,
-      this.masks,
-      @required this.valueRange,
-      this.description,
-      this.example})
-      : super(index: index);
-
-  /// random generator
-  static Random rnd = Random();
-
-  // TODO make 10 tasks
-  /// Generate 10 tasks for 1 level
-  @override
-  void generate() {
-    solution = onGenerate();
-    _selectedTaskMask = rnd.nextInt(masks.length);
-  }
-
-  @override
-  String toString() =>
-      "level: $index - $solution - ${masks[_selectedTaskMask]}";
-}
 
 /// ///////////////////////// Tree of levels (incl. definitions) //////////////////////////////
 ///
@@ -153,7 +100,7 @@ class LevelTree extends LevelTreeBlueprint {
         index: 43,
         onGenerate: () {
           int k =
-              random(1) == 1 ? randomMinMax(1, 19) * 5 : randomMinMax(91, 99);
+              random(1) == 1 ? randomMinMax(1, 19) * 5 : randomMinMax(81, 99);
           int x = 100 - k;
           return [k, x];
         },
@@ -169,7 +116,7 @@ class LevelTree extends LevelTreeBlueprint {
         onGenerate: () {
           int x = random(7) + 1;
           int y = random(8 - x) + 1;
-          return [x * 1000, y * 1000, null, (x + y) * 1000];
+          return [x * 1000, y * 1000, (x + y) * 1000];
         },
         masks: [
           "x+y=Z",

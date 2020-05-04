@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:cvicebnice/models/addition_levels.dart';
+import 'package:cvicebnice/tasks/additions/leveltree.dart';
 
 /// tests using matchers: http://dartdoc.takyam.com/articles/dart-unit-tests/#matchers
 

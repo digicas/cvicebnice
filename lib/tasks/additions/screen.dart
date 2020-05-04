@@ -1,6 +1,7 @@
 import 'package:cvicebnice/widgets/small_numeric_keyboard.dart';
 import 'package:flutter/material.dart';
-import '../models/addition_levels.dart' as model;
+import 'level.dart';
+import 'leveltree.dart';
 
 class TaskScreen extends StatefulWidget {
   @override
@@ -11,6 +12,8 @@ class _TaskScreenState extends State<TaskScreen> {
   bool _showBackground;
   bool taskSubmitted;
   bool optionsRequested;
+  LevelTree levelTree;
+  List<Level> questions;
 
   @override
   void initState() {
@@ -21,6 +24,12 @@ class _TaskScreenState extends State<TaskScreen> {
     taskSubmitted ??= false;
     optionsRequested ??= false;
 //    levelInit();
+
+    levelTree = LevelTree();
+    questions = List.generate(10, (_) => levelTree.getLevelByIndex(146).clone());
+
+    questions.forEach((level) {level.generate();});
+
     super.initState();
   }
 
@@ -35,7 +44,7 @@ class _TaskScreenState extends State<TaskScreen> {
               Center(
                 child: SingleChildScrollView(
                   padding: EdgeInsets.fromLTRB(0, 40, 0, 80),
-                  child: EquationList(),
+                  child: QuestionList(questions: questions),
                 ),
               ),
               Container(
@@ -48,9 +57,9 @@ class _TaskScreenState extends State<TaskScreen> {
                       Color(0xccECE6E9),
                       Color(0x00ECE6E9),
                     ],
-                    begin: FractionalOffset(0,0),
-                    end: FractionalOffset(0,1),
-                    stops: [0,0.6,1],
+                    begin: FractionalOffset(0, 0),
+                    end: FractionalOffset(0, 1),
+                    stops: [0, 0.6, 1],
                     tileMode: TileMode.clamp,
                   ),
                 ),
@@ -102,23 +111,134 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 }
 
-class EquationList extends StatelessWidget {
-  const EquationList({
+class QuestionList extends StatelessWidget {
+  final List<Level> questions;
+
+  const QuestionList({
     Key key,
+    this.questions,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(height: 100),
-        Text("4008 + 3548 = 7556"),
-      ] + List.generate(50, (index) => Text("Tady budou tasks $index")),
-
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 200, 0, 0),
+      child: Column(
+        children: List.generate(
+        questions.length,
+            (index) => Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                  child: Question(
+                    mask: questions[index].selectedQuestionMask,
+                    solution: questions[index].solution,
+//                      solution: [4008, 3548, 7556]
+                  ),
+                )),
+      ),
     );
   }
 }
 
+class Question extends StatelessWidget {
+  final String mask;
+  final List<int> solution;
+  static const double textSize = 32;
+
+  const Question({
+    Key key,
+    this.mask,
+    this.solution,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (mask == "x+y=Z") {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Text(
+            solution[0].toString(),
+            style: TextStyle(fontSize: textSize),
+          ),
+          Text(
+            "+",
+            style: TextStyle(fontSize: textSize),
+          ),
+          Text(
+            solution[1].toString(),
+            style: TextStyle(fontSize: textSize),
+          ),
+          Text(
+            "=",
+            style: TextStyle(fontSize: textSize),
+          ),
+          Text(
+            "????",
+            style: TextStyle(fontSize: textSize),
+          ),
+        ],
+      );
+    }
+
+    if (mask == "X+y=z") {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Text(
+            "????",
+            style: TextStyle(fontSize: textSize),
+          ),
+          Text(
+            "+",
+            style: TextStyle(fontSize: textSize),
+          ),
+          Text(
+            solution[1].toString(),
+            style: TextStyle(fontSize: textSize),
+          ),
+          Text(
+            "=",
+            style: TextStyle(fontSize: textSize),
+          ),
+          Text(
+            solution[2].toString(),
+            style: TextStyle(fontSize: textSize),
+          ),
+        ],
+      );
+    }
+
+    if (mask == "x+Y=z") {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Text(
+            solution[0].toString(),
+            style: TextStyle(fontSize: textSize),
+          ),
+          Text(
+            "+",
+            style: TextStyle(fontSize: textSize),
+          ),
+          Text(
+            "????",
+            style: TextStyle(fontSize: textSize),
+          ),
+          Text(
+            "=",
+            style: TextStyle(fontSize: textSize),
+          ),
+          Text(
+            solution[2].toString(),
+            style: TextStyle(fontSize: textSize),
+          ),
+        ],
+      );
+    }
+
+    return Container();
+  }
+}
 
 //class TaskScreen extends StatefulWidget {
 //  final Level level;
