@@ -163,7 +163,7 @@ class LevelTree extends LevelTreeBlueprint {
         onGenerate: () {
           int x = (random(8) + 1) * 1000;
           int y = random(899) + 100;
-          return [x, y, null, x + y];
+          return [x, y,  x + y];
         },
         masks: [
           "x+y=Z",
@@ -211,7 +211,7 @@ class LevelTree extends LevelTreeBlueprint {
         onGenerate: () {
           int y = (random(7) + 1) * 1000;
           int x = random(8999 - y) + 1000;
-          return [x, y, null, x + y];
+          return [x, y, x + y];
         },
         masks: ["x+Y=z"],
         valueRange: [0, 9999],
@@ -235,7 +235,7 @@ class LevelTree extends LevelTreeBlueprint {
           int x = xt * 1000 + xo * onesOrTens;
           int y = yt * 1000 + yo * onesOrTens;
 
-          return [x, y, null, x + y];
+          return [x, y,  x + y];
         },
         masks: ["x+y=Z"],
         valueRange: [0, 9999],
@@ -258,7 +258,7 @@ class LevelTree extends LevelTreeBlueprint {
           int x = xt * 1000 + xh * 100;
           int y = yt * 1000 + yh * 100;
 
-          return [x, y, null, x + y];
+          return [x, y,  x + y];
         },
         masks: ["x+y=Z"],
         valueRange: [0, 9999],

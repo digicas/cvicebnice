@@ -164,19 +164,21 @@ class _TaskListScreenState extends State<TaskListScreen> {
                     } else {
                       Navigator.push(
                         context,
-                        // open Task screen
-//                        MaterialPageRoute(
-//                          builder: (context) => addition.TaskScreen(),
-//                        ),
-                        MaterialPageRoute(
-                            builder: (context) => pyramidsAndFunnels.TaskScreen(
-                                  level: level,
-                                  taskType: (taskSelectedIndex == 0)
-                                      ? pyramidsAndFunnels
-                                          .TriangleTaskType.Pyramid
-                                      : pyramidsAndFunnels
-                                          .TriangleTaskType.Funnel,
-                                )),
+                        // Open task screen
+                        MaterialPageRoute(builder: (context) {
+                          if (taskSelectedIndex == 2) {
+                            return addition.TaskScreen(selectedLevelIndex: 142,);
+                          }
+
+                          return pyramidsAndFunnels.TaskScreen(
+                            level: level,
+                            taskType: (taskSelectedIndex == 0)
+                                ? pyramidsAndFunnels.TriangleTaskType.Pyramid
+                                : pyramidsAndFunnels.TriangleTaskType.Funnel,
+                          );
+                        }
+//
+                            ),
                       );
                     }
                   },
@@ -186,38 +188,6 @@ class _TaskListScreenState extends State<TaskListScreen> {
           ),
         ),
       ),
-
-//      body: Builder(builder: (context) {
-//        return SafeArea(
-//          child: Container(
-////          color: Colors.pink,
-//            child: LevelSelect(
-//              onPlay: (int selectedLevelIndex) {
-//                print("selected level $selectedLevelIndex");
-//                // if level not yet implemented, just Toast
-//
-//                var level = LevelTree.getLevelByLevelIndex(selectedLevelIndex);
-//
-//                if (level == null) {
-//                  Scaffold.of(context).showSnackBar(SnackBar(
-//                    content: Text(
-//                        "Úroveň $selectedLevelIndex není ještě naimplemetovaná."),
-//                  ));
-//                } else {
-//                  Navigator.push(
-//                    context,
-//                    MaterialPageRoute(
-//                        builder: (context) =>
-//                            TaskScreen(level: level)),
-//                  );
-//                }
-//              },
-//            ),
-//
-//          ),
-//        );
-//      }),
-//
 
       bottomNavigationBar: Text(
           " Úrovní: ${LevelTree.levels.length} Masek: $mm Zadání cca: $totalTasks"),

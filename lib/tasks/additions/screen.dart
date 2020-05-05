@@ -9,6 +9,10 @@ import 'package:security_keyboard/keyboard_manager.dart';
 import 'package:security_keyboard/keyboard_media_query.dart';
 
 class TaskScreen extends StatefulWidget {
+  final int selectedLevelIndex;
+
+  TaskScreen({Key key, this.selectedLevelIndex}) : super(key: key);
+
   @override
   _TaskScreenState createState() => _TaskScreenState();
 }
@@ -21,9 +25,11 @@ class _TaskScreenState extends State<TaskScreen> {
   List<Level> questions;
   List<TextEditingController> textControllers;
   Level _level;
+  int selectedLevelIndex;
 
   @override
   void initState() {
+    selectedLevelIndex = widget.selectedLevelIndex;
 //    _level = widget.level;
 //    print("hu $_maskOn");
 //    _hintOn ??= false;
@@ -33,9 +39,9 @@ class _TaskScreenState extends State<TaskScreen> {
 //    levelInit();
 
     levelTree = LevelTree();
-    _level = levelTree.getLevelByIndex(146);
+    _level = levelTree.getLevelByIndex(selectedLevelIndex);
     questions =
-        List.generate(10, (_) => levelTree.getLevelByIndex(146).clone());
+        List.generate(10, (_) => levelTree.getLevelByIndex(selectedLevelIndex).clone());
 
     questions.forEach((level) {
       level.generate();
@@ -57,7 +63,10 @@ class _TaskScreenState extends State<TaskScreen> {
               Center(
                 child: SingleChildScrollView(
                   padding: EdgeInsets.fromLTRB(0, 40, 0, 80),
-                  child: QuestionList(questions: questions, textControllers: textControllers,),
+                  child: QuestionList(
+                    questions: questions,
+                    textControllers: textControllers,
+                  ),
                 ),
               ),
               Container(
@@ -322,9 +331,8 @@ class InputField extends StatelessWidget {
 //        this.masked = false,
 //        this.hint,
 //    this.textController,
-  }) :
-        textController = TextEditingController(),
-    super(key: key);
+  })  : textController = TextEditingController(),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -341,7 +349,7 @@ class InputField extends StatelessWidget {
           keyboardType: SmallNumericKeyboard.text,
 //                  keyboardType: TextInputType.number,
           inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-        controller: textController,
+          controller: textController,
 //        controller: textController,
           cursorColor: Color(0xffa02b5f),
           autocorrect: false,
