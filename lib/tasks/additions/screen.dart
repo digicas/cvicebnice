@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'level.dart';
 import 'leveltree.dart';
 
+import 'package:flutter/services.dart';
+import 'package:security_keyboard/keyboard_manager.dart';
+import 'package:security_keyboard/keyboard_media_query.dart';
+
 class TaskScreen extends StatefulWidget {
   @override
   _TaskScreenState createState() => _TaskScreenState();
@@ -15,6 +19,7 @@ class _TaskScreenState extends State<TaskScreen> {
   bool optionsRequested;
   LevelTree levelTree;
   List<Level> questions;
+  List<TextEditingController> textControllers;
   Level _level;
 
   @override
@@ -36,6 +41,8 @@ class _TaskScreenState extends State<TaskScreen> {
       level.generate();
     });
 
+    textControllers = List.generate(10, (_) => TextEditingController());
+
     super.initState();
   }
 
@@ -50,7 +57,7 @@ class _TaskScreenState extends State<TaskScreen> {
               Center(
                 child: SingleChildScrollView(
                   padding: EdgeInsets.fromLTRB(0, 40, 0, 80),
-                  child: QuestionList(questions: questions),
+                  child: QuestionList(questions: questions, textControllers: textControllers,),
                 ),
               ),
               Container(
@@ -173,10 +180,12 @@ class _TaskScreenState extends State<TaskScreen> {
 
 class QuestionList extends StatelessWidget {
   final List<Level> questions;
+  final List<TextEditingController> textControllers;
 
   const QuestionList({
     Key key,
     this.questions,
+    this.textControllers,
   }) : super(key: key);
 
   @override
@@ -189,6 +198,7 @@ class QuestionList extends StatelessWidget {
             (index) => Padding(
                   padding: const EdgeInsets.fromLTRB(8, 16, 8, 8),
                   child: Question(
+                    textController: textControllers[index],
                     mask: questions[index].selectedQuestionMask,
                     solution: questions[index].solution,
 //                      solution: [4008, 3548, 7556]
@@ -202,12 +212,14 @@ class QuestionList extends StatelessWidget {
 class Question extends StatelessWidget {
   final String mask;
   final List<int> solution;
+  final TextEditingController textController;
   static const double textSize = 32;
 
   const Question({
     Key key,
     this.mask,
     this.solution,
+    this.textController,
   }) : super(key: key);
 
   @override
@@ -232,10 +244,11 @@ class Question extends StatelessWidget {
             "=",
             style: TextStyle(fontSize: textSize),
           ),
-          Text(
-            "????",
-            style: TextStyle(fontSize: textSize),
-          ),
+          InputField(),
+//          Text(
+//            "????",
+//            style: TextStyle(fontSize: textSize),
+//          ),
         ],
       );
     }
@@ -297,6 +310,57 @@ class Question extends StatelessWidget {
     }
 
     return Container();
+  }
+}
+
+class InputField extends StatelessWidget {
+  final TextEditingController textController;
+
+  InputField({
+    Key key,
+//        @required this.value,
+//        this.masked = false,
+//        this.hint,
+//    this.textController,
+  }) :
+        textController = TextEditingController(),
+    super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 100,
+      height: 50,
+      decoration: BoxDecoration(
+        color: Color(0x109C4D82),
+      ),
+      child: Center(
+        child: TextField(
+          /// enableInteractiveSelection must NOT be false, otherwise KeyboardController error
+//                  enableInteractiveSelection: false,
+          keyboardType: SmallNumericKeyboard.text,
+//                  keyboardType: TextInputType.number,
+          inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+        controller: textController,
+//        controller: textController,
+          cursorColor: Color(0xffa02b5f),
+          autocorrect: false,
+          maxLength: 4,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 32,
+          ),
+//            readOnly: true,
+//            showCursor: true,
+          // hide length counter and underline
+          decoration: null,
+          buildCounter: (BuildContext context,
+                  {int currentLength, int maxLength, bool isFocused}) =>
+              null,
+        ),
+      ),
+    );
   }
 }
 

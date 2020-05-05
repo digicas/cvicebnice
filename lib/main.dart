@@ -10,7 +10,7 @@ import './screens/level_select.dart';
 
 import 'tasks/pyramidsandfunnels/triangle_levels.dart';
 
-import 'tasks/additions/screen.dart' as addition;
+import 'tasks/additions/task.dart' as addition;
 
 //import 'package:pyramida/widgets/launchurl.dart';
 //import 'package:url_launcher/url_launcher.dart';
@@ -52,8 +52,8 @@ class TaskListScreen extends StatefulWidget {
 }
 
 class _TaskListScreenState extends State<TaskListScreen> {
-  /// holder for togglebuttons - tasks list
-  List<bool> taskSelection;
+  // Togglebuttons current selection - tasks list
+  int taskSelectedIndex;
 
   final List<TaskSelectionItem> taskCollection = [
     TaskSelectionItem("assets/menu_pyramid.png", "Pyramidy"),
@@ -65,9 +65,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
   @override
   void initState() {
     // set the togglebuttons for task selection
-//    taskSelection = [true, false, false, false];
-    taskSelection = List<bool>.filled(taskCollection.length, false);
-    taskSelection[0] = true;
+    taskSelectedIndex = 0;
 
     super.initState();
   }
@@ -136,14 +134,11 @@ class _TaskListScreenState extends State<TaskListScreen> {
                     ),
                     onPressed: (int index) {
                       setState(() {
-                        for (int buttonIndex = 0;
-                            buttonIndex < taskSelection.length;
-                            buttonIndex++) {
-                          taskSelection[buttonIndex] = buttonIndex == index;
-                        }
+                        taskSelectedIndex = index;
                       });
                     },
-                    isSelected: taskSelection,
+                    isSelected: List.generate(
+                        taskCollection.length, (i) => (i == taskSelectedIndex)),
                   ),
                 ),
                 LevelSelect(
@@ -169,14 +164,14 @@ class _TaskListScreenState extends State<TaskListScreen> {
                     } else {
                       Navigator.push(
                         context,
-//                        // open Task screen
+                        // open Task screen
 //                        MaterialPageRoute(
 //                          builder: (context) => addition.TaskScreen(),
 //                        ),
                         MaterialPageRoute(
                             builder: (context) => pyramidsAndFunnels.TaskScreen(
                                   level: level,
-                                  taskType: taskSelection[0]
+                                  taskType: (taskSelectedIndex == 0)
                                       ? pyramidsAndFunnels
                                           .TriangleTaskType.Pyramid
                                       : pyramidsAndFunnels
