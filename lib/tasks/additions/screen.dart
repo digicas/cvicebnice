@@ -1,3 +1,4 @@
+import 'package:cvicebnice/screens/overlays/optionsoverlay.dart';
 import 'package:cvicebnice/widgets/small_numeric_keyboard.dart';
 import 'package:flutter/material.dart';
 import 'level.dart';
@@ -14,6 +15,7 @@ class _TaskScreenState extends State<TaskScreen> {
   bool optionsRequested;
   LevelTree levelTree;
   List<Level> questions;
+  Level _level;
 
   @override
   void initState() {
@@ -26,9 +28,13 @@ class _TaskScreenState extends State<TaskScreen> {
 //    levelInit();
 
     levelTree = LevelTree();
-    questions = List.generate(10, (_) => levelTree.getLevelByIndex(146).clone());
+    _level = levelTree.getLevelByIndex(146);
+    questions =
+        List.generate(10, (_) => levelTree.getLevelByIndex(146).clone());
 
-    questions.forEach((level) {level.generate();});
+    questions.forEach((level) {
+      level.generate();
+    });
 
     super.initState();
   }
@@ -64,49 +70,103 @@ class _TaskScreenState extends State<TaskScreen> {
                   ),
                 ),
               ),
-              Positioned(
-                left: 20,
-                top: 20,
-                right: 20,
-                child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            /// must hide keyboard before option overlay is shown
-                            removeEditableFocus(context);
-                            optionsRequested = true;
-                          });
-                        },
-                        child: Image.asset(
-                          "assets/ada_head_only.png",
-                          width: 100,
-                        ),
-                      ),
-//                          Container(width: 20),
+              buildGuideAndButton(context),
 
-//                      submissionController.isFilled
-                      true
-                          ? RaisedButton(
-                              shape: StadiumBorder(),
-                              child: Text("HOTOVO?"),
-                              onPressed: () {
-                                setState(() {
-                                  /// must hide keyboard before done overlay is shown
-                                  removeEditableFocus(context);
-                                  taskSubmitted = true;
-                                });
-                              },
-                            )
-                          : Container(),
-                    ]),
-              )
+              // Check the task is not submitted
+              (!taskSubmitted) ? buildOptionsOverlay(context) : Container(),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  /// Build overlay for Options
+  ///
+  /// Must be inside the TaskScreen class in order to handle options
+  Widget buildOptionsOverlay(context) {
+    /// No shade overlay requested
+    if (!optionsRequested) return Container();
+
+    /// Options menu requested
+    return OptionsOverlay(
+      canDecreaseLevel: (_level.index > 2),
+      levelInfoText: _level.index.toString() + " ze 100",
+      showBackground: _showBackground,
+      onBackToLevel: () {
+        setState(() {
+          optionsRequested = false;
+        });
+      },
+      onBack: () {
+        Navigator.of(context).pop();
+      },
+      onRestartLevel: () {
+        setState(() {
+//          submissionController
+//              .initiateForLevel(_level);
+          optionsRequested = false;
+        });
+      },
+      onSwitchBackgroundImage: () {
+        setState(() {
+          _showBackground = !_showBackground;
+          optionsRequested = false;
+        });
+      },
+      onDecreaseLevel: () {
+        setState(() {
+//          _level =
+//              levelTree.getLessDifficultLevel(_level);
+//          levelRegenerate();
+          optionsRequested = false;
+        });
+      },
+    );
+  }
+
+  /// Build Guide head and Action button
+  ///
+  /// Must be inside the TaskScreen class in order to handle options
+  Positioned buildGuideAndButton(BuildContext context) {
+    return Positioned(
+      left: 20,
+      top: 20,
+      right: 20,
+      child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  /// must hide keyboard before option overlay is shown
+                  removeEditableFocus(context);
+                  optionsRequested = true;
+                });
+              },
+              child: Image.asset(
+                "assets/ada_head_only.png",
+                width: 100,
+              ),
+            ),
+//                          Container(width: 20),
+
+//                      submissionController.isFilled
+            true
+                ? RaisedButton(
+                    shape: StadiumBorder(),
+                    child: Text("HOTOVO?"),
+                    onPressed: () {
+                      setState(() {
+                        /// must hide keyboard before done overlay is shown
+                        removeEditableFocus(context);
+                        taskSubmitted = true;
+                      });
+                    },
+                  )
+                : Container(),
+          ]),
     );
   }
 }
@@ -125,9 +185,9 @@ class QuestionList extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(0, 200, 0, 0),
       child: Column(
         children: List.generate(
-        questions.length,
+            questions.length,
             (index) => Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                  padding: const EdgeInsets.fromLTRB(8, 16, 8, 8),
                   child: Question(
                     mask: questions[index].selectedQuestionMask,
                     solution: questions[index].solution,
