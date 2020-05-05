@@ -19,8 +19,7 @@ import 'package:security_keyboard/keyboard_media_query.dart';
 
 //import 'package:cool_ui/cool_ui.dart';
 
-/// triangles ... matematicke prostredi: souctove trojuhelniky
-
+/// Triangles ... matematicke prostredi: souctove trojuhelniky
 class TaskScreen extends StatefulWidget {
   final Level level;
   final TriangleTaskType taskType;

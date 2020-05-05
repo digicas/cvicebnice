@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../tasks/pyramidsandfunnels/triangle_levels.dart';
 import '../widgets/fluid_slider.dart';
 
 final List<String> schoolMonths = [
@@ -19,9 +18,19 @@ class LevelSelect extends StatefulWidget {
   const LevelSelect({
     Key key,
     this.onPlay,
+    this.onCheckLevelExists,
+    this.onSchoolClassToLevelIndex,
   }) : super(key: key);
 
   final void Function(int) onPlay;
+
+  /// Callback function for checking whether level with int index exists
+  ///
+  /// Shall return true if exists or false if not
+  final bool Function(int) onCheckLevelExists;
+
+  /// Callback function to get the level index based on school year and month
+  final int Function(int schoolYear, int schoolMonth) onSchoolClassToLevelIndex;
 
   @override
   _LevelSelectState createState() => _LevelSelectState();
@@ -48,7 +57,6 @@ class _LevelSelectState extends State<LevelSelect> {
 
   @override
   Widget build(BuildContext context) {
-//    levelIndex = LevelTree.schoolClassToLevelIndex(schoolYear.toInt(), schoolMonth.toInt());
     levelFieldController.text = levelIndex.toString();
     return SingleChildScrollView(
       child: Column(
@@ -69,7 +77,7 @@ class _LevelSelectState extends State<LevelSelect> {
                 onChanged: (double newValue) {
                   setState(() {
                     schoolYear = newValue;
-                    levelIndex = LevelTree.schoolClassToLevelIndex(
+                    levelIndex = widget.onSchoolClassToLevelIndex(
                         schoolYear.toInt(), schoolMonth.toInt());
                   });
                 },
@@ -92,7 +100,7 @@ class _LevelSelectState extends State<LevelSelect> {
                 onChanged: (double newValue) {
                   setState(() {
                     schoolMonth = newValue;
-                    levelIndex = LevelTree.schoolClassToLevelIndex(
+                    levelIndex = widget.onSchoolClassToLevelIndex(
                         schoolYear.toInt(), schoolMonth.toInt());
                   });
                 },
@@ -101,10 +109,10 @@ class _LevelSelectState extends State<LevelSelect> {
                 },
                 min: 0.0,
                 max: 9.0,
-                start: Text(
-                    schoolMonths.first, style: _fluidSliderTextStyle(context)),
-                end: Text(
-                    schoolMonths.last, style: _fluidSliderTextStyle(context)),
+                start: Text(schoolMonths.first,
+                    style: _fluidSliderTextStyle(context)),
+                end: Text(schoolMonths.last,
+                    style: _fluidSliderTextStyle(context)),
                 valueTextStyle: Theme.of(context).textTheme.subtitle,
               ),
             ),
@@ -113,7 +121,7 @@ class _LevelSelectState extends State<LevelSelect> {
             ),
             ListTile(
               contentPadding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-              leading: LevelTree.getLevelByLevelIndex(levelIndex) == null
+              leading: widget.onCheckLevelExists(levelIndex)
                   ? Icon(Icons.block)
                   : Icon(Icons.assignment_turned_in),
               title: Text("Úroveň:", style: Theme.of(context).textTheme.title),
@@ -172,7 +180,8 @@ class _LevelSelectState extends State<LevelSelect> {
                   size: 40,
                 ),
 //                color: Colors.blue,
-                onPressed: LevelTree.getLevelByLevelIndex(levelIndex) == null
+//                onPressed: LevelTree.getLevelByLevelIndex(levelIndex) == null
+                onPressed: widget.onCheckLevelExists(levelIndex)
                     ? null
                     : () {
                         widget.onPlay(levelIndex);
@@ -188,8 +197,5 @@ class _LevelSelectState extends State<LevelSelect> {
   }
 
   TextStyle _fluidSliderTextStyle(BuildContext context) =>
-      Theme
-          .of(context)
-          .accentTextTheme
-          .subtitle;
+      Theme.of(context).accentTextTheme.subtitle;
 }

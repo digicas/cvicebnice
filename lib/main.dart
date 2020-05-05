@@ -3,7 +3,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 //import 'package:flutter_linkify/flutter_linkify.dart';
-import 'tasks/pyramidsandfunnels/triangles.dart';
+//import 'tasks/pyramidsandfunnels/screen.dart' as pyramidsAndFunnels;
+
+import 'tasks/pyramidsandfunnels/task.dart' as pyramidsAndFunnels;
 
 import './screens/level_select.dart';
 
@@ -146,6 +148,11 @@ class _TaskListScreenState extends State<TaskListScreen> {
                   ),
                 ),
                 LevelSelect(
+                  onCheckLevelExists: (index) =>
+                      LevelTree.getLevelByLevelIndex(index) == null,
+                  onSchoolClassToLevelIndex: (schoolYear, schoolMonth) =>
+                      LevelTree.schoolClassToLevelIndex(
+                          schoolYear.toInt(), schoolMonth.toInt()),
                   onPlay: (int selectedLevelIndex) {
                     print("selected level $selectedLevelIndex");
                     // if level not yet implemented, just Toast
@@ -168,11 +175,13 @@ class _TaskListScreenState extends State<TaskListScreen> {
 //                          builder: (context) => addition.TaskScreen(),
 //                        ),
                         MaterialPageRoute(
-                            builder: (context) => TaskScreen(
+                            builder: (context) => pyramidsAndFunnels.TaskScreen(
                                   level: level,
                                   taskType: taskSelection[0]
-                                      ? TriangleTaskType.Pyramid
-                                      : TriangleTaskType.Funnel,
+                                      ? pyramidsAndFunnels
+                                          .TriangleTaskType.Pyramid
+                                      : pyramidsAndFunnels
+                                          .TriangleTaskType.Funnel,
                                 )),
                       );
                     }
