@@ -14,6 +14,10 @@ final List<String> schoolMonths = [
   "Červen",
 ];
 
+
+/// (Sub)screen for level selection
+///
+/// Calls onPlay callback with selected levelindex
 class LevelSelect extends StatefulWidget {
   const LevelSelect({
     Key key,
@@ -22,12 +26,13 @@ class LevelSelect extends StatefulWidget {
     this.onSchoolClassToLevelIndex,
   }) : super(key: key);
 
-  final void Function(int) onPlay;
+  /// Callback function when "Start" button is pressed
+  final void Function(int levelIndex) onPlay;
 
   /// Callback function for checking whether level with int index exists
   ///
   /// Shall return true if exists or false if not
-  final bool Function(int) onCheckLevelExists;
+  final bool Function(int levelIndex) onCheckLevelExists;
 
   /// Callback function to get the level index based on school year and month
   final int Function(int schoolYear, int schoolMonth) onSchoolClassToLevelIndex;
@@ -67,7 +72,7 @@ class _LevelSelectState extends State<LevelSelect> {
           children: <Widget>[
             ListTile(
               title: Text("Třída ve škole",
-                  style: Theme.of(context).textTheme.title),
+                  style: Theme.of(context).textTheme.headline6),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
@@ -90,7 +95,7 @@ class _LevelSelectState extends State<LevelSelect> {
             ),
             ListTile(
               title: Text("Měsíc ve školním roce",
-                  style: Theme.of(context).textTheme.title),
+                  style: Theme.of(context).textTheme.headline6),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
@@ -113,7 +118,7 @@ class _LevelSelectState extends State<LevelSelect> {
                     style: _fluidSliderTextStyle(context)),
                 end: Text(schoolMonths.last,
                     style: _fluidSliderTextStyle(context)),
-                valueTextStyle: Theme.of(context).textTheme.subtitle,
+                valueTextStyle: Theme.of(context).textTheme.subtitle2,
               ),
             ),
             Container(
@@ -124,7 +129,7 @@ class _LevelSelectState extends State<LevelSelect> {
               leading: widget.onCheckLevelExists(levelIndex)
                   ? Icon(Icons.block)
                   : Icon(Icons.assignment_turned_in),
-              title: Text("Úroveň:", style: Theme.of(context).textTheme.title),
+              title: Text("Úroveň:", style: Theme.of(context).textTheme.headline6),
 //              trailing: Text("$levelIndex", style: Theme.of(context).textTheme.title),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -142,7 +147,7 @@ class _LevelSelectState extends State<LevelSelect> {
                     width: 32,
                     child: Text(levelIndex.toString(),
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.title),
+                        style: Theme.of(context).textTheme.headline6),
 
 //                    child: TextField(
 //                      style: Theme.of(context).textTheme.title,
@@ -197,5 +202,5 @@ class _LevelSelectState extends State<LevelSelect> {
   }
 
   TextStyle _fluidSliderTextStyle(BuildContext context) =>
-      Theme.of(context).accentTextTheme.subtitle;
+      Theme.of(context).accentTextTheme.subtitle2;
 }

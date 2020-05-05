@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 //import 'package:flutter_linkify/flutter_linkify.dart';
-//import 'tasks/pyramidsandfunnels/screen.dart' as pyramidsAndFunnels;
 
 import 'tasks/pyramidsandfunnels/task.dart' as pyramidsAndFunnels;
 
