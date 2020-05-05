@@ -3,11 +3,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 //import 'package:flutter_linkify/flutter_linkify.dart';
-import './screens/triangles.dart';
+import 'tasks/pyramidsandfunnels/triangles.dart';
 
 import './screens/level_select.dart';
 
-import './models/triangle_levels.dart';
+import 'tasks/pyramidsandfunnels/triangle_levels.dart';
 
 import 'tasks/additions/screen.dart' as addition;
 
@@ -163,16 +163,17 @@ class _TaskListScreenState extends State<TaskListScreen> {
                     } else {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => addition.TaskScreen(),
-                        ),
+//                        // open Task screen
 //                        MaterialPageRoute(
-//                            builder: (context) => TaskScreen(
-//                                  level: level,
-//                                  taskType: taskSelection[0]
-//                                      ? TriangleTaskType.Pyramid
-//                                      : TriangleTaskType.Funnel,
-//                                )),
+//                          builder: (context) => addition.TaskScreen(),
+//                        ),
+                        MaterialPageRoute(
+                            builder: (context) => TaskScreen(
+                                  level: level,
+                                  taskType: taskSelection[0]
+                                      ? TriangleTaskType.Pyramid
+                                      : TriangleTaskType.Funnel,
+                                )),
                       );
                     }
                   },

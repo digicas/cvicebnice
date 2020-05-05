@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/triangle_levels.dart';
+import '../tasks/pyramidsandfunnels/triangle_levels.dart';
 import '../widgets/fluid_slider.dart';
 
 final List<String> schoolMonths = [

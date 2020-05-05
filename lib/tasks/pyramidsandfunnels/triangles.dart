@@ -1,16 +1,16 @@
 //import 'dart:ffi';
 
 //import './overlays/shaderoverlay.dart';
-import './overlays/donesuccessoverlay.dart';
-import './overlays/donewrongoverlay.dart';
-import './overlays/optionsoverlay.dart';
+import '../../screens/overlays/donesuccessoverlay.dart';
+import '../../screens/overlays/donewrongoverlay.dart';
+import '../../screens/overlays/optionsoverlay.dart';
 
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import '../models/triangle_levels.dart';
-import '../widgets/small_numeric_keyboard.dart';
+import 'triangle_levels.dart';
+import '../../widgets/small_numeric_keyboard.dart';
 //import 'package:zoom_widget/zoom_widget.dart';
 
 import 'package:flutter/services.dart';
