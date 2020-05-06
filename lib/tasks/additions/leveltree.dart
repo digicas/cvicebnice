@@ -80,7 +80,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["100=k+X"],
         valueRange: [0, 99],
         description: "Rozklad čísla 100, kde 1. sčítanec je dělitelný 10.",
-        example: "100 = 60 + x",
+        example: "100 = 60 + ?",
       ),
 
       Level(
@@ -93,7 +93,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["100=k+X"],
         valueRange: [0, 99],
         description: "Rozklad čísla 100, kde 1. sčítanec je dělitelný 5.",
-        example: "100 = 75 + x",
+        example: "100 = 75 + ?",
       ),
 
       Level(
@@ -107,8 +107,8 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["100=k+X"],
         valueRange: [0, 99],
         description:
-            "Rozklad čísla 100, kde 1. sčítanec je dělitelný 5 a nebo 91-99.",
-        example: "100 = 92 + x",
+            "Rozklad čísla 100, kde 1. sčítanec je dělitelný 5 a nebo 81-99.",
+        example: "100 = 92 + ?",
       ),
 
       Level(

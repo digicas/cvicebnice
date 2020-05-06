@@ -3,8 +3,6 @@ import 'package:cvicebnice/widgets/small_numeric_keyboard.dart';
 import 'package:flutter/material.dart';
 import 'level.dart';
 import 'leveltree.dart';
-
-import '../../widgets/small_numeric_keyboard.dart';
 import 'package:flutter/services.dart';
 
 class TaskScreen extends StatefulWidget {
@@ -24,7 +22,12 @@ class _TaskScreenState extends State<TaskScreen> {
   List<Level> questions;
   List<TextEditingController> textControllers;
   Level _level;
+
+  /// Level index selected in the parent Widget
   int selectedLevelIndex;
+
+  /// Amount of generated questions on the screen
+  static const questionsAmount = 5;
 
   @override
   void initState() {
@@ -40,13 +43,13 @@ class _TaskScreenState extends State<TaskScreen> {
     levelTree = LevelTree();
     _level = levelTree.getLevelByIndex(selectedLevelIndex);
     questions = List.generate(
-        5, (_) => levelTree.getLevelByIndex(selectedLevelIndex).clone());
+        questionsAmount, (_) => levelTree.getLevelByIndex(selectedLevelIndex).clone());
 
     questions.forEach((level) {
       level.generate();
     });
 
-    textControllers = List.generate(10, (_) => (TextEditingController()));
+    textControllers = List.generate(questionsAmount, (_) => (TextEditingController()));
 
     super.initState();
   }
@@ -237,9 +240,15 @@ class QuestionList extends StatelessWidget {
 
 /// Render one question
 class Question extends StatelessWidget {
+  /// Form of the question
+  ///
+  /// "x+y=Z", "X+y=z", "x+Y=z"
   final String mask;
+  /// [x,y,z] or [x,y,w,z]
   final List<int> solution;
+  /// Controller for the editinput
   final TextEditingController textController;
+
   static const double textSize = 32;
 
   const Question({
