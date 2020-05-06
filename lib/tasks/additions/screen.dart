@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'level.dart';
 import 'leveltree.dart';
 
+import '../../widgets/small_numeric_keyboard.dart';
 import 'package:flutter/services.dart';
 import 'package:security_keyboard/keyboard_manager.dart';
 import 'package:security_keyboard/keyboard_media_query.dart';
@@ -16,6 +17,8 @@ class TaskScreen extends StatefulWidget {
   @override
   _TaskScreenState createState() => _TaskScreenState();
 }
+
+// TODO lets try totally custom keyboard: https://medium.com/@caseyahenson/stop-fighting-the-native-ios-keypad-and-build-a-custom-number-pad-for-flutter-473404d1bbd6
 
 class _TaskScreenState extends State<TaskScreen> {
   bool _showBackground;
@@ -40,61 +43,93 @@ class _TaskScreenState extends State<TaskScreen> {
 
     levelTree = LevelTree();
     _level = levelTree.getLevelByIndex(selectedLevelIndex);
-    questions =
-        List.generate(10, (_) => levelTree.getLevelByIndex(selectedLevelIndex).clone());
+    questions = List.generate(
+        5, (_) => levelTree.getLevelByIndex(selectedLevelIndex).clone());
 
     questions.forEach((level) {
       level.generate();
     });
 
-    textControllers = List.generate(10, (_) => TextEditingController());
+    textControllers = List.generate(10, (_) => (TextEditingController()));
 
     super.initState();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
-          color: Color(0xffECE6E9),
-          child: Stack(
-            children: [
-              Center(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.fromLTRB(0, 40, 0, 80),
-                  child: QuestionList(
-                    questions: questions,
-                    textControllers: textControllers,
-                  ),
-                ),
-              ),
-              Container(
-                width: double.infinity,
-                height: 125,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color(0xffECE6E9),
-                      Color(0xccECE6E9),
-                      Color(0x00ECE6E9),
-                    ],
-                    begin: FractionalOffset(0, 0),
-                    end: FractionalOffset(0, 1),
-                    stops: [0, 0.6, 1],
-                    tileMode: TileMode.clamp,
-                  ),
-                ),
-              ),
-              buildGuideAndButton(context),
+  void dispose() {
+//    submissionController.dispose();
+    super.dispose();
+  }
 
-              // Check the task is not submitted
-              (!taskSubmitted) ? buildOptionsOverlay(context) : Container(),
-            ],
-          ),
-        ),
+  @override
+  void didUpdateWidget(TaskScreen oldWidget) {
+    print('didUpdateWidget: $this');
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: _requestPop,
+      child: KeyboardMediaQuery(
+        child: Builder(builder: (context) {
+          KeyboardManager.init(context);
+          return Scaffold(
+            body: SafeArea(
+              child: Container(
+                color: Color(0xffECE6E9),
+                child: Stack(
+                  children: [
+                    Center(
+                      child: SingleChildScrollView(
+                        padding: EdgeInsets.fromLTRB(0, 40, 0, 80),
+                        child: QuestionList(
+                          questions: questions,
+                          textControllers: textControllers,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      height: 125,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Color(0xffECE6E9),
+                            Color(0xccECE6E9),
+                            Color(0x00ECE6E9),
+                          ],
+                          begin: FractionalOffset(0, 0),
+                          end: FractionalOffset(0, 1),
+                          stops: [0, 0.6, 1],
+                          tileMode: TileMode.clamp,
+                        ),
+                      ),
+                    ),
+                    buildGuideAndButton(context),
+
+                    // Check the task is not submitted
+                    (!taskSubmitted)
+                        ? buildOptionsOverlay(context)
+                        : Container(),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }),
       ),
     );
+  }
+
+  Future<bool> _requestPop() {
+    bool b = true;
+    if (KeyboardManager.isShowKeyboard) {
+      KeyboardManager.hideKeyboard();
+      b = false;
+    }
+//    return Future.value(true); // go screen back immediately - nefunguje @web :(
+    return Future.value(b); // first hide keyboard, go screen back next time
   }
 
   /// Build overlay for Options
@@ -200,12 +235,12 @@ class QuestionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 200, 0, 0),
+      padding: const EdgeInsets.fromLTRB(0, 130, 0, 0),
       child: Column(
         children: List.generate(
             questions.length,
             (index) => Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 16, 8, 8),
+                  padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
                   child: Question(
                     textController: textControllers[index],
                     mask: questions[index].selectedQuestionMask,
@@ -253,7 +288,7 @@ class Question extends StatelessWidget {
             "=",
             style: TextStyle(fontSize: textSize),
           ),
-          InputField(),
+          InputField(textController: textController,),
 //          Text(
 //            "????",
 //            style: TextStyle(fontSize: textSize),
@@ -330,8 +365,9 @@ class InputField extends StatelessWidget {
 //        @required this.value,
 //        this.masked = false,
 //        this.hint,
-//    this.textController,
-  })  : textController = TextEditingController(),
+    this.textController,
+  }) :
+//        textController = TextEditingController(),
         super(key: key);
 
   @override
@@ -371,69 +407,3 @@ class InputField extends StatelessWidget {
     );
   }
 }
-
-//class TaskScreen extends StatefulWidget {
-//  final Level level;
-////  final TriangleTaskType taskType;
-//
-//  TaskScreen({this.level});
-//
-//  @override
-//  _TaskScreenState createState() => _TaskScreenState();
-//}
-//
-//
-//class _TaskScreenState extends State<TaskScreen> {
-//  bool _hintOn;
-//  bool _showBackground;
-//  bool taskSubmitted;
-//  bool optionsRequested;
-//  Level _level;
-//
-////  SubmissionController submissionController;
-//
-//  @override
-//  void initState() {
-//    _level = widget.level;
-////    print("hu $_maskOn");
-//    _hintOn ??= false;
-//    _showBackground ??= true;
-//    taskSubmitted ??= false;
-//    optionsRequested ??= false;
-//    levelInit();
-//
-//    super.initState();
-//  }
-//
-//  void levelInit() {
-//    _level.generate();
-//    submissionController = SubmissionController(level: _level);
-//    submissionController.addListener(_checkSolution);
-//    taskSubmitted = false;
-//    optionsRequested = false;
-//  }
-//
-//  void levelRegenerate() {
-////    submissionController.dispose();
-//    levelInit();
-////  initState();
-//  }
-//
-//  _checkSolution() {
-//    print(
-//        "Submission: ${submissionController.toString()} : solved: ${submissionController.isSolved}");
-//    setState(() {});
-//  }
-//
-//  @override
-//  void dispose() {
-//    submissionController.dispose();
-//    super.dispose();
-//  }
-//
-//  @override
-//  void didUpdateWidget(TaskScreen oldWidget) {
-//    print('didUpdateWidget: $this');
-//    super.didUpdateWidget(oldWidget);
-//  }
-//
