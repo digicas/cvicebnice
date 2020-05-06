@@ -82,7 +82,7 @@ class LevelTree extends LevelTreeBlueprint {
               (x + y) > 10 ? 1 : 11 - (x + y), (x + y) < 10 ? 9 : 19 - (x + y));
           return [x, y, w, x + y + w];
         },
-        masks: ["x+y+w=Z"],
+        masks: ["x+y+w=ZZ"],
         valueRange: [0, 19],
         description:
             "Součet více jednociferných čísel s přechodem přes 10 s celkovým součtem do 20.",

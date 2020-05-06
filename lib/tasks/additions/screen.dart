@@ -32,6 +32,8 @@ class _TaskScreenState extends State<TaskScreen> {
   @override
   void initState() {
     selectedLevelIndex = widget.selectedLevelIndex;
+
+    selectedLevelIndex = 150;
 //    _level = widget.level;
 //    print("hu $_maskOn");
 //    _hintOn ??= false;
@@ -200,6 +202,7 @@ class _TaskScreenState extends State<TaskScreen> {
                       });
                     },
                   )
+                // ignore: dead_code
                 : Container(),
           ]),
     );
@@ -242,10 +245,10 @@ class QuestionList extends StatelessWidget {
 class Question extends StatelessWidget {
   /// Form of the question
   ///
-  /// "x+y=Z", "X+y=z", "x+Y=z"
+  /// "x+y=Z", "X+y=z", "x+Y=z", "x+y+w=Z", "100=k+X"
   final String mask;
 
-  /// [x,y,z] or [x,y,w,z]
+  /// [k, x] or [x,y,z] or [x,y,w,z]
   final List<int> solution;
 
   /// Controller for the editinput
@@ -266,22 +269,10 @@ class Question extends StatelessWidget {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Text(
-            solution[0].toString(),
-            style: TextStyle(fontSize: textSize),
-          ),
-          Text(
-            "+",
-            style: TextStyle(fontSize: textSize),
-          ),
-          Text(
-            solution[1].toString(),
-            style: TextStyle(fontSize: textSize),
-          ),
-          Text(
-            "=",
-            style: TextStyle(fontSize: textSize),
-          ),
+          QText(solution[0].toString()),
+          QText("+"),
+          QText(solution[1].toString()),
+          QText("="),
           QuestionInputField(
             textController: textController,
           ),
@@ -300,22 +291,10 @@ class Question extends StatelessWidget {
           QuestionInputField(
             textController: textController,
           ),
-          Text(
-            "+",
-            style: TextStyle(fontSize: textSize),
-          ),
-          Text(
-            solution[1].toString(),
-            style: TextStyle(fontSize: textSize),
-          ),
-          Text(
-            "=",
-            style: TextStyle(fontSize: textSize),
-          ),
-          Text(
-            solution[2].toString(),
-            style: TextStyle(fontSize: textSize),
-          ),
+          QText("+"),
+          QText(solution[1].toString()),
+          QText("="),
+          QText(solution[2].toString()),
         ],
       );
     }
@@ -324,30 +303,71 @@ class Question extends StatelessWidget {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Text(
-            solution[0].toString(),
-            style: TextStyle(fontSize: textSize),
-          ),
-          Text(
-            "+",
-            style: TextStyle(fontSize: textSize),
-          ),
+          QText(solution[0].toString()),
+          QText("+"),
           QuestionInputField(
             textController: textController,
           ),
-          Text(
-            "=",
-            style: TextStyle(fontSize: textSize),
-          ),
-          Text(
-            solution[2].toString(),
-            style: TextStyle(fontSize: textSize),
+          QText("="),
+          QText(solution[2].toString()),
+        ],
+      );
+    }
+
+    if (mask == "x+y+w=ZZ") {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          QText(solution[0].toString()),
+          QText("+"),
+          QText(solution[1].toString()),
+          QText("+"),
+          QText(solution[2].toString()),
+          QText("="),
+          QuestionInputField(
+            textController: textController,
+            length: 2,
           ),
         ],
       );
     }
 
+    if (mask == "100=k+X") {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          QText("100"),
+          QText("="),
+          QText(solution[0].toString()),
+          QText("+"),
+          QuestionInputField(
+            textController: textController,
+            length: 2,
+          ),
+        ],
+      );
+    }
+
+    print("mask $mask not implemented");
     return Container();
+  }
+}
+
+/// Text part to be rendered for the question
+class QText extends StatelessWidget {
+  const QText(
+    this.text, {
+    Key key,
+  }) : super(key: key);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: TextStyle(fontSize: 32),
+    );
   }
 }
 
@@ -357,9 +377,13 @@ class Question extends StatelessWidget {
 class QuestionInputField extends StatelessWidget {
   final TextEditingController textController;
 
+  /// Max length of the input value
+  final int length;
+
   QuestionInputField({
     Key key,
     this.textController,
+    this.length,
   }) : super(key: key);
 
   @override
@@ -380,7 +404,7 @@ class QuestionInputField extends StatelessWidget {
           controller: textController,
           cursorColor: Color(0xffa02b5f),
           autocorrect: false,
-          maxLength: 4,
+          maxLength: length ?? 4,
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Colors.black,
