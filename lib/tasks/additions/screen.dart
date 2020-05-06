@@ -6,8 +6,6 @@ import 'leveltree.dart';
 
 import '../../widgets/small_numeric_keyboard.dart';
 import 'package:flutter/services.dart';
-import 'package:security_keyboard/keyboard_manager.dart';
-import 'package:security_keyboard/keyboard_media_query.dart';
 
 class TaskScreen extends StatefulWidget {
   final int selectedLevelIndex;
@@ -17,8 +15,6 @@ class TaskScreen extends StatefulWidget {
   @override
   _TaskScreenState createState() => _TaskScreenState();
 }
-
-// TODO lets try totally custom keyboard: https://medium.com/@caseyahenson/stop-fighting-the-native-ios-keypad-and-build-a-custom-number-pad-for-flutter-473404d1bbd6
 
 class _TaskScreenState extends State<TaskScreen> {
   bool _showBackground;
@@ -69,12 +65,8 @@ class _TaskScreenState extends State<TaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _requestPop,
-      child: KeyboardMediaQuery(
-        child: Builder(builder: (context) {
-          KeyboardManager.init(context);
-          return Scaffold(
+        return CustomKeyboardCovered(
+          child: Scaffold(
             body: SafeArea(
               child: Container(
                 color: Color(0xffECE6E9),
@@ -116,20 +108,8 @@ class _TaskScreenState extends State<TaskScreen> {
                 ),
               ),
             ),
-          );
-        }),
-      ),
-    );
-  }
-
-  Future<bool> _requestPop() {
-    bool b = true;
-    if (KeyboardManager.isShowKeyboard) {
-      KeyboardManager.hideKeyboard();
-      b = false;
-    }
-//    return Future.value(true); // go screen back immediately - nefunguje @web :(
-    return Future.value(b); // first hide keyboard, go screen back next time
+          ),
+        );
   }
 
   /// Build overlay for Options
@@ -222,6 +202,8 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 }
 
+
+/// Render set of questions
 class QuestionList extends StatelessWidget {
   final List<Level> questions;
   final List<TextEditingController> textControllers;
@@ -253,6 +235,7 @@ class QuestionList extends StatelessWidget {
   }
 }
 
+/// Render one question
 class Question extends StatelessWidget {
   final String mask;
   final List<int> solution;
@@ -288,7 +271,9 @@ class Question extends StatelessWidget {
             "=",
             style: TextStyle(fontSize: textSize),
           ),
-          InputField(textController: textController,),
+          QuestionInputField(
+            textController: textController,
+          ),
 //          Text(
 //            "????",
 //            style: TextStyle(fontSize: textSize),
@@ -357,18 +342,16 @@ class Question extends StatelessWidget {
   }
 }
 
-class InputField extends StatelessWidget {
+/// Editing field
+///
+/// note keyboardType
+class QuestionInputField extends StatelessWidget {
   final TextEditingController textController;
 
-  InputField({
+  QuestionInputField({
     Key key,
-//        @required this.value,
-//        this.masked = false,
-//        this.hint,
     this.textController,
-  }) :
-//        textController = TextEditingController(),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -386,7 +369,6 @@ class InputField extends StatelessWidget {
 //                  keyboardType: TextInputType.number,
           inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
           controller: textController,
-//        controller: textController,
           cursorColor: Color(0xffa02b5f),
           autocorrect: false,
           maxLength: 4,
