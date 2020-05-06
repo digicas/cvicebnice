@@ -42,16 +42,20 @@ class _TaskScreenState extends State<TaskScreen> {
 
     levelTree = LevelTree();
     _level = levelTree.getLevelByIndex(selectedLevelIndex);
-    questions = List.generate(
-        questionsAmount, (_) => levelTree.getLevelByIndex(selectedLevelIndex).clone());
+
+    questionsGenerate();
+    textControllers =
+        List.generate(questionsAmount, (_) => (TextEditingController()));
+
+    super.initState();
+  }
+
+  void questionsGenerate() {
+    questions = List.generate(questionsAmount, (_) => _level.clone());
 
     questions.forEach((level) {
       level.generate();
     });
-
-    textControllers = List.generate(questionsAmount, (_) => (TextEditingController()));
-
-    super.initState();
   }
 
   @override
@@ -68,51 +72,49 @@ class _TaskScreenState extends State<TaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-        return CustomKeyboardCovered(
-          child: Scaffold(
-            body: SafeArea(
-              child: Container(
-                color: Color(0xffECE6E9),
-                child: Stack(
-                  children: [
-                    Center(
-                      child: SingleChildScrollView(
-                        padding: EdgeInsets.fromLTRB(0, 40, 0, 80),
-                        child: QuestionList(
-                          questions: questions,
-                          textControllers: textControllers,
-                        ),
-                      ),
+    return CustomKeyboardCovered(
+      child: Scaffold(
+        body: SafeArea(
+          child: Container(
+            color: Color(0xffECE6E9),
+            child: Stack(
+              children: [
+                Center(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.fromLTRB(0, 40, 0, 80),
+                    child: QuestionList(
+                      questions: questions,
+                      textControllers: textControllers,
                     ),
-                    Container(
-                      width: double.infinity,
-                      height: 125,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Color(0xffECE6E9),
-                            Color(0xccECE6E9),
-                            Color(0x00ECE6E9),
-                          ],
-                          begin: FractionalOffset(0, 0),
-                          end: FractionalOffset(0, 1),
-                          stops: [0, 0.6, 1],
-                          tileMode: TileMode.clamp,
-                        ),
-                      ),
-                    ),
-                    buildGuideAndButton(context),
-
-                    // Check the task is not submitted
-                    (!taskSubmitted)
-                        ? buildOptionsOverlay(context)
-                        : Container(),
-                  ],
+                  ),
                 ),
-              ),
+                Container(
+                  width: double.infinity,
+                  height: 125,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color(0xffECE6E9),
+                        Color(0xccECE6E9),
+                        Color(0x00ECE6E9),
+                      ],
+                      begin: FractionalOffset(0, 0),
+                      end: FractionalOffset(0, 1),
+                      stops: [0, 0.6, 1],
+                      tileMode: TileMode.clamp,
+                    ),
+                  ),
+                ),
+                buildGuideAndButton(context),
+
+                // Check the task is not submitted
+                (!taskSubmitted) ? buildOptionsOverlay(context) : Container(),
+              ],
             ),
           ),
-        );
+        ),
+      ),
+    );
   }
 
   /// Build overlay for Options
@@ -125,7 +127,7 @@ class _TaskScreenState extends State<TaskScreen> {
     /// Options menu requested
     return OptionsOverlay(
       canDecreaseLevel: (_level.index > 2),
-      levelInfoText: _level.index.toString() + " ze 100",
+      levelInfoText: _level.index.toString() + " ze 150",
       showBackground: _showBackground,
       onBackToLevel: () {
         setState(() {
@@ -150,9 +152,8 @@ class _TaskScreenState extends State<TaskScreen> {
       },
       onDecreaseLevel: () {
         setState(() {
-//          _level =
-//              levelTree.getLessDifficultLevel(_level);
-//          levelRegenerate();
+          _level = levelTree.getLessDifficultLevel(_level);
+          questionsGenerate();
           optionsRequested = false;
         });
       },
@@ -205,7 +206,6 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 }
 
-
 /// Render set of questions
 class QuestionList extends StatelessWidget {
   final List<Level> questions;
@@ -244,8 +244,10 @@ class Question extends StatelessWidget {
   ///
   /// "x+y=Z", "X+y=z", "x+Y=z"
   final String mask;
+
   /// [x,y,z] or [x,y,w,z]
   final List<int> solution;
+
   /// Controller for the editinput
   final TextEditingController textController;
 
@@ -295,9 +297,8 @@ class Question extends StatelessWidget {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Text(
-            "????",
-            style: TextStyle(fontSize: textSize),
+          QuestionInputField(
+            textController: textController,
           ),
           Text(
             "+",
@@ -331,9 +332,8 @@ class Question extends StatelessWidget {
             "+",
             style: TextStyle(fontSize: textSize),
           ),
-          Text(
-            "????",
-            style: TextStyle(fontSize: textSize),
+          QuestionInputField(
+            textController: textController,
           ),
           Text(
             "=",

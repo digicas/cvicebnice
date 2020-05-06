@@ -167,7 +167,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                         // Open task screen
                         MaterialPageRoute(builder: (context) {
                           if (taskSelectedIndex == 2) {
-                            return addition.TaskScreen(selectedLevelIndex: 142,);
+                            return addition.TaskScreen(selectedLevelIndex: 146,);
                           }
 
                           return pyramidsAndFunnels.TaskScreen(
@@ -194,25 +194,3 @@ class _TaskListScreenState extends State<TaskListScreen> {
     );
   }
 }
-
-// total combinations:
-// jen odhad vzhledem k algoritmum generovani
-//
-//          child: ListView(
-//            children: levels
-//                .map(
-//                  (level) => ListTile(
-//                    onTap: () {
-//                      Navigator.push(
-//                        context,
-//                        MaterialPageRoute( builder: (context) => TaskScreen(level: level)),
-//                      );
-//                    },
-//                    leading: Text(level.levelIndex.toString()),
-//                    title: Text("${level.allMasksToString()}"),
-//                    subtitle: Text("totalmax: ${level.maxTotal}, úrovně ${level.maxRows}"),
-//                    trailing: Icon(Icons.navigate_next),
-//                  ),
-//                )
-//                .toList(),
-//          ),

@@ -6,12 +6,10 @@ import 'dart:core';
 import '../core/level.dart';
 import 'level.dart';
 
-
 /// ///////////////////////// Tree of levels (incl. definitions) //////////////////////////////
 ///
 /// At least one instance must be created otherwise level definitions are not generated
 class LevelTree extends LevelTreeBlueprint {
-
   /// Collection of defined levels
   ///
   List<Level> levels;
@@ -30,8 +28,13 @@ class LevelTree extends LevelTreeBlueprint {
 
   /// Returns [Level] by searching given index or null if not found
   Level getLevelByIndex(int levelIndex) {
-    return levels
-        .singleWhere((level) => level.index == levelIndex, orElse: () => null);
+    return levels.singleWhere((level) => level.index == levelIndex,
+        orElse: () => null);
+  }
+
+  /// Returns true if level exists in LevelTree, false otherwise
+  bool levelExists(int levelIndex) {
+    return getLevelByIndex(levelIndex) != null;
   }
 
   /// Returns more difficult [Level] if there is any or the same one
@@ -40,15 +43,31 @@ class LevelTree extends LevelTreeBlueprint {
     int newLevelIndex = level.index;
 
     /// avoid not implemented levels
-    while (newLevel == null){
+    while (newLevel == null) {
       newLevelIndex++;
+
       /// max level -> return the same level
-      if (level.index == levels.last.index ) return level;
+      if (level.index == levels.last.index) return level;
       newLevel = getLevelByIndex(newLevelIndex);
     }
     return newLevel;
   }
 
+  /// returns less difficult level if there is any
+  Level getLessDifficultLevel(Level level) {
+    int newLevelIndex = level.index;
+    Level newLevel;
+
+    /// avoid not implemented levels
+    while (newLevel == null) {
+      newLevelIndex--;
+
+      /// min level -> return the same level
+      if (newLevelIndex == 0) return level;
+      newLevel = getLevelByIndex(newLevelIndex);
+    }
+    return newLevel;
+  }
 
   /// ////////////////////////////////////////////// level definitions builder
   ///
@@ -163,7 +182,7 @@ class LevelTree extends LevelTreeBlueprint {
         onGenerate: () {
           int x = (random(8) + 1) * 1000;
           int y = random(899) + 100;
-          return [x, y,  x + y];
+          return [x, y, x + y];
         },
         masks: [
           "x+y=Z",
@@ -235,7 +254,7 @@ class LevelTree extends LevelTreeBlueprint {
           int x = xt * 1000 + xo * onesOrTens;
           int y = yt * 1000 + yo * onesOrTens;
 
-          return [x, y,  x + y];
+          return [x, y, x + y];
         },
         masks: ["x+y=Z"],
         valueRange: [0, 9999],
@@ -258,7 +277,7 @@ class LevelTree extends LevelTreeBlueprint {
           int x = xt * 1000 + xh * 100;
           int y = yt * 1000 + yh * 100;
 
-          return [x, y,  x + y];
+          return [x, y, x + y];
         },
         masks: ["x+y=Z"],
         valueRange: [0, 9999],
