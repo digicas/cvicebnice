@@ -74,6 +74,20 @@ class LevelTree extends LevelTreeBlueprint {
   List<Level> levelBuilder() {
     return [
       Level(
+        index: 2,
+        xid: "59q",
+        onGenerate: () {
+          int x = randomMinMax(0, 6);
+          int y = randomMinMax(0, 6 - x);
+          return [x, y, x + y];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 6],
+        description: "Sčítání v číselném oboru 0 - 6.",
+        example: "4 + 2 = ?",
+      ),
+
+      Level(
         index: 40,
         onGenerate: () {
           int x = randomMinMax(1, 9);

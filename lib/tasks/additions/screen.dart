@@ -33,7 +33,7 @@ class _TaskScreenState extends State<TaskScreen> {
   void initState() {
     selectedLevelIndex = widget.selectedLevelIndex;
 
-    selectedLevelIndex = 150;
+    selectedLevelIndex = 2;
 //    _level = widget.level;
 //    print("hu $_maskOn");
 //    _hintOn ??= false;

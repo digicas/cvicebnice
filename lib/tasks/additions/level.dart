@@ -40,6 +40,7 @@ class Level extends LevelBlueprint {
   /// Constructor
   Level(
       {@required index,
+      xid,
       @required this.onGenerate,
       this.masks,
       @required this.valueRange,
@@ -51,6 +52,7 @@ class Level extends LevelBlueprint {
   Level clone() {
     return new Level(
         index: this.index,
+        xid: this.xid,
         onGenerate: this.onGenerate,
         masks: this.masks,
         valueRange: this.valueRange,

@@ -12,8 +12,16 @@ abstract class LevelBlueprint {
   /// index of the level within LevelTree
   final int index;
 
+  /// unique external ID
+  ///
+  /// generated using https://shortunique.id/ or https://pypi.org/project/shortuuid/
+  /// for each level definition so the task level code can be used such as zvm-uhv
+  /// scope of uniqueness is among the levels of particular task
+  /// therefore only 3 characters should be enough
+  final String xid;
+
   /// initializes index for subclasses
-  const LevelBlueprint({this.index});
+  const LevelBlueprint({this.index, this.xid});
 
   /// Initial generation of the task and solution
   ///
@@ -29,7 +37,6 @@ abstract class LevelBlueprint {
   @override
   String toString();
 }
-
 
 /// Common blueprint for the LevelTree implementations
 ///
@@ -47,7 +54,6 @@ abstract class LevelBlueprint {
 /// static final List<Level> levels
 /// ```
 abstract class LevelTreeBlueprint {
-
   /// Random generator initialization
   ///
   /// Random numbers are often used for level definition callbacks.
@@ -102,6 +108,5 @@ abstract class LevelTreeBlueprint {
 //    return levels
 //        .singleWhere((level) => level.index == levelIndex, orElse: () => null);
 //  }
-
 
 }
