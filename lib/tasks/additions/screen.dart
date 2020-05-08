@@ -2,6 +2,7 @@ import 'package:cvicebnice/screens/overlays/donesuccessoverlay.dart';
 import 'package:cvicebnice/screens/overlays/donewrongoverlay.dart';
 import 'package:cvicebnice/screens/overlays/optionsoverlay.dart';
 import 'package:cvicebnice/widgets/small_numeric_keyboard.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'level.dart';
 import 'leveltree.dart';
@@ -41,7 +42,7 @@ class _TaskScreenState extends State<TaskScreen> {
   void initState() {
     selectedLevelIndex = widget.selectedLevelIndex;
 
-    selectedLevelIndex = 41;
+    selectedLevelIndex = 2;
 
     _showBackground ??= true;
     taskSubmitted ??= false;
@@ -70,16 +71,31 @@ class _TaskScreenState extends State<TaskScreen> {
 
   /// Regenerates the questions for the screen
   void questionsRegenerate() {
-//    submissionController.dispose();
+//    submissionController.dispose(); // must not dispose here :(
     questionsControllerInit();
   }
 
+  /// Generates the collection of questions
+  ///
+  /// tries x times to have unique questions
   void questionsGenerate() {
     questions = List.generate(questionsAmount, (_) => _level.clone());
 
-    questions.forEach((question) {
-      question.generate();
-    });
+    for (int i = 0; i < questions.length; i++) {
+      bool mustRegenerate;
+      int tries = 5;
+      do {
+        questions[i].generate();
+        tries--;
+        /// avoid generating the same question / solution
+        mustRegenerate = false;
+        for (int j = 0; j < i; j++) {
+          if (listEquals(questions[j].solution, questions[i].solution))
+            mustRegenerate = true;
+        }
+//        print("$i: $tries: ${questions[i].solution}");
+      } while (mustRegenerate & (tries > 0));
+    }
   }
 
   _checkSolution() {
@@ -151,7 +167,8 @@ class _TaskScreenState extends State<TaskScreen> {
                             onNextUpLevel: () {
                               setState(() {
                                 selectedLevelIndex =
-                                    levelTree.getMoreDifficultLevelIndex(selectedLevelIndex);
+                                    levelTree.getMoreDifficultLevelIndex(
+                                        selectedLevelIndex);
                                 questionsRegenerate();
                               });
                             },
