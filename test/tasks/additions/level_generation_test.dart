@@ -1,3 +1,4 @@
+import 'package:cvicebnice/tasks/additions/level.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:cvicebnice/tasks/additions/leveltree.dart';
 
@@ -6,7 +7,8 @@ import 'package:cvicebnice/tasks/additions/leveltree.dart';
 void main() {
   group("When generating levels", () {
     LevelTree levelTree = LevelTree();
-    test("Generated values should:", () {
+
+    test("Generated values should be in range:", () {
       levelTree.levels.forEach((level) {
 //        var level = LevelTree.getLevelByIndex(135);
         for (var i = 0; i < 2; i++) {
@@ -29,6 +31,14 @@ void main() {
                     level.valueRange[1])); // test min and max range of z
           }
         }
+      });
+    });
+
+    test("Levels have implemented submission check of the mask:", () {
+      levelTree.levels.forEach((level) {
+        level.generate();
+        expect(() => Level.checkSubmission(level.solution, [1], level.masks[0]),
+            returnsNormally);
       });
     });
   });
