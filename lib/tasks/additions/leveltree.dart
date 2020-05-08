@@ -121,6 +121,22 @@ class LevelTree extends LevelTreeBlueprint {
       ),
 
       Level(
+        index: 6,
+        xid: "34u",
+        onGenerate: () {
+          int x = randomMinMax(0, 9);
+          int y = randomMinMax(0, 9 - x);
+          return [x, y, x + y];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 9],
+        description: "Sčítání v číselném oboru 0 - 9.",
+        example: "4 + 5 = ?",
+      ),
+
+
+
+      Level(
         index: 40,
         xid: "5af",
         onGenerate: () {
