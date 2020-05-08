@@ -12,6 +12,9 @@ class Level extends LevelBlueprint {
   /// callback to generator function, which should return the list of generated values for task and solution
   List<int> Function() onGenerate;
 
+  /// callback to check the submission
+  bool Function(List generated, List filled) onCheck;
+
   /// Collection of masks to be applied onto task
   ///
   /// Capital letter (e.g. Z in x+y=Z) means input place => x+y=?
@@ -42,6 +45,7 @@ class Level extends LevelBlueprint {
       {@required index,
       xid,
       @required this.onGenerate,
+      this.onCheck,
       this.masks,
       @required this.valueRange,
       this.description,
@@ -54,6 +58,7 @@ class Level extends LevelBlueprint {
         index: this.index,
         xid: this.xid,
         onGenerate: this.onGenerate,
+        onCheck: this.onCheck,
         masks: this.masks,
         valueRange: this.valueRange,
         description: this.description,

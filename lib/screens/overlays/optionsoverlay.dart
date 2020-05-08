@@ -18,10 +18,15 @@ class OptionsOverlay extends StatelessWidget {
     this.canIncreaseLevel = true,
   }) : super(key: key);
 
+  /// Callback when getting back from this options overlay
   final VoidCallback onBackToLevel;
+  /// Callback when getting out of the taskscreen back "parent" screen
   final VoidCallback onBack;
+  /// Callback to clean and de facto restart the task screen
   final VoidCallback onRestartLevel;
+  /// Callback to restart with lower level
   final VoidCallback onDecreaseLevel;
+  /// Callback when background button was touched
   final VoidCallback onSwitchBackgroundImage;
 
   /// text (typically number) to show

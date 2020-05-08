@@ -12,7 +12,7 @@ import 'tasks/pyramidsandfunnels/triangle_levels.dart';
 
 import 'tasks/additions/task.dart' as addition;
 
-//import 'package:pyramida/widgets/launchurl.dart';
+//import '/widgets/launchurl.dart';
 //import 'package:url_launcher/url_launcher.dart';
 
 void main() => runApp(MyApp());
@@ -167,7 +167,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                         // Open task screen
                         MaterialPageRoute(builder: (context) {
                           if (taskSelectedIndex == 2) {
-                            return addition.TaskScreen(selectedLevelIndex: 146,);
+                            return addition.TaskScreen(selectedLevelIndex: 40,);
                           }
 
                           return pyramidsAndFunnels.TaskScreen(

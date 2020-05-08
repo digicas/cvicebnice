@@ -12,12 +12,13 @@ abstract class LevelBlueprint {
   /// index of the level within LevelTree
   final int index;
 
-  /// unique external ID
+  /// Unique external ID
   ///
   /// generated using https://shortunique.id/ or https://pypi.org/project/shortuuid/
   /// for each level definition so the task level code can be used such as zvm-uhv
   /// scope of uniqueness is among the levels of particular task
   /// therefore only 3 characters should be enough
+  /// Is defined forever - does not change, while internal index might change
   final String xid;
 
   /// initializes index for subclasses

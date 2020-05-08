@@ -1,8 +1,11 @@
+import 'package:cvicebnice/screens/overlays/donesuccessoverlay.dart';
+import 'package:cvicebnice/screens/overlays/donewrongoverlay.dart';
 import 'package:cvicebnice/screens/overlays/optionsoverlay.dart';
 import 'package:cvicebnice/widgets/small_numeric_keyboard.dart';
 import 'package:flutter/material.dart';
 import 'level.dart';
 import 'leveltree.dart';
+import 'submissioncontroller.dart';
 import 'package:flutter/services.dart';
 
 class TaskScreen extends StatefulWidget {
@@ -20,7 +23,7 @@ class _TaskScreenState extends State<TaskScreen> {
   bool optionsRequested;
   LevelTree levelTree;
   List<Level> questions;
-  List<TextEditingController> textControllers;
+
   Level _level;
 
   /// Level index selected in the parent Widget
@@ -29,40 +32,64 @@ class _TaskScreenState extends State<TaskScreen> {
   /// Amount of generated questions on the screen
   static const questionsAmount = 5;
 
+  /// Controller for submission / solution checks
+  SubmissionController submissionController;
+
+//  List<TextEditingController> textControllers;
+
   @override
   void initState() {
     selectedLevelIndex = widget.selectedLevelIndex;
 
     selectedLevelIndex = 2;
-//    _level = widget.level;
-//    print("hu $_maskOn");
-//    _hintOn ??= false;
     _showBackground ??= true;
     taskSubmitted ??= false;
     optionsRequested ??= false;
-//    levelInit();
 
-    levelTree = LevelTree();
-    _level = levelTree.getLevelByIndex(selectedLevelIndex);
-
-    questionsGenerate();
-    textControllers =
-        List.generate(questionsAmount, (_) => (TextEditingController()));
+    questionsControllerInit();
 
     super.initState();
+  }
+
+  /// Initializes the questions for screen for the particular level index
+  void questionsControllerInit() {
+    levelTree = LevelTree();
+    _level = levelTree.getLevelByIndex(selectedLevelIndex);
+    questionsGenerate();
+
+    submissionController = SubmissionController(screenQuestions: questions);
+    submissionController.addListener(_checkSolution);
+
+//    textControllers =
+//        List.generate(questionsAmount, (_) => (TextEditingController()));
+
+    taskSubmitted = false;
+    optionsRequested = false;
+  }
+
+  /// Regenerates the questions for the screen
+  void questionsRegenerate() {
+//    submissionController.dispose();
+    questionsControllerInit();
   }
 
   void questionsGenerate() {
     questions = List.generate(questionsAmount, (_) => _level.clone());
 
-    questions.forEach((level) {
-      level.generate();
+    questions.forEach((question) {
+      question.generate();
     });
+  }
+
+  _checkSolution() {
+    print("Submission: ${submissionController.toString()} : "
+        "solved: ${submissionController.isSolved}");
+    setState(() {});
   }
 
   @override
   void dispose() {
-//    submissionController.dispose();
+    submissionController.dispose();
     super.dispose();
   }
 
@@ -86,10 +113,12 @@ class _TaskScreenState extends State<TaskScreen> {
                     padding: EdgeInsets.fromLTRB(0, 40, 0, 80),
                     child: QuestionList(
                       questions: questions,
-                      textControllers: textControllers,
+                      textControllers: submissionController.cells,
+//                      textControllers: textControllers,
                     ),
                   ),
                 ),
+                // top scrolling shade
                 Container(
                   width: double.infinity,
                   height: 125,
@@ -109,8 +138,48 @@ class _TaskScreenState extends State<TaskScreen> {
                 ),
                 buildGuideAndButton(context),
 
+                // Build overlays based on taskscreen states
+                Builder(builder: (context) {
+                  if (!taskSubmitted & optionsRequested)
+                    return buildOptionsOverlay(context);
+                  if (taskSubmitted) {
+                    return submissionController.isSolved
+
+                        /// task is submitted and solved successfully
+                        ? DoneSuccessOverlay(
+                            onNextUpLevel: () {
+                              setState(() {
+                                selectedLevelIndex =
+                                    levelTree.getMoreDifficultLevelIndex(selectedLevelIndex);
+                                questionsRegenerate();
+                              });
+                            },
+                            onNextSameLevel: () {
+                              setState(() {
+                                questionsRegenerate();
+                              });
+                            },
+                            onBack: () {
+                              Navigator.of(context).pop();
+                            },
+                          )
+
+                        /// task is submitted, but not solved
+                        : DoneWrongOverlay(
+                            onBackToLevel: () {
+                              setState(() {
+                                taskSubmitted = false;
+                              });
+                            },
+                          );
+                  }
+                  // no options overlay to show
+                  return Container();
+                }),
+
                 // Check the task is not submitted
-                (!taskSubmitted) ? buildOptionsOverlay(context) : Container(),
+//                (!taskSubmitted) ? buildOptionsOverlay(context) : Container(),
+//                (taskSubmitted && submissionController.isSolved) ? build: Container();
               ],
             ),
           ),
@@ -141,8 +210,7 @@ class _TaskScreenState extends State<TaskScreen> {
       },
       onRestartLevel: () {
         setState(() {
-//          submissionController
-//              .initiateForLevel(_level);
+          submissionController.eraseSubmission();
           optionsRequested = false;
         });
       },
@@ -154,8 +222,9 @@ class _TaskScreenState extends State<TaskScreen> {
       },
       onDecreaseLevel: () {
         setState(() {
-          _level = levelTree.getLessDifficultLevel(_level);
-          questionsGenerate();
+          selectedLevelIndex =
+              levelTree.getLessDifficultLevelIndex(selectedLevelIndex);
+          questionsRegenerate();
           optionsRequested = false;
         });
       },
@@ -189,8 +258,8 @@ class _TaskScreenState extends State<TaskScreen> {
             ),
 //                          Container(width: 20),
 
-//                      submissionController.isFilled
-            true
+            submissionController.isFilled
+//            true
                 ? RaisedButton(
                     shape: StadiumBorder(),
                     child: Text("HOTOVO?"),

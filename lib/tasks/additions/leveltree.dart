@@ -53,6 +53,22 @@ class LevelTree extends LevelTreeBlueprint {
     return newLevel;
   }
 
+  /// Returns more difficult levelIndex if there is any or the same one
+  int getMoreDifficultLevelIndex(int currentIndex) {
+    Level newLevel;
+    int newIndex = currentIndex;
+
+    /// avoid not implemented levels
+    while (newLevel == null) {
+      newIndex++;
+      /// max level -> return the same level index
+      if (newIndex > levels.last.index) return currentIndex;
+      newLevel = getLevelByIndex(newIndex);
+    }
+
+    return newIndex;
+  }
+
   /// returns less difficult level if there is any
   Level getLessDifficultLevel(Level level) {
     int newLevelIndex = level.index;
@@ -69,18 +85,35 @@ class LevelTree extends LevelTreeBlueprint {
     return newLevel;
   }
 
+  /// Returns less difficult levelIndex if there is any or the same one
+  int getLessDifficultLevelIndex(int currentIndex) {
+    Level newLevel;
+    int newLevelIndex = currentIndex;
+    /// avoid not implemented levels
+    while (newLevel == null) {
+      newLevelIndex--;
+
+      /// min level -> return the same level
+      if (newLevelIndex == 0) return currentIndex;
+      newLevel = getLevelByIndex(newLevelIndex);
+    }
+    return newLevelIndex;
+  }
+
+
   /// ////////////////////////////////////////////// level definitions builder
   ///
   List<Level> levelBuilder() {
     return [
       Level(
         index: 2,
-        xid: "59q",
+        xid: "4p8",
         onGenerate: () {
           int x = randomMinMax(0, 6);
           int y = randomMinMax(0, 6 - x);
           return [x, y, x + y];
         },
+        onCheck: (List g, List f) => g[0] + g[1] == f[0],
         masks: ["x+y=Z"],
         valueRange: [0, 6],
         description: "Sčítání v číselném oboru 0 - 6.",
@@ -89,6 +122,7 @@ class LevelTree extends LevelTreeBlueprint {
 
       Level(
         index: 40,
+        xid: "5af",
         onGenerate: () {
           int x = randomMinMax(1, 9);
           int y = randomMinMax(1, 9);
@@ -96,6 +130,7 @@ class LevelTree extends LevelTreeBlueprint {
               (x + y) > 10 ? 1 : 11 - (x + y), (x + y) < 10 ? 9 : 19 - (x + y));
           return [x, y, w, x + y + w];
         },
+        onCheck: (g, f) => g[0] + g[1] + g[2]== f[0],
         masks: ["x+y+w=ZZ"],
         valueRange: [0, 19],
         description:
