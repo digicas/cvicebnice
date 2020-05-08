@@ -52,7 +52,6 @@ class SubmissionController extends ChangeNotifier {
     cells.forEach((tController) => tController.clear());
   }
 
-
   /// disposes all resources as required by [TextEditingController]
   void dispose() {
     cells.forEach((tController) => tController.dispose());
@@ -66,9 +65,11 @@ class SubmissionController extends ChangeNotifier {
   /// checks whether the submitted solution is equal to generated solution
   bool checkSolution() {
     bool done = true;
-    for (int i=0; i< screenQuestions.length; i++) {
+    for (int i = 0; i < screenQuestions.length; i++) {
       int filled = int.tryParse(cells[i].text);
-      if (!screenQuestions[i].onCheck(screenQuestions[i].solution, [filled])) done = false;
+      if (!Level.checkSubmission(screenQuestions[i].solution, [filled],
+          screenQuestions[i].selectedQuestionMask)) done = false;
+//      if (!screenQuestions[i].onCheck(screenQuestions[i].solution, [filled])) done = false;
     }
     return done;
   }

@@ -13,6 +13,8 @@ class Level extends LevelBlueprint {
   List<int> Function() onGenerate;
 
   /// callback to check the submission
+  ///
+  /// not used in this case - static [checkSubmission] is used instead
   bool Function(List generated, List filled) onCheck;
 
   /// Collection of masks to be applied onto task
@@ -41,15 +43,14 @@ class Level extends LevelBlueprint {
   String get selectedQuestionMask => masks[selectedQuestionMaskID];
 
   /// Constructor
-  Level(
-      {@required index,
-      xid,
-      @required this.onGenerate,
-      this.onCheck,
-      this.masks,
-      @required this.valueRange,
-      this.description,
-      this.example})
+  Level({@required index,
+    xid,
+    @required this.onGenerate,
+    this.onCheck,
+    this.masks,
+    @required this.valueRange,
+    this.description,
+    this.example})
       : super(index: index);
 
   /// Cloning method
@@ -73,6 +74,31 @@ class Level extends LevelBlueprint {
   void generate() {
     solution = onGenerate();
     selectedQuestionMaskID = rnd.nextInt(masks.length);
+  }
+
+  /// Returns true if submitted data correspond to generated data and mask
+  ///
+  /// Implementation for this kind of task, other tasks need different one
+  static bool checkSubmission(List generated, List filled, String mask) {
+
+    /// In case of empty submission - we cannot calculate with null
+    if(filled[0]==null) return false;
+
+    if (["x+y=Z"].contains(mask))
+      return generated[0] + generated[1] == filled[0];
+
+    if (["x+Y=z"].contains(mask))
+      return generated[0] + filled[0] == generated[2];
+
+    if (["X+y=z"].contains(mask))
+      return filled[0] + generated[1] == generated[2];
+
+    if (["x+y+w=ZZ"].contains(mask))
+      return generated[0] + generated[1] + generated[2] == filled[0];
+
+    if (["100=k+X"].contains(mask)) return 100 == generated[0] + filled[0];
+
+    return false;
   }
 
   @override

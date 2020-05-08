@@ -61,6 +61,7 @@ class LevelTree extends LevelTreeBlueprint {
     /// avoid not implemented levels
     while (newLevel == null) {
       newIndex++;
+
       /// max level -> return the same level index
       if (newIndex > levels.last.index) return currentIndex;
       newLevel = getLevelByIndex(newIndex);
@@ -89,6 +90,7 @@ class LevelTree extends LevelTreeBlueprint {
   int getLessDifficultLevelIndex(int currentIndex) {
     Level newLevel;
     int newLevelIndex = currentIndex;
+
     /// avoid not implemented levels
     while (newLevel == null) {
       newLevelIndex--;
@@ -99,7 +101,6 @@ class LevelTree extends LevelTreeBlueprint {
     }
     return newLevelIndex;
   }
-
 
   /// ////////////////////////////////////////////// level definitions builder
   ///
@@ -113,7 +114,6 @@ class LevelTree extends LevelTreeBlueprint {
           int y = randomMinMax(0, 6 - x);
           return [x, y, x + y];
         },
-        onCheck: (List g, List f) => g[0] + g[1] == f[0],
         masks: ["x+y=Z"],
         valueRange: [0, 6],
         description: "Sčítání v číselném oboru 0 - 6.",
@@ -130,7 +130,6 @@ class LevelTree extends LevelTreeBlueprint {
               (x + y) > 10 ? 1 : 11 - (x + y), (x + y) < 10 ? 9 : 19 - (x + y));
           return [x, y, w, x + y + w];
         },
-        onCheck: (g, f) => g[0] + g[1] + g[2]== f[0],
         masks: ["x+y+w=ZZ"],
         valueRange: [0, 19],
         description:
@@ -186,9 +185,7 @@ class LevelTree extends LevelTreeBlueprint {
           int y = random(8 - x) + 1;
           return [x * 1000, y * 1000, (x + y) * 1000];
         },
-        masks: [
-          "x+y=Z",
-        ],
+        masks: ["x+y=Z"],
         valueRange: [0, 9999],
         description:
             "Oba sčítanci jsou 4 ciferná čísla dělitelná 1000 s hodnotou v rozsahu 0 až 10000.",
@@ -198,9 +195,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 135,
         onGenerate: () => getLevelByIndex(134).onGenerate(),
-        masks: [
-          "x+Y=z",
-        ],
+        masks: ["x+Y=z"],
         valueRange: [0, 9999],
         description:
             "Oba sčítanci jsou 4 ciferná čísla dělitelná 1000 s hodnotou v rozsahu 0 až 10000.",
@@ -209,9 +204,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 136,
         onGenerate: () => getLevelByIndex(134).onGenerate(),
-        masks: [
-          "X+y=z",
-        ],
+        masks: ["X+y=z"],
         valueRange: [0, 9999],
         description:
             "Oba sčítanci jsou 4 ciferná čísla dělitelná 1000 s hodnotou v rozsahu 0 až 10000.",
@@ -233,9 +226,7 @@ class LevelTree extends LevelTreeBlueprint {
           int y = random(899) + 100;
           return [x, y, x + y];
         },
-        masks: [
-          "x+y=Z",
-        ],
+        masks: ["x+y=Z"],
         valueRange: [0, 9999],
         description:
             "1. sčítanec je 4 ciferné číslo dělitelné 1000 s hodnotou v rozsahu 0 až 10000. 2. sčítanec je 3 ciferné číslo.",
@@ -245,9 +236,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 139,
         onGenerate: () => getLevelByIndex(138).onGenerate(),
-        masks: [
-          "x+Y=z",
-        ],
+        masks: ["x+Y=z"],
         valueRange: [0, 9999],
         description:
             "1. sčítanec je 4 ciferné číslo dělitelné 1000 s hodnotou v rozsahu 0 až 10000. 2. sčítanec je 3 ciferné číslo.",
