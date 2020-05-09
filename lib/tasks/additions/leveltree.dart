@@ -134,6 +134,234 @@ class LevelTree extends LevelTreeBlueprint {
         example: "4 + 5 = ?",
       ),
 
+      Level(
+        index: 10,
+        xid: "2ni",
+        onGenerate: () {
+          int x = randomMinMax(0, 10);
+          int y = randomMinMax(0, 10 - x);
+          return [x, y, x + y];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 10],
+        description: "Sčítání v číselném oboru 0 - 10.",
+        example: "4 + 6 = ?",
+      ),
+
+      Level(
+        index: 15,
+        xid: "4zk",
+        onGenerate: () {
+          int x = randomMinMax(10, 14);
+          int y = randomMinMax(0, 14 - x);
+          return random(1) == 1 ? [x, y, x + y] : [y, x, x + y];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 14],
+        description: "Sčítání v číselném oboru 0 - 14 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        example: "11 + 2 = ?",
+      ),
+
+      Level(
+        index: 16,
+        xid: "4ae",
+        onGenerate: () {
+          int z = randomMinMax(10, 14);
+          int x = randomMinMax(10, z);
+          return random(1) == 1 ? [x, z-x, z] : [z-x, x, z];
+        },
+        masks: ["x+Y=z"],
+        valueRange: [0, 14],
+        description: "Sčítání v číselném oboru 0 - 14 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        example: "11 + ? = 14",
+      ),
+
+      Level(
+        index: 17,
+        xid: "3u2",
+        onGenerate: () {
+          int z = randomMinMax(10, 14);
+          int x = randomMinMax(10, z);
+          return random(1) == 1 ? [x, z-x, z] : [z-x, x, z];
+        },
+        masks: ["X+y=z"],
+        valueRange: [0, 14],
+        description: "Sčítání v číselném oboru 0 - 14 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        example: "? + 5 = 16",
+      ),
+
+      Level(
+        index: 18,
+        xid: "37e",
+        onGenerate: () {
+          int z = randomMinMax(10, 14);
+          int x = randomMinMax(10, z);
+          return random(1) == 1 ? [x, z-x, z] : [z-x, x, z];
+        },
+        masks: ["X+y=z", "x+Y=z"],
+        valueRange: [0, 14],
+        description: "Sčítání v číselném oboru 0 - 14 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        example: "? + 2 = 13, nebo 4 + ? = 14",
+      ),
+
+      Level(
+        index: 19,
+        xid: "3hc",
+        onGenerate: () {
+          int z = randomMinMax(11, 14);
+          int a = randomMinMax(10, z-1);
+          int b = randomMinMax(0, z-a);
+          int c = z - (a+b);
+          return [[a, b, c, z], [b, c, a, z], [c, a, b, z]][random(2)];
+        },
+        masks: ["x+y+w=ZZ"],
+        valueRange: [0, 14],
+        description: "Sčítání v číselném oboru 0 - 14 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        example: "2 + 1 + 11 = ?",
+      ),
+      Level(
+        index: 20,
+        xid: "3fu",
+        onGenerate: () {
+          int x = randomMinMax(10, 17);
+          int y = randomMinMax(0, 17 - x);
+          return random(1) == 1 ? [x, y, x + y] : [y, x, x + y];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 17],
+        description: "Sčítání v číselném oboru 0 - 17 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        example: "11 + 2 = ?",
+      ),
+
+      Level(
+        index: 21,
+        xid: "2v8",
+        onGenerate: () {
+          int z = randomMinMax(10, 17);
+          int x = randomMinMax(10, z);
+          return random(1) == 1 ? [x, z-x, z] : [z-x, x, z];
+        },
+        masks: ["x+Y=z"],
+        valueRange: [0, 17],
+        description: "Sčítání v číselném oboru 0 - 17 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        example: "11 + ? = 17",
+      ),
+
+      Level(
+        index: 22,
+        xid: "2ai",
+        onGenerate: () {
+          int z = randomMinMax(10, 17);
+          int x = randomMinMax(10, z);
+          return random(1) == 1 ? [x, z-x, z] : [z-x, x, z];
+        },
+        masks: ["X+y=z"],
+        valueRange: [0, 17],
+        description: "Sčítání v číselném oboru 0 - 17 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        example: "? + 5 = 16",
+      ),
+
+      Level(
+        index: 23,
+        xid: "3q9",
+        onGenerate: () {
+          int z = randomMinMax(10, 17);
+          int x = randomMinMax(10, z);
+          return random(1) == 1 ? [x, z-x, z] : [z-x, x, z];
+        },
+        masks: ["X+y=z", "x+Y=z"],
+        valueRange: [0, 17],
+        description: "Sčítání v číselném oboru 0 - 17 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        example: "? + 2 = 13, nebo 4 + ? = 17",
+      ),
+
+      Level(
+        index: 24,
+        xid: "3se",
+        onGenerate: () {
+          int z = randomMinMax(11, 17);
+          int a = randomMinMax(10, z-1);
+          int b = randomMinMax(0, z-a);
+          int c = z - (a+b);
+          return [[a, b, c, z], [b, c, a, z], [c, a, b, z]][random(2)];
+        },
+        masks: ["x+y+w=ZZ"],
+        valueRange: [0, 17],
+        description: "Sčítání v číselném oboru 0 - 17 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        example: "2 + 1 + 11 = ?",
+      ),
+
+      Level(
+        index: 25,
+        xid: "3pj",
+        onGenerate: () {
+          int x = randomMinMax(10, 20);
+          int y = randomMinMax(0, 20 - x);
+          return random(1) == 1 ? [x, y, x + y] : [y, x, x + y];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 20],
+        description: "Sčítání v číselném oboru 0 - 20 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        example: "16 + 2 = ?",
+      ),
+
+      Level(
+        index: 26,
+        xid: "3br",
+        onGenerate: () {
+          int z = randomMinMax(10, 20);
+          int x = randomMinMax(10, z);
+          return random(1) == 1 ? [x, z-x, z] : [z-x, x, z];
+        },
+        masks: ["x+Y=z"],
+        valueRange: [0, 20],
+        description: "Sčítání v číselném oboru 0 - 20 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        example: "11 + ? = 16",
+      ),
+
+      Level(
+        index: 27,
+        xid: "57p",
+        onGenerate: () {
+          int z = randomMinMax(10, 20);
+          int x = randomMinMax(10, z);
+          return random(1) == 1 ? [x, z-x, z] : [z-x, x, z];
+        },
+        masks: ["X+y=z"],
+        valueRange: [0, 20],
+        description: "Sčítání v číselném oboru 0 - 20 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        example: "? + 5 = 16",
+      ),
+
+      Level(
+        index: 28,
+        xid: "2id",
+        onGenerate: () {
+          int z = randomMinMax(10, 20);
+          int x = randomMinMax(10, z);
+          return random(1) == 1 ? [x, z-x, z] : [z-x, x, z];
+        },
+        masks: ["X+y=z", "x+Y=z"],
+        valueRange: [0, 20],
+        description: "Sčítání v číselném oboru 0 - 20 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        example: "? + 5 = 16, nebo 4 + ? = 15",
+      ),
+
+      Level(
+        index: 29,
+        xid: "3pd",
+        onGenerate: () {
+          int z = randomMinMax(11, 20);
+          int a = randomMinMax(10, z-1);
+          int b = randomMinMax(0, z-a);
+          int c = z - (a+b);
+          return [[a, b, c, z], [b, c, a, z], [c, a, b, z]][random(2)];
+        },
+        masks: ["x+y+w=ZZ"],
+        valueRange: [0, 20],
+        description: "Sčítání v číselném oboru 0 - 20 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        example: "2 + 4 + 12 = ?",
+      ),
 
 
       Level(
