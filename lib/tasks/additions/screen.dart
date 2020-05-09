@@ -42,7 +42,7 @@ class _TaskScreenState extends State<TaskScreen> {
   void initState() {
     selectedLevelIndex = widget.selectedLevelIndex;
 
-    selectedLevelIndex = 2;
+    selectedLevelIndex = 35;
 
     _showBackground ??= true;
     taskSubmitted ??= false;
