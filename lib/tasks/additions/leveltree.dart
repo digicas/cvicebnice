@@ -102,6 +102,32 @@ class LevelTree extends LevelTreeBlueprint {
     return newLevelIndex;
   }
 
+  /// Returns level Index number based on the given school year and month
+  static int schoolClassToLevelIndex(int schoolClass, int monthInSchool) {
+    assert(schoolClass > -1); // 0 schoolClass is tutorial
+    assert(monthInSchool > -1 && monthInSchool < 10); // 0..Sept, 9..June
+    schoolClass =
+    (schoolClass > 5) ? 5 : schoolClass; // highest defined schoolClass
+
+    return schoolClassToLevelMap[schoolClass][monthInSchool];
+  }
+
+  /// Lookup map to find levels based on school year and month
+  ///
+  /// each row is the schoolClass (0-5)
+  /// each column is the schoolMonth (0-9)
+  // @formatter:off
+  static final List<List<int>> schoolClassToLevelMap = [
+    //09   10   11   12   01   02   03   04   05   06 -- months in the school year
+    [ 00,  00,  00,  00,  00,  00,  00,  00,  00,  00], // 0 class => tutorial
+    [ 02,  02,  06,  10,  15,  15,  20,  25,  30,  30], // 1st class
+    [ 36,  41,  44,  55,  59,  64,  72,  76,  77,  77], // 2nd
+    [ 65,  73,  73,  78,  79,  90,  94, 114, 126, 126], // 3rd
+    [118, 130, 130, 170, 170, 170, 180, 180, 180, 180], // 4th
+    [180, 180, 180, 180, 180, 180, 180, 180, 180, 180], // 5th
+  ]; //@formatter:on
+
+
   /// ////////////////////////////////////////////// level definitions builder
   ///
   List<Level> levelBuilder() {
@@ -159,7 +185,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["x+y=Z"],
         valueRange: [0, 14],
         description:
-            "Sčítání v číselném oboru 0 - 14 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        "Sčítání v číselném oboru 0 - 14 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
         example: "11 + 2 = ?",
       ),
 
@@ -174,7 +200,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["x+Y=z"],
         valueRange: [0, 14],
         description:
-            "Sčítání v číselném oboru 0 - 14 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        "Sčítání v číselném oboru 0 - 14 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
         example: "11 + ? = 14",
       ),
 
@@ -189,7 +215,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["X+y=z"],
         valueRange: [0, 14],
         description:
-            "Sčítání v číselném oboru 0 - 14 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        "Sčítání v číselném oboru 0 - 14 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
         example: "? + 5 = 16",
       ),
 
@@ -204,7 +230,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["X+y=z", "x+Y=z"],
         valueRange: [0, 14],
         description:
-            "Sčítání v číselném oboru 0 - 14 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        "Sčítání v číselném oboru 0 - 14 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
         example: "? + 2 = 13, nebo 4 + ? = 14",
       ),
 
@@ -225,7 +251,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["x+y+w=ZZ"],
         valueRange: [0, 14],
         description:
-            "Sčítání v číselném oboru 0 - 14 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        "Sčítání v číselném oboru 0 - 14 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
         example: "2 + 1 + 11 = ?",
       ),
 // //////////////////////////////////////////////////////////////////// Level 20+
@@ -241,7 +267,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["x+y=Z"],
         valueRange: [0, 17],
         description:
-            "Sčítání v číselném oboru 0 - 17 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        "Sčítání v číselném oboru 0 - 17 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
         example: "11 + 2 = ?",
       ),
 
@@ -256,7 +282,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["x+Y=z"],
         valueRange: [0, 17],
         description:
-            "Sčítání v číselném oboru 0 - 17 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        "Sčítání v číselném oboru 0 - 17 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
         example: "11 + ? = 17",
       ),
 
@@ -271,7 +297,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["X+y=z"],
         valueRange: [0, 17],
         description:
-            "Sčítání v číselném oboru 0 - 17 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        "Sčítání v číselném oboru 0 - 17 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
         example: "? + 5 = 16",
       ),
 
@@ -286,7 +312,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["X+y=z", "x+Y=z"],
         valueRange: [0, 17],
         description:
-            "Sčítání v číselném oboru 0 - 17 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        "Sčítání v číselném oboru 0 - 17 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
         example: "? + 2 = 13, nebo 4 + ? = 17",
       ),
 
@@ -307,7 +333,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["x+y+w=ZZ"],
         valueRange: [0, 17],
         description:
-            "Sčítání v číselném oboru 0 - 17 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        "Sčítání v číselném oboru 0 - 17 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
         example: "2 + 1 + 11 = ?",
       ),
 
@@ -322,7 +348,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["x+y=Z"],
         valueRange: [0, 20],
         description:
-            "Sčítání v číselném oboru 0 - 20 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        "Sčítání v číselném oboru 0 - 20 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
         example: "16 + 2 = ?",
       ),
 
@@ -337,7 +363,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["x+Y=z"],
         valueRange: [0, 20],
         description:
-            "Sčítání v číselném oboru 0 - 20 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        "Sčítání v číselném oboru 0 - 20 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
         example: "11 + ? = 16",
       ),
 
@@ -352,7 +378,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["X+y=z"],
         valueRange: [0, 20],
         description:
-            "Sčítání v číselném oboru 0 - 20 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        "Sčítání v číselném oboru 0 - 20 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
         example: "? + 5 = 16",
       ),
 
@@ -367,7 +393,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["X+y=z", "x+Y=z"],
         valueRange: [0, 20],
         description:
-            "Sčítání v číselném oboru 0 - 20 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        "Sčítání v číselném oboru 0 - 20 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
         example: "? + 5 = 16, nebo 4 + ? = 15",
       ),
 
@@ -388,7 +414,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["x+y+w=ZZ"],
         valueRange: [0, 20],
         description:
-            "Sčítání v číselném oboru 0 - 20 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
+        "Sčítání v číselném oboru 0 - 20 bez přechodu přes 10, kde jeden ze sčítanců je 10 a více.",
         example: "2 + 4 + 12 = ?",
       ),
 // //////////////////////////////////////////////////////////////////// Level 30+
@@ -408,7 +434,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["x+Y=z"],
         valueRange: [0, 20],
         description:
-            "Sčítání v číselném oboru 0 - 20 s přechodem přes 10, kde je součet 16, 17, 18.",
+        "Sčítání v číselném oboru 0 - 20 s přechodem přes 10, kde je součet 16, 17, 18.",
         example: "9 + ? = 17",
       ),
 
@@ -426,7 +452,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["x+y+w=ZZ"],
         valueRange: [0, 19],
         description:
-            "Součet více jednociferných čísel s přechodem přes 10 s celkovým součtem do 20.",
+        "Součet více jednociferných čísel s přechodem přes 10 s celkovým součtem do 20.",
         example: "5 + 4 + 9 = ?",
       ),
 
@@ -460,14 +486,14 @@ class LevelTree extends LevelTreeBlueprint {
         index: 43,
         onGenerate: () {
           int k =
-              random(1) == 1 ? randomMinMax(1, 19) * 5 : randomMinMax(81, 99);
+          random(1) == 1 ? randomMinMax(1, 19) * 5 : randomMinMax(81, 99);
           int x = 100 - k;
           return [k, x];
         },
         masks: ["100=k+X"],
         valueRange: [0, 99],
         description:
-            "Rozklad čísla 100, kde 1. sčítanec je dělitelný 5 a nebo 81-99.",
+        "Rozklad čísla 100, kde 1. sčítanec je dělitelný 5 a nebo 81-99.",
         example: "100 = 92 + ?",
       ),
 
@@ -481,7 +507,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["x+y=Z"],
         valueRange: [0, 9999],
         description:
-            "Oba sčítanci jsou 4 ciferná čísla dělitelná 1000 s hodnotou v rozsahu 0 až 10000.",
+        "Oba sčítanci jsou 4 ciferná čísla dělitelná 1000 s hodnotou v rozsahu 0 až 10000.",
         example: "6000 + 3000 = ?",
       ),
 
@@ -491,7 +517,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["x+Y=z"],
         valueRange: [0, 9999],
         description:
-            "Oba sčítanci jsou 4 ciferná čísla dělitelná 1000 s hodnotou v rozsahu 0 až 10000.",
+        "Oba sčítanci jsou 4 ciferná čísla dělitelná 1000 s hodnotou v rozsahu 0 až 10000.",
         example: "6000 + ? = 9000",
       ),
       Level(
@@ -500,7 +526,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["X+y=z"],
         valueRange: [0, 9999],
         description:
-            "Oba sčítanci jsou 4 ciferná čísla dělitelná 1000 s hodnotou v rozsahu 0 až 10000.",
+        "Oba sčítanci jsou 4 ciferná čísla dělitelná 1000 s hodnotou v rozsahu 0 až 10000.",
         example: "6000 + ? = 9000",
       ),
       Level(
@@ -509,7 +535,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 9999],
         description:
-            "Oba sčítanci jsou 4 ciferná čísla dělitelná 1000 s hodnotou v rozsahu 0 až 10000.",
+        "Oba sčítanci jsou 4 ciferná čísla dělitelná 1000 s hodnotou v rozsahu 0 až 10000.",
         example: "6000 + ? = 9000, nebo ? + 3000 = 9000",
       ),
       Level(
@@ -522,7 +548,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["x+y=Z"],
         valueRange: [0, 9999],
         description:
-            "1. sčítanec je 4 ciferné číslo dělitelné 1000 s hodnotou v rozsahu 0 až 10000. 2. sčítanec je 3 ciferné číslo.",
+        "1. sčítanec je 4 ciferné číslo dělitelné 1000 s hodnotou v rozsahu 0 až 10000. 2. sčítanec je 3 ciferné číslo.",
         example: "4000 + 358 = ?",
       ),
 
@@ -532,7 +558,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["x+Y=z"],
         valueRange: [0, 9999],
         description:
-            "1. sčítanec je 4 ciferné číslo dělitelné 1000 s hodnotou v rozsahu 0 až 10000. 2. sčítanec je 3 ciferné číslo.",
+        "1. sčítanec je 4 ciferné číslo dělitelné 1000 s hodnotou v rozsahu 0 až 10000. 2. sčítanec je 3 ciferné číslo.",
         example: "4000 + ? = 4358",
       ),
 
@@ -542,7 +568,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["X+y=z"],
         valueRange: [0, 9999],
         description:
-            "1. sčítanec je 4 ciferné číslo dělitelné 1000 s hodnotou v rozsahu 0 až 10000. 2. sčítanec je 3 ciferné číslo.",
+        "1. sčítanec je 4 ciferné číslo dělitelné 1000 s hodnotou v rozsahu 0 až 10000. 2. sčítanec je 3 ciferné číslo.",
         example: "? + 358 = 4358",
       ),
 
@@ -552,7 +578,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 9999],
         description:
-            "1. sčítanec je 4 ciferné číslo dělitelné 1000 s hodnotou v rozsahu 0 až 10000. 2. sčítanec je 3 ciferné číslo.",
+        "1. sčítanec je 4 ciferné číslo dělitelné 1000 s hodnotou v rozsahu 0 až 10000. 2. sčítanec je 3 ciferné číslo.",
         example: "4000 + ? = 4358, nebo ? + 358 = 4358",
       ),
 
@@ -566,7 +592,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["x+Y=z"],
         valueRange: [0, 9999],
         description:
-            "1. sčítanec je 4 ciferné číslo, 2. sčítanec je 4 ciferné číslo dělitelné 1000, součet je < 10000.",
+        "1. sčítanec je 4 ciferné číslo, 2. sčítanec je 4 ciferné číslo dělitelné 1000, součet je < 10000.",
         example: "4321 + ? = 6321",
       ),
 

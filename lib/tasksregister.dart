@@ -111,6 +111,7 @@ final List<TasksRegisterItem> tasksRegister = [
     onOpenTaskScreen: (index) => additions.TaskScreen(
       selectedLevelIndex: index,
     ),
+    onSchoolClassToLevelIndex: additions.onSchoolClassToLevelIndex,
     onLevelsCount: additions.levelsCount,
   ),
   TasksRegisterItem(

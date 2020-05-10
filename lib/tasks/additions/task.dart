@@ -1,6 +1,12 @@
 // Encapsulation / namespacing of the tasks code
 //
 // Used by the [TaskRegister] collection
+// Serves as the unifying proxy to methods calls
+// Ideally implements at least:
+//    isLevelImplemented
+//    onOpenTaskScreen
+//    onSchoolClassToLevelIndex
+
 export 'screen.dart';
 export 'leveltree.dart';
 export 'level.dart';
@@ -18,4 +24,12 @@ bool isLevelImplemented(int index) {
   print("Checking additions for level: $index");
   var levelTree = LevelTree();
   return levelTree.getLevelByIndex(index) != null;
+}
+
+int onSchoolClassToLevelIndex(int schoolYear, int schoolMonth) {
+  return LevelTree.schoolClassToLevelIndex(schoolYear, schoolMonth);
+//
+//
+//  print("SchoolYear/schoolMonth proxy not implemented.");
+//  return 0;
 }
