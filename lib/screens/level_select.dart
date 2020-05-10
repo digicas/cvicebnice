@@ -185,7 +185,6 @@ class _LevelSelectState extends State<LevelSelect> {
                   size: 40,
                 ),
 //                color: Colors.blue,
-//                onPressed: LevelTree.getLevelByLevelIndex(levelIndex) == null
                 onPressed: widget.onCheckLevelExists(levelIndex)
                     ? () {
                         widget.onPlay(levelIndex);

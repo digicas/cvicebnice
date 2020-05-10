@@ -50,3 +50,9 @@ Widget openFunnelsTaskScreen(int selectedLevelIndex) {
       level: LevelTree.getLevelByLevelIndex(selectedLevelIndex),
       taskType: TriangleTaskType.Funnel);
 }
+
+/// Obtain the level index based on the school year and month
+int schoolClassToLevelIndex(int schoolYear, int schoolMonth) {
+  return LevelTree.schoolClassToLevelIndex(
+      schoolYear.toInt(), schoolMonth.toInt());
+}

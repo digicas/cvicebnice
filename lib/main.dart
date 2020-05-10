@@ -1,17 +1,10 @@
-import 'dart:math';
 
 import 'package:cvicebnice/tasksregister.dart';
 import 'package:flutter/material.dart';
 
 //import 'package:flutter_linkify/flutter_linkify.dart';
 
-import 'tasks/pyramidsandfunnels/task.dart' as pyramidsAndFunnels;
-
 import './screens/level_select.dart';
-
-import 'tasks/pyramidsandfunnels/triangle_levels.dart';
-
-//import 'tasks/additions/task.dart' as addition;
 
 //import '/widgets/launchurl.dart';
 //import 'package:url_launcher/url_launcher.dart';
@@ -19,7 +12,7 @@ import 'tasks/pyramidsandfunnels/triangle_levels.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+  // This widget is the root of the application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -88,7 +81,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
             child: Column(
               children: <Widget>[
                 ListTile(
-                  title: Text("Úloha",
+                  title: Text("Prostředí úloh",
                       style: Theme.of(context).textTheme.headline6),
                 ),
                 SingleChildScrollView(
@@ -124,8 +117,9 @@ class _TaskListScreenState extends State<TaskListScreen> {
                       tasksRegister[taskSelectedIndex]
                           .isLevelImplemented(index),
                   onSchoolClassToLevelIndex: (schoolYear, schoolMonth) =>
-                      LevelTree.schoolClassToLevelIndex(
-                          schoolYear.toInt(), schoolMonth.toInt()),
+                      tasksRegister[taskSelectedIndex]
+                          .onSchoolClassToLevelIndex(
+                              schoolYear.toInt(), schoolMonth.toInt()),
                   onPlay: (int selectedLevelIndex) {
                     print("Selected level to play: $selectedLevelIndex");
                     // if level not yet implemented, just Toast
@@ -142,31 +136,8 @@ class _TaskListScreenState extends State<TaskListScreen> {
                         context,
                         // Open task screen
                         MaterialPageRoute(builder: (context) {
-                          if (taskSelectedIndex == 2) {
-                            // common
-                            return tasksRegister[taskSelectedIndex]
-                                .onOpenTaskScreen(selectedLevelIndex);
-                          }
-                          if (taskSelectedIndex == 0) {
-                            // pyramidy
-                            return tasksRegister[taskSelectedIndex]
-                                .onOpenTaskScreen(selectedLevelIndex);
-//                            return pyramidsAndFunnels.TaskScreen(
-//                              level: LevelTree.getLevelByLevelIndex(
-//                                  selectedLevelIndex),
-//                              taskType: pyramidsAndFunnels.TriangleTaskType.Pyramid
-//                            );
-                          }
-                          if (taskSelectedIndex == 1) {
-                            // funnels
-                            return pyramidsAndFunnels.TaskScreen(
-                                level: LevelTree.getLevelByLevelIndex(
-                                    selectedLevelIndex),
-                                taskType: pyramidsAndFunnels.TriangleTaskType.Funnel
-                            );
-                          }
-                          return Container(child: Center(child: Text("N/A")));
-
+                          return tasksRegister[taskSelectedIndex]
+                              .onOpenTaskScreen(selectedLevelIndex);
                         }
 //
                             ),
@@ -182,8 +153,8 @@ class _TaskListScreenState extends State<TaskListScreen> {
         ),
       ),
       bottomNavigationBar: Text(
-          " Úrovní: ${tasksRegister.allLevels} Masek: ${tasksRegister.allMasks} "
-          "Zadání cca: ${tasksRegister.allQuestions}"),
+          " Všech úrovní: ${tasksRegister.allLevels} "
+          "  Zadání cca: ${tasksRegister.allQuestions}"),
     );
   }
 }

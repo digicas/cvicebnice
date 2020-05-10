@@ -1,4 +1,4 @@
-// Register (registry) of tasks
+// Register (registry) of tasks environments
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +10,7 @@ import 'tasks/pyramidsandfunnels/task.dart' as pyramidsAndFunnels;
 ///
 /// Defines image and label for the selection screen
 /// Serves as the proxy for calling underlying methods, widgets, screens, atc.
-/// of particular task
+/// of particular task environment
 class TasksRegisterItem {
   /// Image of Task for the Selection screen with min. size of 256x256
   ///
@@ -26,6 +26,9 @@ class TasksRegisterItem {
 
   /// Callback to render Task screen
   Widget Function(int selectedLevelIndex) onOpenTaskScreen;
+
+  /// Callback to obtain the level index based on the school year and month
+  int Function(int schoolYear, int schoolMonth) onSchoolClassToLevelIndex;
 
   // Statistical functions / callbacks below
 
@@ -50,22 +53,25 @@ class TasksRegisterItem {
   ///  Amount of tasks of particular Task
   int get questionsCount => onQuestionsCount();
 
-  TasksRegisterItem({@required this.imageAssetName,
-    @required this.label,
-    this.isLevelImplemented = defaultLevelIsNotImplemented,
-    this.onOpenTaskScreen = defaultOpenTaskScreen,
-    this.onLevelsCount = defaultLevelsCount,
-    this.onMasksCount = defaultMasksCount,
-    this.onQuestionsCount = defaultQuestionsCount});
+  TasksRegisterItem(
+      {@required this.imageAssetName,
+      @required this.label,
+      this.isLevelImplemented = defaultLevelIsNotImplemented,
+      this.onOpenTaskScreen = defaultOpenTaskScreen,
+      this.onSchoolClassToLevelIndex = defaultOnSchoolClassToLevelIndex,
+      this.onLevelsCount = defaultLevelsCount,
+      this.onMasksCount = defaultMasksCount,
+      this.onQuestionsCount = defaultQuestionsCount});
 }
 
+
+/// TasksRegister methods
 extension TaskRegister<TasksRegisterItem> on List<TasksRegisterItem> {
   /// Total sum of all registered Tasks
   int get allTasks => this.length;
 
   /// Total sum of all implemented levels
-  int get allLevels =>
-      tasksRegister.fold(0, (p, task) {
+  int get allLevels => tasksRegister.fold(0, (p, task) {
         print("task: ${task.label} levels: ${task.levelsCount}");
         return p + task.levelsCount;
       });
@@ -85,6 +91,7 @@ final List<TasksRegisterItem> tasksRegister = [
       label: "Pyramidy",
       isLevelImplemented: pyramidsAndFunnels.isLevelImplemented,
       onOpenTaskScreen: pyramidsAndFunnels.openPyramidsTaskScreen,
+      onSchoolClassToLevelIndex: pyramidsAndFunnels.schoolClassToLevelIndex,
       onLevelsCount: pyramidsAndFunnels.levelsCount,
       onMasksCount: pyramidsAndFunnels.masksCount,
       onQuestionsCount: pyramidsAndFunnels.questionsCount),
@@ -93,29 +100,28 @@ final List<TasksRegisterItem> tasksRegister = [
       label: "Trychtýř",
       isLevelImplemented: pyramidsAndFunnels.isLevelImplemented,
       onOpenTaskScreen: pyramidsAndFunnels.openFunnelsTaskScreen,
+      onSchoolClassToLevelIndex: pyramidsAndFunnels.schoolClassToLevelIndex,
       onLevelsCount: pyramidsAndFunnels.levelsCount,
-
-
-
       onMasksCount: pyramidsAndFunnels.masksCount,
       onQuestionsCount: pyramidsAndFunnels.questionsCount),
   TasksRegisterItem(
-      imageAssetName: "assets/menu_additions.png",
-      label: "Sčítání",
-      isLevelImplemented: additions.isLevelImplemented,
-      onOpenTaskScreen: (index) => additions.TaskScreen(selectedLevelIndex: index,),
-      onLevelsCount: additions.levelsCount,
-      onMasksCount: defaultMasksCount,
-      onQuestionsCount: defaultQuestionsCount),
+    imageAssetName: "assets/menu_additions.png",
+    label: "Sčítání",
+    isLevelImplemented: additions.isLevelImplemented,
+    onOpenTaskScreen: (index) => additions.TaskScreen(
+      selectedLevelIndex: index,
+    ),
+    onLevelsCount: additions.levelsCount,
+  ),
   TasksRegisterItem(
-      imageAssetName: "assets/menu_subtractions.png",
-      label: "Odčítání",
-      onLevelsCount: defaultLevelsCount,
-      onMasksCount: defaultMasksCount,
-      onQuestionsCount: defaultQuestionsCount),
+    imageAssetName: "assets/menu_subtractions.png",
+    label: "Odčítání",
+    onLevelsCount: defaultLevelsCount,
+  ),
 ];
 
-// Default callbacks, which might not be implemented yet in corresponding task.dart
+// Default callbacks for methods,
+// which might not be implemented yet in corresponding task.dart file
 
 int defaultLevelsCount() => 0;
 
@@ -135,4 +141,9 @@ Widget defaultOpenTaskScreen(_) {
       child: Text("Default Task screen"),
     ),
   );
+}
+
+int defaultOnSchoolClassToLevelIndex(int schoolYear, int schoolMonth) {
+  print("SchoolYear/schoolMonth -> index not implemented in Tasks register!");
+  return 0;
 }
