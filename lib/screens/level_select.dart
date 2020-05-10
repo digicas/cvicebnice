@@ -144,7 +144,7 @@ class _LevelSelectState extends State<LevelSelect> {
                     },
                   ),
                   SizedBox(
-                    width: 32,
+                    width: 48,
                     child: Text(levelIndex.toString(),
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.headline6),
