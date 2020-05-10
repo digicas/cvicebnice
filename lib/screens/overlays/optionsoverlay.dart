@@ -117,7 +117,7 @@ class OptionsOverlay extends StatelessWidget {
           )
               : Container(),
           RaisedButton.icon(
-            label: Text("ZPĚT NA VÝBĚR TŘÍDY"),
+            label: Text("ZPĚT NA HLAVNÍ VÝBĚR"),
             icon: Icon(Icons.assignment),
             shape: StadiumBorder(),
             onPressed: onBack,

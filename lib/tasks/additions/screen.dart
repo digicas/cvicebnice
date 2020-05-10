@@ -36,13 +36,11 @@ class _TaskScreenState extends State<TaskScreen> {
   /// Controller for submission / solution checks
   SubmissionController submissionController;
 
-//  List<TextEditingController> textControllers;
-
   @override
   void initState() {
     selectedLevelIndex = widget.selectedLevelIndex;
 
-    selectedLevelIndex = 35;
+//    selectedLevelIndex = 35; // for immediate debug only :)
 
     _showBackground ??= true;
     taskSubmitted ??= false;

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cvicebnice/tasksregister.dart';
 import 'package:flutter/material.dart';
 
 //import 'package:flutter_linkify/flutter_linkify.dart';
@@ -10,7 +11,7 @@ import './screens/level_select.dart';
 
 import 'tasks/pyramidsandfunnels/triangle_levels.dart';
 
-import 'tasks/additions/task.dart' as addition;
+//import 'tasks/additions/task.dart' as addition;
 
 //import '/widgets/launchurl.dart';
 //import 'package:url_launcher/url_launcher.dart';
@@ -39,13 +40,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class TaskSelectionItem {
-  final String imageAssetName;
-  final String text;
-
-  TaskSelectionItem(this.imageAssetName, this.text);
-}
-
 class TaskListScreen extends StatefulWidget {
   @override
   _TaskListScreenState createState() => _TaskListScreenState();
@@ -55,12 +49,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
   // Togglebuttons current selection - tasks list
   int taskSelectedIndex;
 
-  final List<TaskSelectionItem> taskCollection = [
-    TaskSelectionItem("assets/menu_pyramid.png", "Pyramidy"),
-    TaskSelectionItem("assets/menu_funnel.png", "Trychtýř"),
-    TaskSelectionItem("assets/menu_additions.png", "Sčítání"),
-    TaskSelectionItem("assets/menu_subtractions.png", "Odčítání"),
-  ];
+  // we use [tasksRegister] List here - imported from tasksregister.dart
 
   @override
   void initState() {
@@ -72,14 +61,6 @@ class _TaskListScreenState extends State<TaskListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    int mm = LevelTree.levels.fold(0, (p, e) => p + e.masksAmount);
-    int totalTasks = LevelTree.levels.fold(
-        0,
-        (p, e) =>
-            p +
-            e.masksAmount *
-                (pow((e.maxTotal ~/ (e.solutionRows - 1)), e.solutionRows)));
-
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -100,7 +81,6 @@ class _TaskListScreenState extends State<TaskListScreen> {
           ],
         ),
       ),
-
       body: SafeArea(
         child: Container(
 //          color: Colors.pink,
@@ -117,17 +97,15 @@ class _TaskListScreenState extends State<TaskListScreen> {
                   child: ToggleButtons(
                     borderRadius: BorderRadius.all(Radius.circular(8)),
                     children: List.generate(
-                      taskCollection.length,
+                      tasksRegister.length,
                       (index) => Column(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           Image.asset(
-                            taskCollection[index].imageAssetName,
-//                            "assets/menu_pyramid.png",
+                            tasksRegister[index].imageAssetName,
                             width: 128,
                           ),
-//                          Text("Pyramidy"),
-                          Text(taskCollection[index].text),
+                          Text(tasksRegister[index].label),
                           Container(height: 8),
                         ],
                       ),
@@ -138,23 +116,21 @@ class _TaskListScreenState extends State<TaskListScreen> {
                       });
                     },
                     isSelected: List.generate(
-                        taskCollection.length, (i) => (i == taskSelectedIndex)),
+                        tasksRegister.length, (i) => (i == taskSelectedIndex)),
                   ),
                 ),
                 LevelSelect(
                   onCheckLevelExists: (index) =>
-                      LevelTree.getLevelByLevelIndex(index) == null,
+                      tasksRegister[taskSelectedIndex]
+                          .isLevelImplemented(index),
                   onSchoolClassToLevelIndex: (schoolYear, schoolMonth) =>
                       LevelTree.schoolClassToLevelIndex(
                           schoolYear.toInt(), schoolMonth.toInt()),
                   onPlay: (int selectedLevelIndex) {
-                    print("selected level $selectedLevelIndex");
+                    print("Selected level to play: $selectedLevelIndex");
                     // if level not yet implemented, just Toast
-
-                    var level =
-                        LevelTree.getLevelByLevelIndex(selectedLevelIndex);
-
-                    if (level == null) {
+                    if (!tasksRegister[taskSelectedIndex]
+                        .isLevelImplemented(selectedLevelIndex)) {
 // must use builder function
 //                Scaffold.of(context).showSnackBar(SnackBar(
 //                  content: Text(
@@ -167,20 +143,37 @@ class _TaskListScreenState extends State<TaskListScreen> {
                         // Open task screen
                         MaterialPageRoute(builder: (context) {
                           if (taskSelectedIndex == 2) {
-                            return addition.TaskScreen(selectedLevelIndex: 40,);
+                            // common
+                            return tasksRegister[taskSelectedIndex]
+                                .onOpenTaskScreen(selectedLevelIndex);
                           }
+                          if (taskSelectedIndex == 0) {
+                            // pyramidy
+                            return tasksRegister[taskSelectedIndex]
+                                .onOpenTaskScreen(selectedLevelIndex);
+//                            return pyramidsAndFunnels.TaskScreen(
+//                              level: LevelTree.getLevelByLevelIndex(
+//                                  selectedLevelIndex),
+//                              taskType: pyramidsAndFunnels.TriangleTaskType.Pyramid
+//                            );
+                          }
+                          if (taskSelectedIndex == 1) {
+                            // funnels
+                            return pyramidsAndFunnels.TaskScreen(
+                                level: LevelTree.getLevelByLevelIndex(
+                                    selectedLevelIndex),
+                                taskType: pyramidsAndFunnels.TriangleTaskType.Funnel
+                            );
+                          }
+                          return Container(child: Center(child: Text("N/A")));
 
-                          return pyramidsAndFunnels.TaskScreen(
-                            level: level,
-                            taskType: (taskSelectedIndex == 0)
-                                ? pyramidsAndFunnels.TriangleTaskType.Pyramid
-                                : pyramidsAndFunnels.TriangleTaskType.Funnel,
-                          );
                         }
 //
                             ),
                       );
                     }
+
+                    //////////////////////////
                   },
                 ),
               ],
@@ -188,9 +181,9 @@ class _TaskListScreenState extends State<TaskListScreen> {
           ),
         ),
       ),
-
       bottomNavigationBar: Text(
-          " Úrovní: ${LevelTree.levels.length} Masek: $mm Zadání cca: $totalTasks"),
+          " Úrovní: ${tasksRegister.allLevels} Masek: ${tasksRegister.allMasks} "
+          "Zadání cca: ${tasksRegister.allQuestions}"),
     );
   }
 }

@@ -14,10 +14,9 @@ final List<String> schoolMonths = [
   "Červen",
 ];
 
-
 /// (Sub)screen for level selection
 ///
-/// Calls onPlay callback with selected levelindex
+/// Calls onPlay callback with selected level index
 class LevelSelect extends StatefulWidget {
   const LevelSelect({
     Key key,
@@ -127,9 +126,10 @@ class _LevelSelectState extends State<LevelSelect> {
             ListTile(
               contentPadding: EdgeInsets.fromLTRB(20, 0, 20, 0),
               leading: widget.onCheckLevelExists(levelIndex)
-                  ? Icon(Icons.block)
-                  : Icon(Icons.assignment_turned_in),
-              title: Text("Úroveň:", style: Theme.of(context).textTheme.headline6),
+                  ? Icon(Icons.assignment_turned_in)
+                  : Icon(Icons.block),
+              title:
+                  Text("Úroveň:", style: Theme.of(context).textTheme.headline6),
 //              trailing: Text("$levelIndex", style: Theme.of(context).textTheme.title),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -187,10 +187,10 @@ class _LevelSelectState extends State<LevelSelect> {
 //                color: Colors.blue,
 //                onPressed: LevelTree.getLevelByLevelIndex(levelIndex) == null
                 onPressed: widget.onCheckLevelExists(levelIndex)
-                    ? null
-                    : () {
+                    ? () {
                         widget.onPlay(levelIndex);
-                      },
+                      }
+                    : null,
                 label: Text("Procvičit", style: TextStyle(fontSize: 28)),
               ),
             ),
