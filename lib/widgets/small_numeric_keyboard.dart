@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:security_keyboard/keyboard_controller.dart';
 import 'package:security_keyboard/keyboard_manager.dart';
+import 'package:security_keyboard/keyboard_media_query.dart';
+
+/// Way to apply custom keyboard
+///
+/// Set parent widget of Scaffold to be [CustomKeyboardCovered] in order to
+/// initialize custom keyboard
+///
+/// TextInput can than use keyboardType: SmallNumericKeyboard.text
+
+// TODO lets try totally custom keyboard: https://medium.com/@caseyahenson/stop-fighting-the-native-ios-keypad-and-build-a-custom-number-pad-for-flutter-473404d1bbd6
+// if there are issues with this one
 
 typedef KeyboardSwitch = Function(SecurityKeyboardType type);
 
@@ -139,4 +150,50 @@ class _SmallNumericKeyboardState extends State<SmallNumericKeyboard> {
       ),
     );
   }
+}
+
+/// Hides keyboard
+void removeEditableFocus(BuildContext context) {
+  FocusScopeNode currentFocus = FocusScope.of(context);
+  if (!currentFocus.hasPrimaryFocus) {
+    currentFocus.unfocus();
+  }
+}
+
+/// Widget allowing child widget tree to use custom keyboard
+///
+/// Initializes custom keyboard and attaches to the system channel
+/// TextInput can than use keyboardType: SmallNumericKeyboard.text
+class CustomKeyboardCovered extends StatelessWidget {
+  final Widget child;
+
+  const CustomKeyboardCovered({
+    Key key, this.child,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: _requestPop,
+      child: KeyboardMediaQuery(
+        child: Builder(
+          builder: (context) {
+            KeyboardManager.init(context);
+            return child;
+          },
+        ),
+      ),
+    );
+  }
+
+  Future<bool> _requestPop() {
+    bool b = true;
+    if (KeyboardManager.isShowKeyboard) {
+      KeyboardManager.hideKeyboard();
+      b = false;
+    }
+//    return Future.value(true); // go screen back immediately - nefunguje @web :(
+    return Future.value(b); // first hide keyboard, go screen back next time
+  }
+
 }

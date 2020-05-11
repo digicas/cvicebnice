@@ -1,8 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pyramida/models/triangle_levels.dart';
-import 'package:pyramida/widgets/fluid_slider.dart';
-
 import '../widgets/fluid_slider.dart';
 
 final List<String> schoolMonths = [
@@ -18,13 +14,27 @@ final List<String> schoolMonths = [
   "Červen",
 ];
 
+/// (Sub)screen for level selection
+///
+/// Calls onPlay callback with selected level index
 class LevelSelect extends StatefulWidget {
   const LevelSelect({
     Key key,
     this.onPlay,
+    this.onCheckLevelExists,
+    this.onSchoolClassToLevelIndex,
   }) : super(key: key);
 
-  final void Function(int) onPlay;
+  /// Callback function when "Start" button is pressed
+  final void Function(int levelIndex) onPlay;
+
+  /// Callback function for checking whether level with int index exists
+  ///
+  /// Shall return true if exists or false if not
+  final bool Function(int levelIndex) onCheckLevelExists;
+
+  /// Callback function to get the level index based on school year and month
+  final int Function(int schoolYear, int schoolMonth) onSchoolClassToLevelIndex;
 
   @override
   _LevelSelectState createState() => _LevelSelectState();
@@ -51,7 +61,6 @@ class _LevelSelectState extends State<LevelSelect> {
 
   @override
   Widget build(BuildContext context) {
-//    levelIndex = LevelTree.schoolClassToLevelIndex(schoolYear.toInt(), schoolMonth.toInt());
     levelFieldController.text = levelIndex.toString();
     return SingleChildScrollView(
       child: Column(
@@ -62,7 +71,7 @@ class _LevelSelectState extends State<LevelSelect> {
           children: <Widget>[
             ListTile(
               title: Text("Třída ve škole",
-                  style: Theme.of(context).textTheme.title),
+                  style: Theme.of(context).textTheme.headline6),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
@@ -72,12 +81,12 @@ class _LevelSelectState extends State<LevelSelect> {
                 onChanged: (double newValue) {
                   setState(() {
                     schoolYear = newValue;
-                    levelIndex = LevelTree.schoolClassToLevelIndex(
+                    levelIndex = widget.onSchoolClassToLevelIndex(
                         schoolYear.toInt(), schoolMonth.toInt());
                   });
                 },
                 min: 1.0,
-                max: 7.0,
+                max: 5.0,
               ),
             ),
             Container(
@@ -85,7 +94,7 @@ class _LevelSelectState extends State<LevelSelect> {
             ),
             ListTile(
               title: Text("Měsíc ve školním roce",
-                  style: Theme.of(context).textTheme.title),
+                  style: Theme.of(context).textTheme.headline6),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
@@ -95,7 +104,7 @@ class _LevelSelectState extends State<LevelSelect> {
                 onChanged: (double newValue) {
                   setState(() {
                     schoolMonth = newValue;
-                    levelIndex = LevelTree.schoolClassToLevelIndex(
+                    levelIndex = widget.onSchoolClassToLevelIndex(
                         schoolYear.toInt(), schoolMonth.toInt());
                   });
                 },
@@ -104,11 +113,11 @@ class _LevelSelectState extends State<LevelSelect> {
                 },
                 min: 0.0,
                 max: 9.0,
-                start: Text(
-                    schoolMonths.first, style: _fluidSliderTextStyle(context)),
-                end: Text(
-                    schoolMonths.last, style: _fluidSliderTextStyle(context)),
-                valueTextStyle: Theme.of(context).textTheme.subtitle,
+                start: Text(schoolMonths.first,
+                    style: _fluidSliderTextStyle(context)),
+                end: Text(schoolMonths.last,
+                    style: _fluidSliderTextStyle(context)),
+                valueTextStyle: Theme.of(context).textTheme.subtitle2,
               ),
             ),
             Container(
@@ -116,10 +125,11 @@ class _LevelSelectState extends State<LevelSelect> {
             ),
             ListTile(
               contentPadding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-              leading: LevelTree.getLevelByLevelIndex(levelIndex) == null
-                  ? Icon(Icons.block)
-                  : Icon(Icons.assignment_turned_in),
-              title: Text("Úroveň:", style: Theme.of(context).textTheme.title),
+              leading: widget.onCheckLevelExists(levelIndex)
+                  ? Icon(Icons.assignment_turned_in)
+                  : Icon(Icons.block),
+              title:
+                  Text("Úroveň:", style: Theme.of(context).textTheme.headline6),
 //              trailing: Text("$levelIndex", style: Theme.of(context).textTheme.title),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -134,10 +144,10 @@ class _LevelSelectState extends State<LevelSelect> {
                     },
                   ),
                   SizedBox(
-                    width: 32,
+                    width: 48,
                     child: Text(levelIndex.toString(),
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.title),
+                        style: Theme.of(context).textTheme.headline6),
 
 //                    child: TextField(
 //                      style: Theme.of(context).textTheme.title,
@@ -175,11 +185,11 @@ class _LevelSelectState extends State<LevelSelect> {
                   size: 40,
                 ),
 //                color: Colors.blue,
-                onPressed: LevelTree.getLevelByLevelIndex(levelIndex) == null
-                    ? null
-                    : () {
+                onPressed: widget.onCheckLevelExists(levelIndex)
+                    ? () {
                         widget.onPlay(levelIndex);
-                      },
+                      }
+                    : null,
                 label: Text("Procvičit", style: TextStyle(fontSize: 28)),
               ),
             ),
@@ -191,8 +201,5 @@ class _LevelSelectState extends State<LevelSelect> {
   }
 
   TextStyle _fluidSliderTextStyle(BuildContext context) =>
-      Theme
-          .of(context)
-          .accentTextTheme
-          .subtitle;
+      Theme.of(context).accentTextTheme.subtitle2;
 }

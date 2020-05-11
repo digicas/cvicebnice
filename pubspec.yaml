@@ -1,5 +1,5 @@
-name: pyramida
-description: kids pyramid test
+name: cvicebnice
+description: matika do kapsy
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -14,7 +14,7 @@ description: kids pyramid test
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.6.0 <3.0.0"
 
 dependencies:
   flutter:

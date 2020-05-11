@@ -1,10 +1,16 @@
 //import 'dart:ffi';
 
+//import './overlays/shaderoverlay.dart';
+import '../../screens/overlays/donesuccessoverlay.dart';
+import '../../screens/overlays/donewrongoverlay.dart';
+import '../../screens/overlays/optionsoverlay.dart';
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:pyramida/models/triangle_levels.dart';
-import 'package:pyramida/widgets/small_numeric_keyboard.dart';
+import 'triangle_levels.dart';
+import '../../widgets/small_numeric_keyboard.dart';
 //import 'package:zoom_widget/zoom_widget.dart';
 
 import 'package:flutter/services.dart';
@@ -13,8 +19,7 @@ import 'package:security_keyboard/keyboard_media_query.dart';
 
 //import 'package:cool_ui/cool_ui.dart';
 
-/// triangles ... matematicke prostredi: souctove trojuhelniky
-
+/// Triangles ... matematicke prostredi: souctove trojuhelniky
 class TaskScreen extends StatefulWidget {
   final Level level;
   final TriangleTaskType taskType;
@@ -136,7 +141,7 @@ class _TaskScreenState extends State<TaskScreen> {
                     /// edu guide and its speech / buttons over task screen
                     (optionsRequested || taskSubmitted)
 
-                        /// do not show it, when overlay is above
+                        /// do not show Guide layer, when overlay is above
                         ? Container()
                         : Positioned(
                             left: 20,
@@ -282,267 +287,12 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 }
 
-/// Overlay screen when successful submission (incl. buttons to navigate next)
-class DoneSuccessOverlay extends StatelessWidget {
-  const DoneSuccessOverlay(
-      {Key key, this.onNextUpLevel, this.onNextSameLevel, this.onBack})
-      : super(key: key);
-
-  final VoidCallback onNextUpLevel;
-  final VoidCallback onNextSameLevel;
-  final VoidCallback onBack;
-
-  @override
-  Widget build(BuildContext context) {
-    return ShaderOverlay(
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Image.asset(
-                "assets/ada_full_body_correct.png",
-                width: 120,
-              ),
-              Container(width: 16),
-              Expanded(
-                  child: Container(
-                child: Text(
-                  "VÝBORNĚ!\n\nTak a můžeš pokračovat.",
-                  softWrap: true,
-                ),
-                margin: EdgeInsets.only(top: 20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-                padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-              )),
-            ],
-          ),
-//          Container(height: 20,),
-          RaisedButton.icon(
-            label: Text("ZKUSIT TĚŽŠÍ"),
-            icon: Icon(Icons.file_upload),
-            shape: StadiumBorder(),
-            onPressed: onNextUpLevel,
-          ),
-          RaisedButton.icon(
-            label: Text("JEŠTĚ JEDNOU STEJNĚ TĚŽKOU"),
-            icon: Icon(Icons.compare_arrows),
-            shape: StadiumBorder(),
-            onPressed: onNextSameLevel,
-          ),
-          RaisedButton.icon(
-            label: Text("ZPĚT NA VÝBĚR TŘÍDY"),
-            icon: Icon(Icons.assignment),
-            shape: StadiumBorder(),
-            onPressed: onBack,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class DoneWrongOverlay extends StatelessWidget {
-  const DoneWrongOverlay({Key key, this.onBackToLevel}) : super(key: key);
-
-  final VoidCallback onBackToLevel;
-
-  @override
-  Widget build(BuildContext context) {
-    return ShaderOverlay(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Image.asset(
-                "assets/ada_full_body_wrong.png",
-                width: 100,
-              ),
-              Container(width: 16),
-              Expanded(
-                  child: Container(
-                child: Text(
-                  "AJAJAJAJ!",
-                ),
-                margin: EdgeInsets.only(top: 20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-                padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-              )),
-            ],
-          ),
-          RaisedButton.icon(
-            autofocus: true,
-            label: Text("ZKUS TO OPRAVIT"),
-            icon: Icon(Icons.repeat),
-            shape: StadiumBorder(),
-            onPressed: onBackToLevel,
-          ),
-          Container(height: 20),
-        ],
-      ),
-    );
-  }
-}
-
-class OptionsOverlay extends StatelessWidget {
-  const OptionsOverlay({
-    Key key,
-    this.levelInfoText,
-    this.showBackground,
-    this.onBackToLevel,
-    this.onBack,
-    this.onRestartLevel,
-    this.onDecreaseLevel,
-    this.onSwitchBackgroundImage,
-    this.canDecreaseLevel = true,
-    this.canIncreaseLevel = true,
-  }) : super(key: key);
-
-  final VoidCallback onBackToLevel;
-  final VoidCallback onBack;
-  final VoidCallback onRestartLevel;
-  final VoidCallback onDecreaseLevel;
-  final VoidCallback onSwitchBackgroundImage;
-
-  /// text (typically number) to show
-  final String levelInfoText;
-
-  /// Visibility for image in background
-  final bool showBackground;
-
-  /// Whether to show button to decrease level
-  final bool canDecreaseLevel;
-
-  /// Whether to show button to increase level
-  final bool canIncreaseLevel;
-
-  @override
-  Widget build(BuildContext context) {
-    removeEditableFocus(context);
-
-    return ShaderOverlay(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              GestureDetector(
-                onTap: onBackToLevel,
-                child: Image.asset(
-                  "assets/ada_full_body.png",
-                  width: 100,
-                ),
-              ),
-              Container(width: 16),
-              Expanded(
-                  child: Container(
-                child: Text(
-                  "JSI NA ÚROVNI $levelInfoText.\n\nCO PRO TEBE MŮŽU UDĚLAT?",
-                ),
-                margin: EdgeInsets.only(top: 20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-                padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-              )),
-            ],
-          ),
-          Container(height: 0),
-          RaisedButton.icon(
-            autofocus: true,
-            label: Text("NIC, CHCI ZPĚT"),
-            icon: Icon(Icons.arrow_back_ios),
-            shape: StadiumBorder(),
-            onPressed: onBackToLevel,
-          ),
-          showBackground
-              ? RaisedButton.icon(
-                  autofocus: true,
-                  label: Text("VYPNOUT OBRÁZEK"),
-                  icon: Icon(Icons.image),
-                  shape: StadiumBorder(),
-                  onPressed: onSwitchBackgroundImage,
-                )
-              : RaisedButton.icon(
-                  autofocus: true,
-                  label: Text("UKAZOVAT OBRÁZEK"),
-                  icon: Icon(Icons.add_photo_alternate),
-                  shape: StadiumBorder(),
-                  onPressed: onSwitchBackgroundImage,
-                ),
-          RaisedButton.icon(
-            autofocus: true,
-            label: Text("VYČISTIT A ZAČÍT ZNOVU"),
-            icon: Icon(Icons.refresh),
-            shape: StadiumBorder(),
-            onPressed: onRestartLevel,
-          ),
-
-          /// show only if we can decrease level
-          canDecreaseLevel
-              ? RaisedButton.icon(
-                  label: Text("TO JE MOC TĚŽKÉ, CHCI LEHČÍ"),
-                  icon: Icon(Icons.file_download),
-                  shape: StadiumBorder(),
-                  onPressed: onDecreaseLevel,
-                )
-              : Container(),
-          RaisedButton.icon(
-            label: Text("ZPĚT NA VÝBĚR TŘÍDY"),
-            icon: Icon(Icons.assignment),
-            shape: StadiumBorder(),
-            onPressed: onBack,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 void removeEditableFocus(BuildContext context) {
   FocusScopeNode currentFocus = FocusScope.of(context);
   if (!currentFocus.hasPrimaryFocus) {
     currentFocus.unfocus();
   }
 // KeyboardManager.hideKeyboard();
-}
-
-/// Overlay widget to be used in [Stack]. Creates shade and container for child padded by 20.
-class ShaderOverlay extends StatelessWidget {
-  ShaderOverlay({Key key, this.child}) : super(key: key);
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return FractionallySizedBox(
-      widthFactor: 1,
-      heightFactor: 1,
-      child: Container(
-        color: Color(0xbb000000),
-        padding: const EdgeInsets.fromLTRB(20.0, 20, 20, 20),
-        child: child,
-      ),
-    );
-  }
 }
 
 /// type of the task for rendering
