@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../widgets/fluid_slider.dart';
 
 final List<String> schoolMonths = [
@@ -222,30 +223,80 @@ class LevelNumberSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            SizedBox(width: 12),
-            IconButton(
-              icon: Icon(Icons.remove_circle_outline),
-              color: Colors.white,
-              onPressed: () {
-                onIndexChange((levelIndex > 0) ? levelIndex-1 : 0);
-              },
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        SizedBox(width: 12),
+        IconButton(
+          icon: Icon(Icons.remove_circle_outline),
+          color: Colors.white,
+          onPressed: () {
+            onIndexChange((levelIndex > 0) ? levelIndex - 1 : 0);
+          },
+        ),
+        InkWell(
+          onTap: () {
+            print("gogo");
+
+            return enterNumberDialog(context);
+          },
+          child: Text(
+            levelIndex.toString(),
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 24, color: Colors.white),
+          ),
+        ),
+        IconButton(
+          icon: Icon(Icons.add_circle_outline),
+          color: Colors.white,
+          onPressed: () {
+            onIndexChange(levelIndex + 1);
+          },
+        ),
+      ],
+    ));
+  }
+
+  Future enterNumberDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
             ),
-            Text(
-              levelIndex.toString(),
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 24, color: Colors.white),
+            title: Text("Číslo úrovně:"),
+            content: Container(
+              decoration: BoxDecoration(
+//                      color: Colors.deepOrange,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              height: 100,
+              width: 300,
+              child: TextField(
+//                controller: TextEditingController()
+//                  ..text = levelIndex.toString(), // providing the current value
+                // current value is not desired now as user wants to jump elsewhere
+                autofocus: true,
+                enableInteractiveSelection: true,
+                keyboardType: TextInputType.number,
+//                decoration: InputDecoration(hintText: "999"),
+                inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+                cursorColor: Color(0xffa02b5f),
+                autocorrect: false,
+                maxLength: 3,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 32,
+                ),
+                onSubmitted: (String str) {
+                  Navigator.of(context).pop();
+                  onIndexChange(int.parse(str));
+                },
+              ),
             ),
-            IconButton(
-              icon: Icon(Icons.add_circle_outline),
-              color: Colors.white,
-              onPressed: () {
-                onIndexChange(levelIndex+1);
-              },
-            ),
-          ],
-        ));
+          );
+        });
   }
 }
 
@@ -276,7 +327,7 @@ class LevelXidSelector extends StatelessWidget {
         textColor: Colors.white,
         color: Color(0xffa02b5f),
         child:
-        Text(levelXid, style: TextStyle(fontSize: 14, color: Colors.white)),
+            Text(levelXid, style: TextStyle(fontSize: 14, color: Colors.white)),
         onPressed: () {
           showDialog(
               context: context,
@@ -297,7 +348,10 @@ class LevelXidSelector extends StatelessWidget {
                       autofocus: true,
                       enableInteractiveSelection: true,
                       keyboardType: TextInputType.text,
-                      //inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+                      decoration: InputDecoration(hintText: "abc-ghi"),
+                      inputFormatters: [
+                        WhitelistingTextInputFormatter(RegExp("[a-z\-]"))
+                      ],
                       cursorColor: Color(0xffa02b5f),
                       autocorrect: false,
                       maxLength: 7,
