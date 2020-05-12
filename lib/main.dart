@@ -49,16 +49,28 @@ class TaskListScreen extends StatefulWidget {
 }
 
 class _TaskListScreenState extends State<TaskListScreen> {
-  // Togglebuttons current selection - tasks list
+  /// Togglebuttons current selection - tasks list
   int taskSelectedIndex;
 
+  /// Currently selected level index
+  int levelSelectedIndex;
+
+  /// Currently selected xid of the particular task level
+  String levelXid;
+
   bool descriptionPaneVisible = false;
+
+  final GlobalKey<ScaffoldState> globalTaskListScaffoldKey =
+      GlobalKey<ScaffoldState>();
+
   // we use [tasksRegister] List here - imported from tasksregister.dart
 
   @override
   void initState() {
     // set the togglebuttons for task selection
     taskSelectedIndex = 0;
+    levelSelectedIndex = 0;
+    levelXid = "???-???";
 
     super.initState();
   }
@@ -66,9 +78,11 @@ class _TaskListScreenState extends State<TaskListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: globalTaskListScaffoldKey,
       extendBody: true,
 //      extendBodyBehindAppBar: true,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             icon: FaIcon(FontAwesomeIcons.chalkboardTeacher),
@@ -188,7 +202,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
         tooltip: "Procvičit",
         elevation: 4,
         child: FaIcon(
-          FontAwesomeIcons.dumbbell,
+          FontAwesomeIcons.play,
         ),
         onPressed: () {},
       ),
@@ -202,53 +216,22 @@ class _TaskListScreenState extends State<TaskListScreen> {
             child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-//                    width: 100,
-//                    color: Colors.greenAccent,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        IconButton(
-                          icon: Icon(Icons.remove_circle_outline),
-                          color: Colors.white,
-                          onPressed: () {
-//                  setState(() {
-//                    if (levelIndex > 0) levelIndex--;
-//                  });
-                          },
-                        ),
-                        Text(567.toString(),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 24, color: Colors.white),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.add_circle_outline),
-                          color: Colors.white,
-                          onPressed: () {
-//                  setState(() {
-//                    levelIndex++;
-//                  });
-                          },
-                        ),
-                      ],
-                    )),
+                LevelNumberSelector(
+                  levelIndex: levelSelectedIndex,
+                  onIndexChange: (newLevelIndex) {
+                    setState(() {
+                      levelSelectedIndex = newLevelIndex;
+                    });
+                  },
+                ),
                 Container(
 //                  width: 80,
 //                  color: Colors.deepOrange,
                   child: Row(
                     children: [
-                      OutlineButton.icon(
-                        borderSide: BorderSide(
-                          color: Colors.blueGrey,
-                        ),
-                        highlightElevation: 4,
-                        textColor: Colors.white,
-                        color: Color(0xffa02b5f),
-                        icon: Icon(Icons.share, color: Colors.white),
-                        label: Text("aeb-3ip"),
-                        onPressed: () {},
-                      ),
+                      LevelXidSelector(levelXid: levelXid),
                       IconButton(
                         icon: Icon(Icons.share, color: Colors.white),
                         onPressed: () {
@@ -273,3 +256,61 @@ class _TaskListScreenState extends State<TaskListScreen> {
   }
 }
 
+///
+class LevelXidSelector extends StatelessWidget {
+  const LevelXidSelector({
+    Key key,
+    @required this.levelXid,
+  }) : super(key: key);
+
+  /// Currently shown level xid
+  final String levelXid;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: OutlineButton(
+        borderSide: BorderSide(
+          color: Colors.blueGrey,
+        ),
+        highlightElevation: 4,
+        textColor: Colors.white,
+        color: Color(0xffa02b5f),
+        child:
+            Text(levelXid, style: TextStyle(fontSize: 14, color: Colors.white)),
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return Dialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.deepOrange,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      height: 300,
+                      width: 300,
+                    ));
+              });
+        },
+      ),
+    );
+  }
+}
+
+class TF extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 40,
+      height: 32,
+      child: TextField(
+        maxLength: 7,
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+}

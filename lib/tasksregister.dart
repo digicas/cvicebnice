@@ -12,6 +12,15 @@ import 'tasks/pyramidsandfunnels/task.dart' as pyramidsAndFunnels;
 /// Serves as the proxy for calling underlying methods, widgets, screens, atc.
 /// of particular task environment
 class TasksRegisterItem {
+  /// Unique external ID of the task environment
+  ///
+  /// generated using https://shortunique.id/ or https://pypi.org/project/shortuuid/
+  /// for each environment definition so the code can be used such as zvm-uhv
+  /// Scope of uniqueness is within the [taskRegister], therefore 3 characters
+  /// should be enough. Can be used in URLs, ...
+  /// Is defined forever - does not change.
+  final String xid;
+
   /// Image of Task for the Selection screen with min. size of 256x256
   ///
   /// Currently rendered to 128x128
@@ -54,7 +63,8 @@ class TasksRegisterItem {
   int get questionsCount => onQuestionsCount();
 
   TasksRegisterItem(
-      {@required this.imageAssetName,
+      {@required this.xid,
+      @required this.imageAssetName,
       @required this.label,
       this.isLevelImplemented = defaultLevelIsNotImplemented,
       this.onOpenTaskScreen = defaultOpenTaskScreen,
@@ -63,7 +73,6 @@ class TasksRegisterItem {
       this.onMasksCount = defaultMasksCount,
       this.onQuestionsCount = defaultQuestionsCount});
 }
-
 
 /// TasksRegister methods
 extension TaskRegister<TasksRegisterItem> on List<TasksRegisterItem> {
@@ -87,6 +96,7 @@ extension TaskRegister<TasksRegisterItem> on List<TasksRegisterItem> {
 /// Register of Tasks (environments) for selection on the selection / main screens
 final List<TasksRegisterItem> tasksRegister = [
   TasksRegisterItem(
+      xid: "pyr",
       imageAssetName: "assets/menu_pyramid.png",
       label: "Pyramidy",
       isLevelImplemented: pyramidsAndFunnels.isLevelImplemented,
@@ -96,6 +106,7 @@ final List<TasksRegisterItem> tasksRegister = [
       onMasksCount: pyramidsAndFunnels.masksCount,
       onQuestionsCount: pyramidsAndFunnels.questionsCount),
   TasksRegisterItem(
+      xid: "try",
       imageAssetName: "assets/menu_funnel.png",
       label: "Trychtýř",
       isLevelImplemented: pyramidsAndFunnels.isLevelImplemented,
@@ -105,6 +116,7 @@ final List<TasksRegisterItem> tasksRegister = [
       onMasksCount: pyramidsAndFunnels.masksCount,
       onQuestionsCount: pyramidsAndFunnels.questionsCount),
   TasksRegisterItem(
+    xid: "cad",
     imageAssetName: "assets/menu_additions.png",
     label: "Sčítání",
     isLevelImplemented: additions.isLevelImplemented,
@@ -115,6 +127,7 @@ final List<TasksRegisterItem> tasksRegister = [
     onLevelsCount: additions.levelsCount,
   ),
   TasksRegisterItem(
+    xid: "csb",
     imageAssetName: "assets/menu_subtractions.png",
     label: "Odčítání",
     onLevelsCount: defaultLevelsCount,

@@ -203,3 +203,49 @@ class _LevelSelectState extends State<LevelSelect> {
   TextStyle _fluidSliderTextStyle(BuildContext context) =>
       Theme.of(context).accentTextTheme.subtitle2;
 }
+
+/// Row enabling choosing the level: (-) 789 (+)
+class LevelNumberSelector extends StatelessWidget {
+  /// Current level number to be rendered
+  final int levelIndex;
+
+  /// Callback with updated level number
+  final Function(int newIndex) onIndexChange;
+
+  const LevelNumberSelector({
+    Key key,
+    this.levelIndex = 789,
+    @required this.onIndexChange,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            SizedBox(width: 12),
+            IconButton(
+              icon: Icon(Icons.remove_circle_outline),
+              color: Colors.white,
+              onPressed: () {
+                onIndexChange((levelIndex > 0) ? levelIndex-1 : 0);
+              },
+            ),
+            Text(
+              levelIndex.toString(),
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 24, color: Colors.white),
+            ),
+            IconButton(
+              icon: Icon(Icons.add_circle_outline),
+              color: Colors.white,
+              onPressed: () {
+                onIndexChange(levelIndex+1);
+              },
+            ),
+          ],
+        ));
+  }
+}
+
