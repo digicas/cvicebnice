@@ -249,3 +249,73 @@ class LevelNumberSelector extends StatelessWidget {
   }
 }
 
+/// Selector Widget for xids including AlertDialog for manual entering
+///
+/// Validation must be done in the callback
+class LevelXidSelector extends StatelessWidget {
+  const LevelXidSelector({
+    Key key,
+    this.levelXid = "???-???",
+    @required this.onSubmittedXid,
+  }) : super(key: key);
+
+  /// Currently shown level xid
+  final String levelXid;
+
+  /// Callback with entered task xid
+  final Function(String newXid) onSubmittedXid;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: OutlineButton(
+        borderSide: BorderSide(
+          color: Colors.blueGrey,
+        ),
+        highlightElevation: 4,
+        textColor: Colors.white,
+        color: Color(0xffa02b5f),
+        child:
+        Text(levelXid, style: TextStyle(fontSize: 14, color: Colors.white)),
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  title: Text("Kód úlohy:"),
+                  content: Container(
+                    decoration: BoxDecoration(
+//                      color: Colors.deepOrange,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    height: 100,
+                    width: 300,
+                    child: TextField(
+                      autofocus: true,
+                      enableInteractiveSelection: true,
+                      keyboardType: TextInputType.text,
+                      //inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+                      cursorColor: Color(0xffa02b5f),
+                      autocorrect: false,
+                      maxLength: 7,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 32,
+                      ),
+                      onSubmitted: (String str) {
+                        Navigator.of(context).pop();
+                        onSubmittedXid(str);
+                      },
+                    ),
+                  ),
+                );
+              });
+        },
+      ),
+    );
+  }
+}

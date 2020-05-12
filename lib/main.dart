@@ -1,6 +1,7 @@
 import 'package:cvicebnice/tasksregister.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share/share.dart';
@@ -231,7 +232,12 @@ class _TaskListScreenState extends State<TaskListScreen> {
 //                  color: Colors.deepOrange,
                   child: Row(
                     children: [
-                      LevelXidSelector(levelXid: levelXid),
+                      LevelXidSelector(
+                        levelXid: levelXid,
+                        onSubmittedXid: (newXid) {
+                          print("Mam $newXid");
+                        },
+                      ),
                       IconButton(
                         icon: Icon(Icons.share, color: Colors.white),
                         onPressed: () {
@@ -256,61 +262,3 @@ class _TaskListScreenState extends State<TaskListScreen> {
   }
 }
 
-///
-class LevelXidSelector extends StatelessWidget {
-  const LevelXidSelector({
-    Key key,
-    @required this.levelXid,
-  }) : super(key: key);
-
-  /// Currently shown level xid
-  final String levelXid;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: OutlineButton(
-        borderSide: BorderSide(
-          color: Colors.blueGrey,
-        ),
-        highlightElevation: 4,
-        textColor: Colors.white,
-        color: Color(0xffa02b5f),
-        child:
-            Text(levelXid, style: TextStyle(fontSize: 14, color: Colors.white)),
-        onPressed: () {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return Dialog(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.deepOrange,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      height: 300,
-                      width: 300,
-                    ));
-              });
-        },
-      ),
-    );
-  }
-}
-
-class TF extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 40,
-      height: 32,
-      child: TextField(
-        maxLength: 7,
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
-}
