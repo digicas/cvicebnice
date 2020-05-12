@@ -187,37 +187,17 @@ class _TaskListScreenState extends State<TaskListScreen> {
                 ),
                 LevelSelect(
                   onCheckLevelExists: (index) => checkLevelExists(index),
-
-//                      tasksRegister[taskSelectedIndex]
-//                          .isLevelImplemented(index),
-                  onSchoolClassToLevelIndex: (schoolYear, schoolMonth) =>
-                      tasksRegister[taskSelectedIndex]
-                          .onSchoolClassToLevelIndex(
-                              schoolYear.toInt(), schoolMonth.toInt()),
+                  onSchoolClassToLevelIndex: (schoolYear, schoolMonth) {
+                    var newIndex = tasksRegister[taskSelectedIndex]
+                        .onSchoolClassToLevelIndex(
+                            schoolYear.toInt(), schoolMonth.toInt());
+                    setState(() {
+                      levelSelectedIndex = newIndex;
+                    });
+                    return newIndex;
+                  },
                   onPlay: (int selectedLevelIndex) {
-                    print("Selected level to play: $selectedLevelIndex");
-                    // if level not yet implemented, just Toast
-                    if (!tasksRegister[taskSelectedIndex]
-                        .isLevelImplemented(selectedLevelIndex)) {
-// must use builder function
-//                Scaffold.of(context).showSnackBar(SnackBar(
-//                  content: Text(
-//                      "Úroveň $selectedLevelIndex není ještě naimplemetovaná."),
-//                ));
-
-                    } else {
-                      Navigator.push(
-                        context,
-                        // Open task screen
-                        MaterialPageRoute(builder: (context) {
-                          return tasksRegister[taskSelectedIndex]
-                              .onOpenTaskScreen(selectedLevelIndex);
-                        }
-//
-                            ),
-                      );
-                    }
-
+                    playWithSelectedLevelIndex();
                     //////////////////////////
                   },
                 ),
