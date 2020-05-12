@@ -39,6 +39,9 @@ class TasksRegisterItem {
   /// Callback to obtain the level index based on the school year and month
   int Function(int schoolYear, int schoolMonth) onSchoolClassToLevelIndex;
 
+  /// Callback to obtain the description text of particular level index
+  String Function(int index) getLevelDescription;
+
   // Statistical functions / callbacks below
 
   /// Callback to calculate the amount of implemented levels of particular Task
@@ -62,16 +65,16 @@ class TasksRegisterItem {
   ///  Amount of tasks of particular Task
   int get questionsCount => onQuestionsCount();
 
-  TasksRegisterItem(
-      {@required this.xid,
-      @required this.imageAssetName,
-      @required this.label,
-      this.isLevelImplemented = defaultLevelIsNotImplemented,
-      this.onOpenTaskScreen = defaultOpenTaskScreen,
-      this.onSchoolClassToLevelIndex = defaultOnSchoolClassToLevelIndex,
-      this.onLevelsCount = defaultLevelsCount,
-      this.onMasksCount = defaultMasksCount,
-      this.onQuestionsCount = defaultQuestionsCount});
+  TasksRegisterItem({@required this.xid,
+    @required this.imageAssetName,
+    @required this.label,
+    this.isLevelImplemented = defaultLevelIsNotImplemented,
+    this.onOpenTaskScreen = defaultOpenTaskScreen,
+    this.onSchoolClassToLevelIndex = defaultOnSchoolClassToLevelIndex,
+    this.getLevelDescription = defaultLevelDescription,
+    this.onLevelsCount = defaultLevelsCount,
+    this.onMasksCount = defaultMasksCount,
+    this.onQuestionsCount = defaultQuestionsCount});
 }
 
 /// TasksRegister methods
@@ -80,7 +83,8 @@ extension TaskRegister<TasksRegisterItem> on List<TasksRegisterItem> {
   int get allTasks => this.length;
 
   /// Total sum of all implemented levels
-  int get allLevels => tasksRegister.fold(0, (p, task) {
+  int get allLevels =>
+      tasksRegister.fold(0, (p, task) {
         print("task: ${task.label} levels: ${task.levelsCount}");
         return p + task.levelsCount;
       });
@@ -120,10 +124,12 @@ final List<TasksRegisterItem> tasksRegister = [
     imageAssetName: "assets/menu_additions.png",
     label: "Sčítání",
     isLevelImplemented: additions.isLevelImplemented,
-    onOpenTaskScreen: (index) => additions.TaskScreen(
-      selectedLevelIndex: index,
-    ),
+    onOpenTaskScreen: (index) =>
+        additions.TaskScreen(
+          selectedLevelIndex: index,
+        ),
     onSchoolClassToLevelIndex: additions.onSchoolClassToLevelIndex,
+    getLevelDescription: additions.getLevelDescription,
     onLevelsCount: additions.levelsCount,
   ),
   TasksRegisterItem(
@@ -160,4 +166,9 @@ Widget defaultOpenTaskScreen(_) {
 int defaultOnSchoolClassToLevelIndex(int schoolYear, int schoolMonth) {
   print("SchoolYear/schoolMonth -> index not implemented in Tasks register!");
   return 0;
+}
+
+String defaultLevelDescription(_) {
+  print("Getting description not implemented in Task register!");
+  return "";
 }

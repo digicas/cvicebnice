@@ -239,43 +239,86 @@ class _TaskListScreenState extends State<TaskListScreen> {
         child: AnimatedContainer(
           duration: Duration(milliseconds: 300),
           curve: Curves.fastOutSlowIn,
-          height: descriptionPaneVisible ? 256 : 56,
+          height: descriptionPaneVisible ? 256 : 48,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
+            child: Column(
               children: [
-                LevelNumberSelector(
-                  levelIndex: levelSelectedIndex,
-                  onIndexChange: (newLevelIndex) {
-                    setState(() {
-                      levelSelectedIndex = newLevelIndex;
-                    });
-                  },
-                ),
-                Container(
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    LevelNumberSelector(
+                      levelIndex: levelSelectedIndex,
+                      onIndexChange: (newLevelIndex) {
+                        setState(() {
+                          levelSelectedIndex = newLevelIndex;
+                        });
+                      },
+                    ),
+                    Container(
 //                  width: 80,
 //                  color: Colors.deepOrange,
-                  child: Row(
-                    children: [
-                      LevelXidSelector(
-                        levelXid: levelXid,
-                        onSubmittedXid: (newXid) {
-                          print("Mam $newXid");
-                        },
+                      child: Row(
+                        children: [
+                          LevelXidSelector(
+                            levelXid: levelXid,
+                            onSubmittedXid: (newXid) {
+                              print("Mam $newXid");
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.share, color: Colors.white),
+                            onPressed: () {
+                              Share.share(
+                                  "Matika do kapsy: ${tasksRegister[taskSelectedIndex].label} -> "
+                                  "Kód úlohy: aeb-3ip ( http://matikadokapsy.edukids.cz/ )",
+                                  subject: "#edukids úloha z matematiky");
+                            },
+                          ),
+                        ],
                       ),
-                      IconButton(
-                        icon: Icon(Icons.share, color: Colors.white),
-                        onPressed: () {
-                          Share.share(
-                              "Matika do kapsy: ${tasksRegister[taskSelectedIndex].label} -> "
-                              "Kód úlohy: aeb-3ip ( http://matikadokapsy.edukids.cz/ )",
-                              subject: "#edukids úloha z matematiky");
-                        },
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Container(
+//                        color: Colors.deepOrange,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Divider(),
+                            Text(
+                                "Prostředí: ${tasksRegister[taskSelectedIndex].label}, "
+                                "úrovně $levelSelectedIndex",
+                                style: TextStyle(
+                                    fontSize: 18, color: Colors.white)),
+                            canPlayLevel
+                                ? Text(
+                                    "Vhodné pro xxxx. třídu (květen) a pro yyy. třídu (září).",
+                                    style: TextStyle(color: Colors.white))
+                                : Container(),
+                            Divider(),
+                            !canPlayLevel
+                                ? Text(
+                                    "Ještě není připraveno :( \n\n"
+                                    "Můžete nám pomoci - na www.edukids.cz\n",
+                                    style: TextStyle(color: Colors.white))
+                                : Container(),
+                            Text(
+                                tasksRegister[taskSelectedIndex]
+                                    .getLevelDescription(levelSelectedIndex),
+                                style: TextStyle(color: Colors.white)),
+                          ],
+                        ),
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ],
