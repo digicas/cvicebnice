@@ -1,6 +1,8 @@
 import 'package:cvicebnice/tasksregister.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share/share.dart';
@@ -267,16 +269,52 @@ class _TaskListScreenState extends State<TaskListScreen> {
                           LevelXidSelector(
                             levelXid: levelXid,
                             onSubmittedXid: (newXid) {
-                              print("Nove xid: $newXid pro a) validaci b) prepnuti tasku / levelu / roku a mesicu");
+                              print(
+                                  "Nove xid: $newXid pro a) validaci b) prepnuti tasku / levelu / roku a mesicu");
                             },
                           ),
                           IconButton(
                             icon: Icon(Icons.share, color: Colors.white),
                             onPressed: () {
-                              Share.share(
-                                  "Matika do kapsy: ${tasksRegister[taskSelectedIndex].label} -> "
-                                  "Kód úlohy: aeb-3ip ( http://matikadokapsy.edukids.cz/ )",
-                                  subject: "#edukids úloha z matematiky");
+                              String text =
+                                  "Matika do kapsy: ${tasksRegister[taskSelectedIndex].label} #$levelSelectedIndex -> "
+                                  "Kód úlohy: $levelXid na https://matikadokapsy.edukids.cz/";
+                              if (kIsWeb) {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text(
+                                            "Jak nasdílet vybranou úlohu?"),
+                                        content:
+                                            Text("Pošlete text:\n\n" + text),
+                                        actions: [
+                                          FlatButton.icon(
+                                            icon: Icon(Icons.content_copy),
+                                            label: Text("Zkopírovat"),
+                                            onPressed: () {
+                                              Clipboard.setData(
+                                                      ClipboardData(text: text))
+                                                  .then((_) {
+                                                Navigator.of(context).pop();
+                                                globalTaskListScaffoldKey
+                                                    .currentState
+                                                    .showSnackBar(SnackBar(
+                                                        duration: Duration(
+                                                            seconds: 3),
+                                                        content: Text(
+                                                            "Zkopírováno!")));
+                                              });
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    });
+                              } else {
+                                // Share intents work only on mobile devices
+                                Share.share(text,
+                                    subject: "#edukids úloha z matematiky");
+                              }
                             },
                           ),
                         ],

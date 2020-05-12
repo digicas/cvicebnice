@@ -138,6 +138,7 @@ final List<TasksRegisterItem> tasksRegister = [
     ),
     onSchoolClassToLevelIndex: additions.onSchoolClassToLevelIndex,
     getLevelDescription: additions.getLevelDescription,
+    getLevelXid: additions.getLevelXid,
     onLevelsCount: additions.levelsCount,
   ),
   TasksRegisterItem(

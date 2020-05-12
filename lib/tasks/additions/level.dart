@@ -51,7 +51,7 @@ class Level extends LevelBlueprint {
     @required this.valueRange,
     this.description,
     this.example})
-      : super(index: index);
+      : super(index: index, xid: xid);
 
   /// Cloning method
   Level clone() {
@@ -103,5 +103,5 @@ class Level extends LevelBlueprint {
 
   @override
   String toString() =>
-      "level: $index - $solution - ${masks[selectedQuestionMaskID]}";
+      "level: $index - $xid - $solution - ${masks[selectedQuestionMaskID]}";
 }

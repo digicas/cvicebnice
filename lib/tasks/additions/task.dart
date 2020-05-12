@@ -46,5 +46,9 @@ String getLevelDescription(int index) {
 }
 
 String getLevelXid(int index) {
-  return "";
+  var levelTree = LevelTree();
+  var level = levelTree.getLevelByIndex(index);
+  if (level == null) return "!!!";
+  if (level.xid == null) return "???";
+  return level.xid;
 }
