@@ -44,3 +44,7 @@ String getLevelDescription(int index) {
   text += level.example ?? "Příklad nám chybí :(";
   return text;
 }
+
+String getLevelXid(int index) {
+  return "";
+}

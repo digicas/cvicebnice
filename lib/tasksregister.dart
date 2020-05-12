@@ -42,6 +42,9 @@ class TasksRegisterItem {
   /// Callback to obtain the description text of particular level index
   String Function(int index) getLevelDescription;
 
+  /// Callback to get the level external ID (xid)
+  String Function(int index) getLevelXid;
+
   // Statistical functions / callbacks below
 
   /// Callback to calculate the amount of implemented levels of particular Task
@@ -65,26 +68,32 @@ class TasksRegisterItem {
   ///  Amount of tasks of particular Task
   int get questionsCount => onQuestionsCount();
 
-  TasksRegisterItem({@required this.xid,
-    @required this.imageAssetName,
-    @required this.label,
-    this.isLevelImplemented = defaultLevelIsNotImplemented,
-    this.onOpenTaskScreen = defaultOpenTaskScreen,
-    this.onSchoolClassToLevelIndex = defaultOnSchoolClassToLevelIndex,
-    this.getLevelDescription = defaultLevelDescription,
-    this.onLevelsCount = defaultLevelsCount,
-    this.onMasksCount = defaultMasksCount,
-    this.onQuestionsCount = defaultQuestionsCount});
+  TasksRegisterItem(
+      {@required this.xid,
+      @required this.imageAssetName,
+      @required this.label,
+      this.getLevelXid = defaultGetLevelXid,
+      this.isLevelImplemented = defaultLevelIsNotImplemented,
+      this.onOpenTaskScreen = defaultOpenTaskScreen,
+      this.onSchoolClassToLevelIndex = defaultOnSchoolClassToLevelIndex,
+      this.getLevelDescription = defaultLevelDescription,
+      this.onLevelsCount = defaultLevelsCount,
+      this.onMasksCount = defaultMasksCount,
+      this.onQuestionsCount = defaultQuestionsCount});
 }
 
 /// TasksRegister methods
 extension TaskRegister<TasksRegisterItem> on List<TasksRegisterItem> {
+  /// Gets the <task>xid-<level>xid for sharing purposes
+  String getWholeXid(int taskIndex, int levelIndex) {
+    return tasksRegister[taskIndex].xid +"-" + tasksRegister[taskIndex].getLevelXid(levelIndex);
+  }
+
   /// Total sum of all registered Tasks
   int get allTasks => this.length;
 
   /// Total sum of all implemented levels
-  int get allLevels =>
-      tasksRegister.fold(0, (p, task) {
+  int get allLevels => tasksRegister.fold(0, (p, task) {
         print("task: ${task.label} levels: ${task.levelsCount}");
         return p + task.levelsCount;
       });
@@ -124,10 +133,9 @@ final List<TasksRegisterItem> tasksRegister = [
     imageAssetName: "assets/menu_additions.png",
     label: "Sčítání",
     isLevelImplemented: additions.isLevelImplemented,
-    onOpenTaskScreen: (index) =>
-        additions.TaskScreen(
-          selectedLevelIndex: index,
-        ),
+    onOpenTaskScreen: (index) => additions.TaskScreen(
+      selectedLevelIndex: index,
+    ),
     onSchoolClassToLevelIndex: additions.onSchoolClassToLevelIndex,
     getLevelDescription: additions.getLevelDescription,
     onLevelsCount: additions.levelsCount,
@@ -171,4 +179,9 @@ int defaultOnSchoolClassToLevelIndex(int schoolYear, int schoolMonth) {
 String defaultLevelDescription(_) {
   print("Getting description not implemented in Task register!");
   return "";
+}
+
+String defaultGetLevelXid(_) {
+  print("Getting level xid not implemented in Task register!");
+  return "???";
 }

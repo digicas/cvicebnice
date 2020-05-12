@@ -103,6 +103,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
   @override
   Widget build(BuildContext context) {
     bool canPlayLevel = checkLevelExists(levelSelectedIndex);
+    levelXid = tasksRegister.getWholeXid(taskSelectedIndex, levelSelectedIndex);
 
     return Scaffold(
       key: globalTaskListScaffoldKey,
@@ -266,7 +267,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                           LevelXidSelector(
                             levelXid: levelXid,
                             onSubmittedXid: (newXid) {
-                              print("Mam $newXid");
+                              print("Nove xid: $newXid pro a) validaci b) prepnuti tasku / levelu / roku a mesicu");
                             },
                           ),
                           IconButton(
