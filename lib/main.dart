@@ -52,6 +52,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
   // Togglebuttons current selection - tasks list
   int taskSelectedIndex;
 
+  bool descriptionPaneVisible = false;
   // we use [tasksRegister] List here - imported from tasksregister.dart
 
   @override
@@ -71,7 +72,11 @@ class _TaskListScreenState extends State<TaskListScreen> {
         actions: [
           IconButton(
             icon: FaIcon(FontAwesomeIcons.chalkboardTeacher),
-            onPressed: () {},
+            onPressed: () {
+              setState(() {
+                descriptionPaneVisible = !descriptionPaneVisible;
+              });
+            },
           ),
         ],
         title: Row(
@@ -188,8 +193,10 @@ class _TaskListScreenState extends State<TaskListScreen> {
         onPressed: () {},
       ),
       bottomNavigationBar: BottomAppBar(
-        child: SizedBox(
-          height: 56,
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 300),
+          curve: Curves.fastOutSlowIn,
+          height: descriptionPaneVisible ? 256 : 56,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Row(
@@ -262,105 +269,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
         shape: CircularNotchedRectangle(),
         color: Color(0xff2b9aa0),
       ),
-//      bottomNavigationBar: Text(" Všech úrovní: ${tasksRegister.allLevels} "
-//          "  Zadání cca: ${tasksRegister.allQuestions}"),
     );
   }
 }
 
-//class AppTaskBar extends StatelessWidget {
-//  const AppTaskBar({
-//    Key key,
-//    @required this.taskSelectedIndex,
-//  }) : super(key: key);
-//
-//  final int taskSelectedIndex;
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    int levelIndex = 999;
-//    return Expanded(
-//      child: DefaultTextStyle(
-//        style: TextStyle(color: Colors.white),
-//        child: Container(
-//          color: Color(0xffa02b5f),
-//          child: Row(
-//            mainAxisSize: MainAxisSize.max,
-//            mainAxisAlignment: MainAxisAlignment.spaceAround,
-//            children: [
-////                    Container(
-////                      decoration: BoxDecoration(
-////                        borderRadius: BorderRadius.all(Radius.circular(6)),
-////                        color: Colors.white,
-////                      ),
-////                      child: Image.asset(
-////                        tasksRegister[taskSelectedIndex].imageAssetName,
-////                        width: 48,
-////                      ),
-////                    ),
-////                    Text(tasksRegister[taskSelectedIndex].label),
-//              Row(
-//                mainAxisSize: MainAxisSize.min,
-//                children: <Widget>[
-//                  IconButton(
-//                    icon: Icon(Icons.remove_circle_outline),
-//                    color: Color(0xff2ba06b),
-//                    onPressed: () {
-////                  setState(() {
-////                    if (levelIndex > 0) levelIndex--;
-////                  });
-//                    },
-//                  ),
-//                  SizedBox(
-//                    width: 48,
-//                    child: Text(levelIndex.toString(),
-//                        textAlign: TextAlign.center,
-//                        style: Theme.of(context).textTheme.headline6),
-//
-////                    child: TextField(
-////                      style: Theme.of(context).textTheme.title,
-////                      textAlign: TextAlign.end,
-////                      controller: levelFieldController,
-////                      keyboardType: TextInputType.number,
-////                      onSubmitted: (text) {
-////                        setState(() {
-////                          levelIndex = int.parse(text);
-////                        });
-////                      },
-////                    ),
-//                  ),
-//                  IconButton(
-//                    icon: Icon(Icons.add_circle_outline),
-//                    color: Color(0xff2ba06b),
-//                    onPressed: () {
-////                  setState(() {
-////                    levelIndex++;
-////                  });
-//                    },
-//                  ),
-//                ],
-//              ),
-//
-////              Text("#999"),
-//              RaisedButton.icon(
-//                icon: Icon(Icons.share),
-//                label: Text("aeb-3ip"),
-//                onPressed: () {
-//                  Share.share(
-//                      "Matika do kapsy: ${tasksRegister[taskSelectedIndex].label} -> "
-//                      "Kód úlohy: aeb-3ip ( http://matikadokapsy.edukids.cz/ )",
-//                      subject: "#edukids úloha z matematiky");
-//                },
-//              ),
-//              RaisedButton.icon(
-//                icon: FaIcon(FontAwesomeIcons.dumbbell),
-//                label: Text("Procvičit"),
-//                onPressed: () {},
-//              ),
-//            ],
-//          ),
-//        ),
-//      ),
-//    );
-//  }
-//}
