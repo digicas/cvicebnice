@@ -121,79 +121,79 @@ class _LevelSelectState extends State<LevelSelect> {
                 valueTextStyle: Theme.of(context).textTheme.subtitle2,
               ),
             ),
-            Container(
-              height: 24,
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-              leading: widget.onCheckLevelExists(levelIndex)
-                  ? Icon(Icons.assignment_turned_in)
-                  : Icon(Icons.block),
-              title:
-                  Text("Úroveň:", style: Theme.of(context).textTheme.headline6),
-//              trailing: Text("$levelIndex", style: Theme.of(context).textTheme.title),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.remove_circle_outline),
-                    color: Color(0xff2ba06b),
-                    onPressed: () {
-                      setState(() {
-                        if (levelIndex > 0) levelIndex--;
-                      });
-                    },
-                  ),
-                  SizedBox(
-                    width: 48,
-                    child: Text(levelIndex.toString(),
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.headline6),
-
-//                    child: TextField(
-//                      style: Theme.of(context).textTheme.title,
-//                      textAlign: TextAlign.end,
-//                      controller: levelFieldController,
-//                      keyboardType: TextInputType.number,
-//                      onSubmitted: (text) {
-//                        setState(() {
-//                          levelIndex = int.parse(text);
-//                        });
-//                      },
-//                    ),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.add_circle_outline),
-                    color: Color(0xff2ba06b),
-                    onPressed: () {
-                      setState(() {
-                        levelIndex++;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              height: 24,
-            ),
-            SizedBox(
-              height: 62,
-//              width: 180,
-              child: RaisedButton.icon(
-                icon: Icon(
-                  Icons.play_circle_outline,
-                  size: 40,
-                ),
-//                color: Colors.blue,
-                onPressed: widget.onCheckLevelExists(levelIndex)
-                    ? () {
-                        widget.onPlay(levelIndex);
-                      }
-                    : null,
-                label: Text("Procvičit", style: TextStyle(fontSize: 28)),
-              ),
-            ),
+//            Container(
+//              height: 24,
+//            ),
+//            ListTile(
+//              contentPadding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+//              leading: widget.onCheckLevelExists(levelIndex)
+//                  ? Icon(Icons.assignment_turned_in)
+//                  : Icon(Icons.block),
+//              title:
+//                  Text("Úroveň:", style: Theme.of(context).textTheme.headline6),
+////              trailing: Text("$levelIndex", style: Theme.of(context).textTheme.title),
+//              trailing: Row(
+//                mainAxisSize: MainAxisSize.min,
+//                children: <Widget>[
+//                  IconButton(
+//                    icon: Icon(Icons.remove_circle_outline),
+//                    color: Color(0xff2ba06b),
+//                    onPressed: () {
+//                      setState(() {
+//                        if (levelIndex > 0) levelIndex--;
+//                      });
+//                    },
+//                  ),
+//                  SizedBox(
+//                    width: 48,
+//                    child: Text(levelIndex.toString(),
+//                        textAlign: TextAlign.center,
+//                        style: Theme.of(context).textTheme.headline6),
+//
+////                    child: TextField(
+////                      style: Theme.of(context).textTheme.title,
+////                      textAlign: TextAlign.end,
+////                      controller: levelFieldController,
+////                      keyboardType: TextInputType.number,
+////                      onSubmitted: (text) {
+////                        setState(() {
+////                          levelIndex = int.parse(text);
+////                        });
+////                      },
+////                    ),
+//                  ),
+//                  IconButton(
+//                    icon: Icon(Icons.add_circle_outline),
+//                    color: Color(0xff2ba06b),
+//                    onPressed: () {
+//                      setState(() {
+//                        levelIndex++;
+//                      });
+//                    },
+//                  ),
+//                ],
+//              ),
+//            ),
+//            Container(
+//              height: 24,
+//            ),
+//            SizedBox(
+//              height: 62,
+////              width: 180,
+//              child: RaisedButton.icon(
+//                icon: Icon(
+//                  Icons.play_circle_outline,
+//                  size: 40,
+//                ),
+////                color: Colors.blue,
+//                onPressed: widget.onCheckLevelExists(levelIndex)
+//                    ? () {
+//                        widget.onPlay(levelIndex);
+//                      }
+//                    : null,
+//                label: Text("Procvičit", style: TextStyle(fontSize: 28)),
+//              ),
+//            ),
             Container(
               height: 32,
             ),
@@ -235,8 +235,6 @@ class LevelNumberSelector extends StatelessWidget {
         ),
         InkWell(
           onTap: () {
-            print("gogo");
-
             return enterNumberDialog(context);
           },
           child: Text(
@@ -302,7 +300,7 @@ class LevelNumberSelector extends StatelessWidget {
 
 /// Selector Widget for xids including AlertDialog for manual entering
 ///
-/// Validation must be done in the callback
+/// Final validation must be done in the callback
 class LevelXidSelector extends StatelessWidget {
   const LevelXidSelector({
     Key key,

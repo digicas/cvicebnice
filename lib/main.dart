@@ -1,7 +1,6 @@
 import 'package:cvicebnice/tasksregister.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share/share.dart';
@@ -76,8 +75,34 @@ class _TaskListScreenState extends State<TaskListScreen> {
     super.initState();
   }
 
+  /// Navigating to the TaskScreen
+  void playWithSelectedLevelIndex() {
+    print("Selected level to play: $levelSelectedIndex");
+    // if level not yet implemented, just Toast
+    if (!tasksRegister[taskSelectedIndex]
+        .isLevelImplemented(levelSelectedIndex)) {
+      print(
+          "Cannot practise: $levelSelectedIndex for ${tasksRegister[taskSelectedIndex].label}");
+    } else {
+      Navigator.push(
+        context,
+        // Open task screen
+        MaterialPageRoute(builder: (context) {
+          return tasksRegister[taskSelectedIndex]
+              .onOpenTaskScreen(levelSelectedIndex);
+        }),
+      );
+    }
+  }
+
+  /// Requests task register whether level exists for the particular task environment
+  bool checkLevelExists(int index) =>
+      tasksRegister[taskSelectedIndex].isLevelImplemented(index);
+
   @override
   Widget build(BuildContext context) {
+    bool canPlayLevel = checkLevelExists(levelSelectedIndex);
+
     return Scaffold(
       key: globalTaskListScaffoldKey,
       extendBody: true,
@@ -157,9 +182,10 @@ class _TaskListScreenState extends State<TaskListScreen> {
                   ),
                 ),
                 LevelSelect(
-                  onCheckLevelExists: (index) =>
-                      tasksRegister[taskSelectedIndex]
-                          .isLevelImplemented(index),
+                  onCheckLevelExists: (index) => checkLevelExists(index),
+
+//                      tasksRegister[taskSelectedIndex]
+//                          .isLevelImplemented(index),
                   onSchoolClassToLevelIndex: (schoolYear, schoolMonth) =>
                       tasksRegister[taskSelectedIndex]
                           .onSchoolClassToLevelIndex(
@@ -198,14 +224,16 @@ class _TaskListScreenState extends State<TaskListScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xffa02b5f),
-        mini: false,
+        backgroundColor: canPlayLevel ? Color(0xffa02b5f) : Colors.grey,
+        mini: !canPlayLevel,
         tooltip: "Procvičit",
         elevation: 4,
-        child: FaIcon(
-          FontAwesomeIcons.play,
-        ),
-        onPressed: () {},
+        child: canPlayLevel ? FaIcon(FontAwesomeIcons.play) : Icon(Icons.block),
+        onPressed: canPlayLevel
+            ? () {
+                playWithSelectedLevelIndex();
+              }
+            : null,
       ),
       bottomNavigationBar: BottomAppBar(
         child: AnimatedContainer(
@@ -261,4 +289,3 @@ class _TaskListScreenState extends State<TaskListScreen> {
     );
   }
 }
-
