@@ -8,6 +8,7 @@ import 'package:share/share.dart';
 //import 'package:flutter_linkify/flutter_linkify.dart';
 
 import './screens/level_select.dart';
+import 'screens/descriptionpane.dart';
 
 //import '/widgets/launchurl.dart';
 //import 'package:url_launcher/url_launcher.dart';
@@ -283,43 +284,10 @@ class _TaskListScreenState extends State<TaskListScreen> {
                   ],
                 ),
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Container(
-//                        color: Colors.deepOrange,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Divider(),
-                            Text(
-                                "Prostředí: ${tasksRegister[taskSelectedIndex].label}, "
-                                "úrovně $levelSelectedIndex",
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.white)),
-                            canPlayLevel
-                                ? Text(
-                                    "Vhodné pro xxxx. třídu (květen) a pro yyy. třídu (září).",
-                                    style: TextStyle(color: Colors.white))
-                                : Container(),
-                            Divider(),
-                            !canPlayLevel
-                                ? Text(
-                                    "Ještě není připraveno :( \n\n"
-                                    "Můžete nám pomoci - na www.edukids.cz\n",
-                                    style: TextStyle(color: Colors.white))
-                                : Container(),
-                            Text(
-                                tasksRegister[taskSelectedIndex]
-                                    .getLevelDescription(levelSelectedIndex),
-                                style: TextStyle(color: Colors.white)),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                  child: DescriptionPane(
+                      taskSelectedIndex: taskSelectedIndex,
+                      levelSelectedIndex: levelSelectedIndex,
+                      canPlayLevel: canPlayLevel),
                 ),
               ],
             ),
