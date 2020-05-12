@@ -118,7 +118,7 @@ class _LevelSelectState extends State<LevelSelect> {
                     style: _fluidSliderTextStyle(context)),
                 end: Text(schoolMonths.last,
                     style: _fluidSliderTextStyle(context)),
-                valueTextStyle: Theme.of(context).textTheme.subtitle2,
+                valueTextStyle: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 13),
               ),
             ),
 //            Container(
