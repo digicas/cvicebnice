@@ -2,6 +2,6 @@
 
 // TODO fix keyboard error - potom, co je aktivovana custom keyboard nejde pak pustit normalni
 
-// TODO fix/refactor year / month selection
+// DONE fix/refactor year / month selection
 
 // IDEA share results on social? https://pub.dev/packages/wc_flutter_share

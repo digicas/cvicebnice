@@ -147,63 +147,63 @@ class _TaskListScreenState extends State<TaskListScreen> {
 //          child: AppTaskBar(taskSelectedIndex: taskSelectedIndex),
 //        ),
       ),
-      body: SafeArea(
-        child: Container(
-//          color: Colors.pink,
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                ListTile(
-                  title: Text("Prostředí úloh",
-                      style: Theme.of(context).textTheme.headline6),
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: ToggleButtons(
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                    children: List.generate(
-                      tasksRegister.length,
-                      (index) => Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Image.asset(
-                            tasksRegister[index].imageAssetName,
-                            width: 128,
-                          ),
-                          Text(tasksRegister[index].label),
-                          Container(height: 8),
-                        ],
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          children: <Widget>[
+            ListTile(
+              title: Text("Prostředí úloh",
+                  style: Theme.of(context).textTheme.headline6),
+            ),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: ToggleButtons(
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+                children: List.generate(
+                  tasksRegister.length,
+                  (index) => Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Image.asset(
+                        tasksRegister[index].imageAssetName,
+                        width: 128,
                       ),
-                    ),
-                    onPressed: (int index) {
-                      setState(() {
-                        taskSelectedIndex = index;
-                      });
-                    },
-                    isSelected: List.generate(
-                        tasksRegister.length, (i) => (i == taskSelectedIndex)),
+                      Text(tasksRegister[index].label),
+                      Container(height: 8),
+                    ],
                   ),
                 ),
-                LevelSelect(
-                  onCheckLevelExists: (index) => checkLevelExists(index),
-                  onSchoolClassToLevelIndex: (schoolYear, schoolMonth) {
-                    var newIndex = tasksRegister[taskSelectedIndex]
-                        .onSchoolClassToLevelIndex(
-                            schoolYear.toInt(), schoolMonth.toInt());
-                    setState(() {
-                      levelSelectedIndex = newIndex;
-                    });
-                    return newIndex;
-                  },
-                  onPlay: (int selectedLevelIndex) {
-                    playWithSelectedLevelIndex();
-                    //////////////////////////
-                  },
-                ),
-              ],
+                onPressed: (int index) {
+                  setState(() {
+                    taskSelectedIndex = index;
+                  });
+                },
+                isSelected: List.generate(
+                    tasksRegister.length, (i) => (i == taskSelectedIndex)),
+              ),
             ),
-          ),
+            LevelSelect(
+              onCheckLevelExists: (index) => checkLevelExists(index),
+              onSchoolClassToLevelIndex: (schoolYear, schoolMonth) {
+                var newIndex = tasksRegister[taskSelectedIndex]
+                    .onSchoolClassToLevelIndex(
+                        schoolYear.toInt(), schoolMonth.toInt());
+                setState(() {
+                  levelSelectedIndex = newIndex;
+                });
+                return newIndex;
+              },
+              onPlay: (int selectedLevelIndex) {
+                playWithSelectedLevelIndex();
+                //////////////////////////
+              },
+            ),
+            AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                curve: Curves.fastOutSlowIn,
+                height: descriptionPaneVisible ? 256 : 48),
+          ],
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
