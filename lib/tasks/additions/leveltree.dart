@@ -138,7 +138,7 @@ class LevelTree extends LevelTreeBlueprint {
         onGenerate: () {
           int x = randomMinMax(0, 5);
           int y = randomMinMax(1, 6 - x);
-          return [[x, y, x + y], [x, y, x + y]][random(1)];
+          return [[x, y, x + y], [y, x, x + y]][random(1)];
         },
         masks: ["x+y=Z"],
         valueRange: [0, 6],
@@ -150,9 +150,9 @@ class LevelTree extends LevelTreeBlueprint {
         index: 6,
         xid: "esv",
         onGenerate: () {
-          int x = randomMinMax(0, 9);
-          int y = randomMinMax(0, 9 - x);
-          return [x, y, x + y];
+          int z = randomMinMax(4, 9);
+          int x = randomMinMax(1, z-1);
+          return [[x, z-x, z],[z-x, x, z]][random(1)];
         },
         masks: ["x+y=Z"],
         valueRange: [0, 9],
