@@ -147,6 +147,49 @@ class LevelTree extends LevelTreeBlueprint {
       ),
 
       Level(
+        index: 3,
+        xid: "bzx",
+        onGenerate: () {
+          int z = randomMinMax(3, 6);
+          int x = randomMinMax(0, z-1);
+          return [[x, z-x, z], [z-x, x, z]][random(1)];
+        },
+        masks: ["x+Y=z"],
+        valueRange: [0, 6],
+        description: "Sčítání v číselném oboru 0 - 6.",
+        example: "4 + ? = 6",
+      ),
+
+      Level(
+        index: 4,
+        xid: "bfr",
+        onGenerate: () {
+          int z = randomMinMax(3, 6);
+          int x = randomMinMax(0, z-1);
+          return [[x, z-x, z], [z-x, x, z]][random(1)];
+        },
+        masks: ["X+y=z"],
+        valueRange: [0, 6],
+        description: "Sčítání v číselném oboru 0 - 6.",
+        example: "? + 2 = 6",
+      ),
+
+      Level(
+        index: 5,
+        xid: "bwj",
+        onGenerate: () {
+          int z = randomMinMax(3, 6);
+          int x = randomMinMax(0, z-1);
+          return [[x, z-x, z], [z-x, x, z]][random(1)];
+        },
+        masks: ["X+y=z", "x+Y=z"],
+        valueRange: [0, 6],
+        description: "Sčítání v číselném oboru 0 - 6.",
+        example: "? + 2 = 6, případně 3 + ? = 5",
+      ),
+
+
+      Level(
         index: 6,
         xid: "esv",
         onGenerate: () {

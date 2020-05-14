@@ -79,6 +79,7 @@ class _TaskScreenState extends State<TaskScreen> {
   void questionsGenerate() {
     questions = List.generate(questionsAmount, (_) => _level.clone());
 
+    bool questionsHaveZero = false;
     for (int i = 0; i < questions.length; i++) {
       bool mustRegenerate;
       int tries = 5;
@@ -91,8 +92,11 @@ class _TaskScreenState extends State<TaskScreen> {
           if (listEquals(questions[j].solution, questions[i].solution))
             mustRegenerate = true;
         }
+        /// avoid more zeros among questions
+        if (questionsHaveZero & questions[i].solution.contains(0)) mustRegenerate = true;
 //        print("$i: $tries: ${questions[i].solution}");
       } while (mustRegenerate & (tries > 0));
+      if (questions[i].solution.contains(0)) questionsHaveZero = true;
     }
   }
 
