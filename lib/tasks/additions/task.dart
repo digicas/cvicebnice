@@ -33,3 +33,22 @@ int onSchoolClassToLevelIndex(int schoolYear, int schoolMonth) {
 //  print("SchoolYear/schoolMonth proxy not implemented.");
 //  return 0;
 }
+
+String getLevelDescription(int index) {
+  var levelTree = LevelTree();
+  var level = levelTree.getLevelByIndex(index);
+  if (level == null) return "";
+  String text = "";
+  text += level.description ?? "Popis ješte není :(";
+  text += "\n\nPříklad: ";
+  text += level.example ?? "Příklad nám chybí :(";
+  return text;
+}
+
+String getLevelXid(int index) {
+  var levelTree = LevelTree();
+  var level = levelTree.getLevelByIndex(index);
+  if (level == null) return "!!!";
+  if (level.xid == null) return "???";
+  return level.xid;
+}
