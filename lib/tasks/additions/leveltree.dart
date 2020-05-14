@@ -194,7 +194,7 @@ class LevelTree extends LevelTreeBlueprint {
         xid: "esv",
         onGenerate: () {
           int z = randomMinMax(4, 9);
-          int x = randomMinMax(1, z-1);
+          int x = randomMinMax(0, z);
           return [[x, z-x, z],[z-x, x, z]][random(1)];
         },
         masks: ["x+y=Z"],
@@ -202,14 +202,54 @@ class LevelTree extends LevelTreeBlueprint {
         description: "Sčítání v číselném oboru 0 - 9.",
         example: "4 + 5 = ?",
       ),
+      Level(
+        index: 7,
+        xid: "bed",
+        onGenerate: () {
+          int z = randomMinMax(4, 9);
+          int x = randomMinMax(0, z);
+          return [[x, z-x, z],[z-x, x, z]][random(1)];
+        },
+        masks: ["x+Y=z"],
+        valueRange: [0, 9],
+        description: "Sčítání v číselném oboru 0 - 9.",
+        example: "4 + ? = 9",
+      ),
+      Level(
+        index: 8,
+        xid: "czd",
+        onGenerate: () {
+          int z = randomMinMax(4, 9);
+          int x = randomMinMax(0, z);
+          return [[x, z-x, z],[z-x, x, z]][random(1)];
+        },
+        masks: ["X+y=z"],
+        valueRange: [0, 9],
+        description: "Sčítání v číselném oboru 0 - 9.",
+        example: "? + 5 = 9",
+      ),
+
+      Level(
+        index: 9,
+        xid: "dnw",
+        onGenerate: () {
+          int z = randomMinMax(4, 9);
+          int x = randomMinMax(0, z);
+          return [[x, z-x, z],[z-x, x, z]][random(1)];
+        },
+        masks: ["X+y=z", "x+Y=z"],
+        valueRange: [0, 9],
+        description: "Sčítání v číselném oboru 0 - 9.",
+        example: "4 + ? = 9, nebo 5 + ? = 9",
+      ),
 
       Level(
         index: 10,
         xid: "dfe",
         onGenerate: () {
-          int x = randomMinMax(0, 10);
-          int y = randomMinMax(0, 10 - x);
-          return [x, y, x + y];
+          int z = randomMinMax(5, 10);
+          int x = randomMinMax(0, z);
+          return [x, z-x, z];
         },
         masks: ["x+y=Z"],
         valueRange: [0, 10],

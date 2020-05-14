@@ -82,7 +82,7 @@ class _TaskScreenState extends State<TaskScreen> {
     bool questionsHaveZero = false;
     for (int i = 0; i < questions.length; i++) {
       bool mustRegenerate;
-      int tries = 5;
+      int tries = 10;
       do {
         questions[i].generate();
         tries--;
