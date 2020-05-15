@@ -1,5 +1,10 @@
 import 'dart:math';
 
+/// TODO rework LevelTrees into extension methods on List:
+/// extension IterableNumX<T extends List> on Iterable<T> {}
+/// https://codewithandrea.com/videos/2019-12-02-dart-extensions-full-introduction/
+/// Extension methods on generic LevelBase to be defined in this file
+
 /// Common blueprint for the Level implementations
 ///
 /// Should be extended (not implemented) in order to inherit members

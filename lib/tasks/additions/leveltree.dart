@@ -37,7 +37,18 @@ class LevelTree extends LevelTreeBlueprint {
     return getLevelByIndex(levelIndex) != null;
   }
 
-  /// Returns more difficult [Level] if there is any or the same one
+  /// Gets the levelIndex in [LevelTree] based on whole xid "abcghi"
+  ///
+  /// Returns -1 if levelIndex is not found.
+  int getLevelIndexFromXid(String wholeXid) {
+    if (wholeXid == null) return -1;
+    if (wholeXid.length < 6 ) return -1;
+    var levelXid = wholeXid.substring(3, 6).toLowerCase();
+    int i = levels.indexWhere((level) => level.xid == levelXid);
+    return levels[i].index;
+  }
+
+/// Returns more difficult [Level] if there is any or the same one
   Level getMoreDifficultLevel(Level level) {
     Level newLevel;
     int newLevelIndex = level.index;

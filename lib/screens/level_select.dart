@@ -307,7 +307,7 @@ class LevelNumberSelector extends StatelessWidget {
 class LevelXidSelector extends StatelessWidget {
   const LevelXidSelector({
     Key key,
-    this.levelXid = "???-???",
+    this.levelXid = "??????",
     @required this.onSubmittedXid,
   }) : super(key: key);
 
@@ -349,13 +349,13 @@ class LevelXidSelector extends StatelessWidget {
                       autofocus: true,
                       enableInteractiveSelection: true,
                       keyboardType: TextInputType.text,
-                      decoration: InputDecoration(hintText: "abc-ghi"),
+                      decoration: InputDecoration(hintText: "abcghi"),
                       inputFormatters: [
-                        WhitelistingTextInputFormatter(RegExp("[a-z\-]"))
+                        WhitelistingTextInputFormatter(RegExp("[a-zA-Z]"))
                       ],
                       cursorColor: Color(0xffa02b5f),
                       autocorrect: false,
-                      maxLength: 7,
+                      maxLength: 6,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.black,

@@ -73,7 +73,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
     // set the togglebuttons for task selection
     taskSelectedIndex = 0;
     levelSelectedIndex = 0;
-    levelXid = "???-???";
+    levelXid = "??????";
 
     super.initState();
   }
@@ -250,15 +250,45 @@ class _TaskListScreenState extends State<TaskListScreen> {
                             levelXid: levelXid,
                             onSubmittedXid: (newXid) {
                               print(
-                                  "Nove xid: $newXid pro a) validaci b) prepnuti tasku / levelu / roku a mesicu");
+                                  "Nove xid: # $newXid # pro a) validaci b) prepnuti tasku / levelu / roku a mesicu");
+                              var newTaskTypeIndex =
+                                  tasksRegister.getTaskTypeIndexFromXid(newXid);
+                              print("Task Type index: $newTaskTypeIndex");
+
+                              int newLevelIndex = -1;
+                              if (newTaskTypeIndex > -1) {
+                                newLevelIndex = tasksRegister[newTaskTypeIndex].getLevelIndexFromXid(newXid);
+                                print("Task's selected index: $newLevelIndex");
+                                setState(() {
+                                  taskSelectedIndex = newTaskTypeIndex;
+                                  if (newLevelIndex > -1) levelSelectedIndex = newLevelIndex;
+                                });
+                              }
+
+                              if (newTaskTypeIndex == -1 || newLevelIndex == -1){
+                                print("Show not found dialog");
+                                showDialog(context: context,
+                                  builder: (context) {
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    title: Text("Kód $newXid neznám :("),
+                                  );
+                                  }
+                                );
+
+                              }
+
                             },
                           ),
                           IconButton(
                             icon: Icon(Icons.share, color: Colors.white),
                             onPressed: () {
                               String text =
-                                  "Matika do kapsy: ${tasksRegister[taskSelectedIndex].label} #$levelSelectedIndex -> "
-                                  "Kód úlohy: $levelXid na https://matikadokapsy.edukids.cz/";
+                                  "https://matikadokapsy.edukids.cz : "
+                                  "${tasksRegister[taskSelectedIndex].label} #$levelSelectedIndex -> "
+                                  "Kód úlohy: # $levelXid #";
                               if (kIsWeb) {
                                 showDialog(
                                     context: context,

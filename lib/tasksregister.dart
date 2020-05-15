@@ -45,6 +45,11 @@ class TasksRegisterItem {
   /// Callback to get the level external ID (xid)
   String Function(int index) getLevelXid;
 
+  /// Callback to ge the level internal index
+  ///
+  /// Must return -1 if not found
+  int Function(String levelWholeXid) getLevelIndexFromXid;
+
   // Statistical functions / callbacks below
 
   /// Callback to calculate the amount of implemented levels of particular Task
@@ -73,6 +78,7 @@ class TasksRegisterItem {
       @required this.imageAssetName,
       @required this.label,
       this.getLevelXid = defaultGetLevelXid,
+      this.getLevelIndexFromXid = defaultGetLevelIndexFromXid,
       this.isLevelImplemented = defaultLevelIsNotImplemented,
       this.onOpenTaskScreen = defaultOpenTaskScreen,
       this.onSchoolClassToLevelIndex = defaultOnSchoolClassToLevelIndex,
@@ -86,7 +92,18 @@ class TasksRegisterItem {
 extension TaskRegister<TasksRegisterItem> on List<TasksRegisterItem> {
   /// Gets the <task>xid-<level>xid for sharing purposes
   String getWholeXid(int taskIndex, int levelIndex) {
-    return tasksRegister[taskIndex].xid +"-" + tasksRegister[taskIndex].getLevelXid(levelIndex);
+    return tasksRegister[taskIndex].xid +
+        tasksRegister[taskIndex].getLevelXid(levelIndex);
+  }
+
+  /// Gets the Task Type in [tasksRegister] based on whole xid "abcghi"
+  ///
+  /// Returns -1 if Task Type is not found.
+  int getTaskTypeIndexFromXid(String levelXid) {
+    if (levelXid == null) return -1;
+    if (levelXid.length < 3) return -1;
+    var taskXid = levelXid.substring(0, 3).toLowerCase();
+    return tasksRegister.indexWhere((taskType) => taskType.xid == taskXid);
   }
 
   /// Total sum of all registered Tasks
@@ -109,7 +126,7 @@ extension TaskRegister<TasksRegisterItem> on List<TasksRegisterItem> {
 /// Register of Tasks (environments) for selection on the selection / main screens
 final List<TasksRegisterItem> tasksRegister = [
   TasksRegisterItem(
-      xid: "pyr",
+      xid: "prm",
       imageAssetName: "assets/menu_pyramid.png",
       label: "Pyramidy",
       isLevelImplemented: pyramidsAndFunnels.isLevelImplemented,
@@ -119,7 +136,7 @@ final List<TasksRegisterItem> tasksRegister = [
       onMasksCount: pyramidsAndFunnels.masksCount,
       onQuestionsCount: pyramidsAndFunnels.questionsCount),
   TasksRegisterItem(
-      xid: "try",
+      xid: "fnl",
       imageAssetName: "assets/menu_funnel.png",
       label: "Trychtýř",
       isLevelImplemented: pyramidsAndFunnels.isLevelImplemented,
@@ -139,6 +156,7 @@ final List<TasksRegisterItem> tasksRegister = [
     onSchoolClassToLevelIndex: additions.onSchoolClassToLevelIndex,
     getLevelDescription: additions.getLevelDescription,
     getLevelXid: additions.getLevelXid,
+    getLevelIndexFromXid: additions.getLevelIndexFromXid,
     onLevelsCount: additions.levelsCount,
   ),
   TasksRegisterItem(
@@ -159,7 +177,7 @@ int defaultMasksCount() => 0;
 int defaultQuestionsCount() => 0;
 
 bool defaultLevelIsNotImplemented(_) {
-  print("Level check existance not defined in Tasks register!");
+  print("Level check existance not registered in Tasks register!");
   return false;
 }
 
@@ -173,16 +191,21 @@ Widget defaultOpenTaskScreen(_) {
 }
 
 int defaultOnSchoolClassToLevelIndex(int schoolYear, int schoolMonth) {
-  print("SchoolYear/schoolMonth -> index not implemented in Tasks register!");
+  print("SchoolYear/schoolMonth -> index not registered in Tasks register!");
   return 0;
 }
 
 String defaultLevelDescription(_) {
-  print("Getting description not implemented in Task register!");
+  print("Getting description not registered in Task register!");
   return "";
 }
 
 String defaultGetLevelXid(_) {
-  print("Getting level xid not implemented in Task register!");
+  print("Getting level xid not registered in Task register!");
   return "???";
+}
+
+int defaultGetLevelIndexFromXid(_) {
+  print("Getting level index not registered in Task register!");
+  return -1;
 }
