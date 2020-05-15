@@ -225,7 +225,7 @@ class LevelNumberSelector extends StatelessWidget {
         child: Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        SizedBox(width: 12),
+        SizedBox(width: 4),
         IconButton(
           icon: Icon(Icons.remove_circle_outline),
           color: Colors.white,
@@ -237,10 +237,13 @@ class LevelNumberSelector extends StatelessWidget {
           onTap: () {
             return enterNumberDialog(context);
           },
-          child: Text(
-            levelIndex.toString(),
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 24, color: Colors.white),
+          child: Container(
+            width: 50,
+            child: Text(
+              levelIndex.toString(),
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 24, color: Colors.white),
+            ),
           ),
         ),
         IconButton(
