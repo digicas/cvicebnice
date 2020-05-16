@@ -1,5 +1,4 @@
 import 'package:cvicebnice/tasksregister.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,13 +6,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share/share.dart';
 
-//import 'package:flutter_linkify/flutter_linkify.dart';
-
 import './screens/level_select.dart';
 import 'screens/descriptionpane.dart';
+import 'widgets/launchurl.dart';
 
-//import '/widgets/launchurl.dart';
-//import 'package:url_launcher/url_launcher.dart';
 
 void main() => runApp(MyApp());
 
@@ -112,7 +108,34 @@ class _TaskListScreenState extends State<TaskListScreen> {
       extendBody: true,
 //      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(Icons.info_outline),
+          onPressed: () {
+            showAboutDialog(
+              context: context,
+              applicationName: "Matika do kapsy",
+              applicationVersion: "20200516",
+              applicationIcon: null,
+              // TODO add app icon
+              applicationLegalese:
+                  "Vytvořeno v rámci neziskového projektu EduKids spolkem Kvalitní digičas, z.s. s pomocí přispěvovatelů.",
+              children: [
+                SizedBox(height: 8),
+                Text(
+                  "Chceme posilovat vzdělání dětí účinným využitím mobilů a minimalizovat tak digitální konzum.",
+//                  style: TextStyle(fontSize: 12),
+                ),
+                SizedBox(height: 8),
+                TextWithLinks("web: https://www.edukids.cz\n"
+                    "(f) https://www.facebook.com/EduKids.cz"),
+                SizedBox(height: 8),
+                TextWithLinks(
+                    "Budeme rádi, když nám pomůžete - https://www.edukids.cz/podporte-nas"),
+              ],
+            );
+          },
+        ),
+//        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             icon: FaIcon(FontAwesomeIcons.chalkboardTeacher),
@@ -123,10 +146,14 @@ class _TaskListScreenState extends State<TaskListScreen> {
             },
           ),
         ],
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text("EduKids.cz / Matika do kapsy"),
+        title: InkWell(
+          onTap: () {
+            print("jojo");
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text("EduKids / Matika do kapsy"),
 //            Text("(prototyp)"),
 //            Linkify(text: "www.edukids.cz"),
 //            GestureDetector(
@@ -138,7 +165,8 @@ class _TaskListScreenState extends State<TaskListScreen> {
 //                  "EduKids",
 //                  style: TextStyle(color: Color(0xffeeeeee)),
 //                )),
-          ],
+            ],
+          ),
         ),
 //        shape: ShapeBorder(),
 
@@ -257,29 +285,31 @@ class _TaskListScreenState extends State<TaskListScreen> {
 
                               int newLevelIndex = -1;
                               if (newTaskTypeIndex > -1) {
-                                newLevelIndex = tasksRegister[newTaskTypeIndex].getLevelIndexFromXid(newXid);
+                                newLevelIndex = tasksRegister[newTaskTypeIndex]
+                                    .getLevelIndexFromXid(newXid);
                                 print("Task's selected index: $newLevelIndex");
                                 setState(() {
                                   taskSelectedIndex = newTaskTypeIndex;
-                                  if (newLevelIndex > -1) levelSelectedIndex = newLevelIndex;
+                                  if (newLevelIndex > -1)
+                                    levelSelectedIndex = newLevelIndex;
                                 });
                               }
 
-                              if (newTaskTypeIndex == -1 || newLevelIndex == -1){
+                              if (newTaskTypeIndex == -1 ||
+                                  newLevelIndex == -1) {
                                 print("Show not found dialog");
-                                showDialog(context: context,
-                                  builder: (context) {
-                                  return AlertDialog(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    title: Text("Kód $newXid neznám :("),
-                                  );
-                                  }
-                                );
-
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        title: Text("Kód $newXid neznám :("),
+                                      );
+                                    });
                               }
-
                             },
                           ),
                           IconButton(
