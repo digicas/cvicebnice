@@ -7,13 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:share/share.dart';
 
 import './screens/level_select.dart';
+import 'screens/about.dart';
 import 'screens/descriptionpane.dart';
-import 'widgets/launchurl.dart';
-
-/// Generated file with git commit info
-/// run ./tools/git_commit_info.bat if missing and after each commit
-/// Hopefully can be automated in the builder - see git_revision branch
-import 'git_info.g.dart' as gitInfo;
 
 void main() => runApp(MyApp());
 
@@ -115,28 +110,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
         leading: IconButton(
           icon: Icon(Icons.info_outline),
           onPressed: () {
-            showAboutDialog(
-              context: context,
-              applicationName: "Matika do kapsy",
-              applicationVersion: gitInfo.shortSHA,
-              applicationIcon: null,
-              // TODO add app icon
-              applicationLegalese:
-                  "Vytvořeno v rámci neziskového projektu EduKids spolkem Kvalitní digičas, z.s. s pomocí přispěvovatelů.",
-              children: [
-                SizedBox(height: 8),
-                Text(
-                  "Chceme posilovat vzdělání dětí účinným využitím mobilů a minimalizovat tak digitální konzum.",
-//                  style: TextStyle(fontSize: 12),
-                ),
-                SizedBox(height: 8),
-                TextWithLinks("web: https://www.edukids.cz\n"
-                    "(f) https://www.facebook.com/EduKids.cz"),
-                SizedBox(height: 8),
-                TextWithLinks(
-                    "Budeme rádi, když nám pomůžete - https://www.edukids.cz/podporte-nas"),
-              ],
-            );
+            buildShowAboutDialog(context);
           },
         ),
 //        automaticallyImplyLeading: false,
@@ -382,4 +356,5 @@ class _TaskListScreenState extends State<TaskListScreen> {
       ),
     );
   }
+
 }
