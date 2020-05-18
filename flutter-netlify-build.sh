@@ -20,9 +20,10 @@ git pull origin $FLUTTER_BRANCH
 git checkout $FLUTTER_REVISION
 cd ..
 
+$FLUTTER config --enable-web
+
 # Setup dart
 DART=`echo $FLUTTER | sed 's/flutter$/cache\/dart-sdk\/bin\/dart/'`
 echo $DART
 
-$FLUTTER config --enable-web
 $FLUTTER build web --release
