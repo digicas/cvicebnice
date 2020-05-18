@@ -10,6 +10,10 @@ import './screens/level_select.dart';
 import 'screens/descriptionpane.dart';
 import 'widgets/launchurl.dart';
 
+/// Generated file with git commit info
+/// run ./tools/git_commit_info.bat if missing and after each commit
+/// Hopefully can be automated in the builder - see git_revision branch
+import 'git_info.g.dart' as gitInfo;
 
 void main() => runApp(MyApp());
 
@@ -114,7 +118,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
             showAboutDialog(
               context: context,
               applicationName: "Matika do kapsy",
-              applicationVersion: "20200516",
+              applicationVersion: gitInfo.shortSHA,
               applicationIcon: null,
               // TODO add app icon
               applicationLegalese:
