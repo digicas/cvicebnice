@@ -37,8 +37,10 @@ void main() {
     test("Levels have implemented submission check of the mask:", () {
       levelTree.levels.forEach((level) {
         level.generate();
-        expect(() => Level.checkSubmission(level.solution, [1], level.masks[0]),
-            returnsNormally);
+        level.masks.forEach((mask) {
+          expect(() => Level.checkSubmission(level.solution, [1], mask),
+              returnsNormally);
+        });
       });
     });
   });

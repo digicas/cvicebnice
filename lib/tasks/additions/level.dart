@@ -78,7 +78,7 @@ class Level extends LevelBlueprint {
 
   /// Returns true if submitted data correspond to generated data and mask
   ///
-  /// Implementation for this kind of task, other tasks need different one
+  /// Implementation for this type of task, other task types need different one
   static bool checkSubmission(List generated, List filled, String mask) {
 
     /// In case of empty submission - we cannot calculate with null
@@ -97,6 +97,8 @@ class Level extends LevelBlueprint {
       return generated[0] + generated[1] + generated[2] == filled[0];
 
     if (["100=k+X"].contains(mask)) return 100 == generated[0] + filled[0];
+
+    assert(false, "Mask $mask not implemented");
 
     return false;
   }
