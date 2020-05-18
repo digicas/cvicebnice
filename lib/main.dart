@@ -67,7 +67,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
   void initState() {
     // set the togglebuttons for task selection
     taskSelectedIndex = 0;
-    levelSelectedIndex = 0;
+    levelSelectedIndex = 2;
     levelXid = "??????";
 
     super.initState();
