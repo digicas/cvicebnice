@@ -575,6 +575,60 @@ class LevelTree extends LevelTreeBlueprint {
 // //////////////////////////////////////////////////////////////////// Level 30+
 
       Level(
+        index: 30,
+        xid: "aka",
+        onGenerate: () {
+          int x = randomMinMax(2, 9);
+          return [x, 11-x, 11];
+        },
+        masks: ["x+Y=z"],
+        valueRange: [0, 20],
+        description: "Sčítání v číselném oboru 0 - 20 s přechodem přes 10, kde je součet 11.",
+        example: "3 + ? = 11",
+      ),
+
+      Level(
+        index: 31,
+        xid: "byv",
+        onGenerate: () {
+          int x = randomMinMax(3, 9);
+          return [x, 12-x, 12];
+        },
+        masks: ["x+Y=z"],
+        valueRange: [0, 20],
+        description: "Sčítání v číselném oboru 0 - 20 s přechodem přes 10, kde je součet 12.",
+        example: "4 + ? = 12",
+      ),
+
+      Level(
+        index: 32,
+        xid: "aqg",
+        onGenerate: () {
+          int z = randomMinMax(11, 13);
+          int x = randomMinMax(2, 4);
+          return [x, z-x, z];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 20],
+        description: "Sčítání v číselném oboru 0 - 20 s přechodem přes 10, kde je součet do 13, přičemž první sčítanec je v rozsahu 2 - 4.",
+        example: "4 + 8 = ?",
+      ),
+
+
+      Level(
+        index: 33,
+        xid: "cgk",
+        onGenerate: () {
+          int x = randomMinMax(4, 9);
+          return [x, 13-x, 13];
+        },
+        masks: ["x+Y=z"],
+        valueRange: [0, 20],
+        description: "Sčítání v číselném oboru 0 - 20 s přechodem přes 10, kde je součet 13.",
+        example: "5 + ? = 13",
+      ),
+
+      Level(
         index: 34,
         xid: "dnf",
         onGenerate: () {
@@ -584,21 +638,98 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["x+y=Z"],
         valueRange: [0, 20],
         description: "Sčítání v číselném oboru 0 - 20 s přechodem přes 10, kde je součet do 14.",
-        example: "5 + ? = 13",
+        example: "5 + 7 = ?",
       ),
-
 
       Level(
         index: 35,
         xid: "akc",
         onGenerate: () {
+          int x = randomMinMax(5, 9);
+          return [x, 14-x, 14];
+        },
+        masks: ["x+Y=z"],
+        valueRange: [0, 20],
+        description: "Sčítání v číselném oboru 0 - 20 s přechodem přes 10, kde je součet 14.",
+        example: "5 + ? = 14",
+      ),
+
+      Level(
+        index: 36,
+        xid: "cgt",
+        onGenerate: () {
+          int y = randomMinMax(5, 9);
+          return [6, y, 6 + y];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 20],
+        description: "Sčítání v číselném oboru 0 - 20 s přechodem přes 10, kde je součet do 15.",
+        example: "6 + 8 = ?",
+      ),
+
+      Level(
+        index: 37,
+        xid: "eeu",
+        onGenerate: () {
+          int x = randomMinMax(6, 9);
+          return [x, 15-x, 15];
+        },
+        masks: ["x+Y=z"],
+        valueRange: [0, 20],
+        description: "Sčítání v číselném oboru 0 - 20 s přechodem přes 10, kde je součet 15.",
+        example: "7 + ? = 15",
+      ),
+
+      Level(
+        index: 38,
+        xid: "dcc",
+        onGenerate: () {
+          int y = randomMinMax(4, 9);
+          return [7, y, 7 + y];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 20],
+        description: "Sčítání v číselném oboru 0 - 20 s přechodem přes 10, kde je součet do 16.",
+        example: "7 + 8 = ?",
+      ),
+
+      Level(
+        index: 39,
+        xid: "fod",
+        onGenerate: () {
+          int y = randomMinMax(3, 9);
+          return [8, y, 8 + y];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 20],
+        description: "Sčítání v číselném oboru 0 - 20 s přechodem přes 10, kde je součet do 17.",
+        example: "8 + 5 = ?",
+      ),
+
+// //////////////////////////////////////////////////////////////////// Level 40+
+
+      Level(
+        index: 40,
+        xid: "avw",
+        onGenerate: () {
+          int y = randomMinMax(2, 9);
+          return [9, y, 9 + y];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 20],
+        description: "Sčítání v číselném oboru 0 - 20 s přechodem přes 10, kde je součet do 18.",
+        example: "9 + 4 = ?",
+      ),
+
+
+      Level(
+        index: 41,
+        xid: "biv",
+        onGenerate: () {
           int z = randomMinMax(16, 18);
           int x = randomMinMax(z - 10 + 1, 9);
           return [x, z - x, z];
 
-//          int a = randomMinMax(2, 4);
-//          int b = randomMinMax(11 - a, 9);
-//          return [[x, z-x, z], []][random(1)];
         },
         masks: ["x+Y=z"],
         valueRange: [0, 20],
@@ -607,10 +738,63 @@ class LevelTree extends LevelTreeBlueprint {
         example: "9 + ? = 17",
       ),
 
-// //////////////////////////////////////////////////////////////////// Level 40+
       Level(
-        index: 40,
-        xid: "avw",
+        index: 42,
+        xid: "akm",
+        onGenerate: () {
+          int z = randomMinMax(11, 18);
+          int x = randomMinMax(z-9, 9);
+          return [x, z-x, z];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 20],
+        description: "Sčítání dvou jednociferných čísel s přechodem přes 10.",
+        example: "6 + 5 = ?",
+      ),
+
+      Level(
+        index: 43,
+        xid: "chj",
+        onGenerate: () {
+          int z = randomMinMax(11, 18);
+          int x = randomMinMax(z-9, 9);
+          return [x, z-x, z];
+        },
+        masks: ["x+Y=z"],
+        valueRange: [0, 20],
+        description: "Sčítání dvou jednociferných čísel s přechodem přes 10.",
+        example: "6 + ? = 11",
+      ),
+      Level(
+        index: 44,
+        xid: "ego",
+        onGenerate: () {
+          int z = randomMinMax(11, 18);
+          int x = randomMinMax(z-9, 9);
+          return [x, z-x, z];
+        },
+        masks: ["X+y=z"],
+        valueRange: [0, 20],
+        description: "Sčítání dvou jednociferných čísel s přechodem přes 10.",
+        example: "? + 5 = 11",
+      ),
+      Level(
+        index: 45,
+        xid: "fhf",
+        onGenerate: () {
+          int z = randomMinMax(11, 18);
+          int x = randomMinMax(z-9, 9);
+          return [x, z-x, z];
+        },
+        masks: ["x+Y=z", "X+y=z"],
+        valueRange: [0, 20],
+        description: "Sčítání dvou jednociferných čísel s přechodem přes 10.",
+        example: "6 + ? = 11, nebo ? + 5 = 11",
+      ),
+
+      Level(
+        index: 46,
+        xid: "eud",
         onGenerate: () {
           int x = randomMinMax(1, 9);
           int y = randomMinMax(1, 9);
@@ -626,8 +810,8 @@ class LevelTree extends LevelTreeBlueprint {
       ),
 
       Level(
-        index: 41,
-        xid: "biv",
+        index: 47,
+        xid: "bkq",
         onGenerate: () {
           int k = randomMinMax(1, 9) * 10;
           int x = 100 - k;
@@ -640,8 +824,8 @@ class LevelTree extends LevelTreeBlueprint {
       ),
 
       Level(
-        index: 42,
-        xid: "akm",
+        index: 48,
+        xid: "fvk",
         onGenerate: () {
           int k = randomMinMax(1, 19) * 5;
           int x = 100 - k;
@@ -654,8 +838,8 @@ class LevelTree extends LevelTreeBlueprint {
       ),
 
       Level(
-        index: 43,
-        xid: "chj",
+        index: 49,
+        xid: "cjg",
         onGenerate: () {
           int k =
           random(1) == 1 ? randomMinMax(1, 19) * 5 : randomMinMax(81, 99);
@@ -666,12 +850,25 @@ class LevelTree extends LevelTreeBlueprint {
         valueRange: [0, 99],
         description:
         "Rozklad čísla 100, kde 1. sčítanec je dělitelný 5 a nebo 81-99.",
-        example: "100 = 92 + ?",
+        example: "100 = 92 + ?, nebo 100 = 55 + ?",
       ),
 
+// //////////////////////////////////////////////////////////////////// Level 50+
+// //////////////////////////////////////////////////////////////////// Level 60+
+// //////////////////////////////////////////////////////////////////// Level 70+
+// //////////////////////////////////////////////////////////////////// Level 80+
+// //////////////////////////////////////////////////////////////////// Level 90+
+
+// //////////////////////////////////////////////////////////////////// Level 100+
+// //////////////////////////////////////////////////////////////////// Level 110+
+// //////////////////////////////////////////////////////////////////// Level 120+
+// //////////////////////////////////////////////////////////////////// Level 130+
+
+// //////////////////////////////////////////////////////////////////// Level 140+
+
       Level(
-        index: 134,
-        xid: "evm",
+        index: 140,
+        xid: "ejb",
         onGenerate: () {
           int x = random(7) + 1;
           int y = random(8 - x) + 1;
@@ -685,9 +882,9 @@ class LevelTree extends LevelTreeBlueprint {
       ),
 
       Level(
-        index: 135,
-        xid: "bne",
-        onGenerate: () => getLevelByIndex(134).onGenerate(),
+        index: 141,
+        xid: "ebd",
+        onGenerate: () => getLevelByIndex(140).onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 9999],
         description:
@@ -695,9 +892,9 @@ class LevelTree extends LevelTreeBlueprint {
         example: "6000 + ? = 9000",
       ),
       Level(
-        index: 136,
-        xid: "eyq",
-        onGenerate: () => getLevelByIndex(134).onGenerate(),
+        index: 142,
+        xid: "dnq",
+        onGenerate: () => getLevelByIndex(140).onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 9999],
         description:
@@ -705,9 +902,9 @@ class LevelTree extends LevelTreeBlueprint {
         example: "6000 + ? = 9000",
       ),
       Level(
-        index: 137,
-        xid: "eex",
-        onGenerate: () => getLevelByIndex(134).onGenerate(),
+        index: 143,
+        xid: "cqy",
+        onGenerate: () => getLevelByIndex(140).onGenerate(),
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 9999],
         description:
@@ -715,8 +912,8 @@ class LevelTree extends LevelTreeBlueprint {
         example: "6000 + ? = 9000, nebo ? + 3000 = 9000",
       ),
       Level(
-        index: 138,
-        xid: "frk",
+        index: 144,
+        xid: "cij",
         onGenerate: () {
           int x = (random(8) + 1) * 1000;
           int y = random(899) + 100;
@@ -730,9 +927,9 @@ class LevelTree extends LevelTreeBlueprint {
       ),
 
       Level(
-        index: 139,
-        xid: "dry",
-        onGenerate: () => getLevelByIndex(138).onGenerate(),
+        index: 145,
+        xid: "ens",
+        onGenerate: () => getLevelByIndex(144).onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 9999],
         description:
@@ -741,9 +938,9 @@ class LevelTree extends LevelTreeBlueprint {
       ),
 
       Level(
-        index: 140,
-        xid: "ejb",
-        onGenerate: () => getLevelByIndex(138).onGenerate(),
+        index: 146,
+        xid: "fwk",
+        onGenerate: () => getLevelByIndex(144).onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 9999],
         description:
@@ -752,9 +949,9 @@ class LevelTree extends LevelTreeBlueprint {
       ),
 
       Level(
-        index: 141,
-        xid: "ebd",
-        onGenerate: () => getLevelByIndex(138).onGenerate(),
+        index: 147,
+        xid: "ckz",
+        onGenerate: () => getLevelByIndex(144).onGenerate(),
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 9999],
         description:
@@ -763,8 +960,8 @@ class LevelTree extends LevelTreeBlueprint {
       ),
 
       Level(
-        index: 142,
-        xid: "dnq",
+        index: 148,
+        xid: "adq",
         onGenerate: () {
           int y = (random(7) + 1) * 1000;
           int x = random(8999 - y) + 1000;
@@ -777,9 +974,11 @@ class LevelTree extends LevelTreeBlueprint {
         example: "4321 + ? = 6321",
       ),
 
+// //////////////////////////////////////////////////////////////////// Level 150+
+
       Level(
-        index: 146,
-        xid: "fwk",
+        index: 152,
+        xid: "fnz",
         onGenerate: () {
           int xt = randomMinMax(1, 8);
           int yt = randomMinMax(1, 9 - xt);
@@ -805,8 +1004,8 @@ class LevelTree extends LevelTreeBlueprint {
       ),
 
       Level(
-        index: 150,
-        xid: "bvf",
+        index: 156,
+        xid: "csn",
         onGenerate: () {
           int xt = randomMinMax(1, 8);
           int yt = randomMinMax(1, 9 - xt);
@@ -827,6 +1026,16 @@ class LevelTree extends LevelTreeBlueprint {
             "celkový součet je < 10000.",
         example: "1200 + 1300 = ?",
       ),
+
+// //////////////////////////////////////////////////////////////////// Level 160+
+
+// //////////////////////////////////////////////////////////////////// Level 170+
+
+// //////////////////////////////////////////////////////////////////// Level 180+
+
+// //////////////////////////////////////////////////////////////////// Level 190+
+
+// //////////////////////////////////////////////////////////////////// Level 200+
 
       // ///////////////// end of levels
     ];
