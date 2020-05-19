@@ -3,6 +3,8 @@
 //
 
 import 'dart:core';
+import 'package:flutter/foundation.dart';
+
 import '../core/level.dart';
 import 'level.dart';
 
@@ -42,13 +44,13 @@ class LevelTree extends LevelTreeBlueprint {
   /// Returns -1 if levelIndex is not found.
   int getLevelIndexFromXid(String wholeXid) {
     if (wholeXid == null) return -1;
-    if (wholeXid.length < 6 ) return -1;
+    if (wholeXid.length < 6) return -1;
     var levelXid = wholeXid.substring(3, 6).toLowerCase();
     int i = levels.indexWhere((level) => level.xid == levelXid);
     return levels[i].index;
   }
 
-/// Returns more difficult [Level] if there is any or the same one
+  /// Returns more difficult [Level] if there is any or the same one
   Level getMoreDifficultLevel(Level level) {
     Level newLevel;
     int newLevelIndex = level.index;
@@ -123,6 +125,47 @@ class LevelTree extends LevelTreeBlueprint {
     return schoolClassToLevelMap[schoolClass][monthInSchool];
   }
 
+  /// Returns the List of List<int> schoolClass, school month based on the given index
+  ///
+  /// Can generate more tuples as the references overlap in time
+  /// Returns empty [] if the given level index is not int the map
+  static List<List<int>> getSchoolClassAndMonth(int levelIndex) {
+    var result = List<List<int>>();
+    var tmp = [0, 0];
+
+    for (int i = 0; i < schoolClassToLevelMap.length; i++) {
+      var yearMap = schoolClassToLevelMap[i];
+      int yearIndex = i;
+      for (int mi = 0; mi < yearMap.length; mi++) {
+        if (yearMap[mi] == levelIndex) {
+          // we take only first occurrence in the uninterrupted sequence
+          if (!listEquals([yearIndex, mi - 1], tmp)) {
+            result.add([yearIndex, mi]);
+          }
+          tmp = [yearIndex, mi];
+        }
+      }
+    }
+//    print(result);
+    return result;
+  }
+
+  /// Returns the List of List<int> schoolClass, school month based on the given index
+  /// additionally to [getSchoolClassAndMonth] if no result is found it returns
+  /// the tuples of closest (lower) index
+  ///
+  /// Can generate more tuples as the references overlap in time
+  static List<List<int>> getMinimumSchoolClassAndMonth(int levelIndex) {
+    var result = List<List<int>>();
+    var li = levelIndex;
+    while (result.isEmpty & (li > 0)) {
+      result = getSchoolClassAndMonth(li);
+      li--;
+    }
+    assert(result.isNotEmpty, "Level $levelIndex does not have class/month assigned.");
+    return result;
+  }
+
   /// Lookup map to find levels based on school year and month
   ///
   /// each row is the schoolClass (0-5)
@@ -162,8 +205,8 @@ class LevelTree extends LevelTreeBlueprint {
         xid: "bzx",
         onGenerate: () {
           int z = randomMinMax(3, 6);
-          int x = randomMinMax(0, z-1);
-          return [[x, z-x, z], [z-x, x, z]][random(1)];
+          int x = randomMinMax(0, z - 1);
+          return [[x, z - x, z], [z - x, x, z]][random(1)];
         },
         masks: ["x+Y=z"],
         valueRange: [0, 6],
@@ -176,8 +219,8 @@ class LevelTree extends LevelTreeBlueprint {
         xid: "bfr",
         onGenerate: () {
           int z = randomMinMax(3, 6);
-          int x = randomMinMax(0, z-1);
-          return [[x, z-x, z], [z-x, x, z]][random(1)];
+          int x = randomMinMax(0, z - 1);
+          return [[x, z - x, z], [z - x, x, z]][random(1)];
         },
         masks: ["X+y=z"],
         valueRange: [0, 6],
@@ -190,8 +233,8 @@ class LevelTree extends LevelTreeBlueprint {
         xid: "bwj",
         onGenerate: () {
           int z = randomMinMax(3, 6);
-          int x = randomMinMax(0, z-1);
-          return [[x, z-x, z], [z-x, x, z]][random(1)];
+          int x = randomMinMax(0, z - 1);
+          return [[x, z - x, z], [z - x, x, z]][random(1)];
         },
         masks: ["X+y=z", "x+Y=z"],
         valueRange: [0, 6],
@@ -206,7 +249,7 @@ class LevelTree extends LevelTreeBlueprint {
         onGenerate: () {
           int z = randomMinMax(4, 9);
           int x = randomMinMax(0, z);
-          return [[x, z-x, z],[z-x, x, z]][random(1)];
+          return [[x, z - x, z], [z - x, x, z]][random(1)];
         },
         masks: ["x+y=Z"],
         valueRange: [0, 9],
@@ -219,7 +262,7 @@ class LevelTree extends LevelTreeBlueprint {
         onGenerate: () {
           int z = randomMinMax(4, 9);
           int x = randomMinMax(0, z);
-          return [[x, z-x, z],[z-x, x, z]][random(1)];
+          return [[x, z - x, z], [z - x, x, z]][random(1)];
         },
         masks: ["x+Y=z"],
         valueRange: [0, 9],
@@ -232,7 +275,7 @@ class LevelTree extends LevelTreeBlueprint {
         onGenerate: () {
           int z = randomMinMax(4, 9);
           int x = randomMinMax(0, z);
-          return [[x, z-x, z],[z-x, x, z]][random(1)];
+          return [[x, z - x, z], [z - x, x, z]][random(1)];
         },
         masks: ["X+y=z"],
         valueRange: [0, 9],
@@ -246,7 +289,7 @@ class LevelTree extends LevelTreeBlueprint {
         onGenerate: () {
           int z = randomMinMax(4, 9);
           int x = randomMinMax(0, z);
-          return [[x, z-x, z],[z-x, x, z]][random(1)];
+          return [[x, z - x, z], [z - x, x, z]][random(1)];
         },
         masks: ["X+y=z", "x+Y=z"],
         valueRange: [0, 9],
@@ -260,7 +303,7 @@ class LevelTree extends LevelTreeBlueprint {
         onGenerate: () {
           int z = randomMinMax(5, 10);
           int x = randomMinMax(0, z);
-          return [x, z-x, z];
+          return [x, z - x, z];
         },
         masks: ["x+y=Z"],
         valueRange: [0, 10],
@@ -274,7 +317,7 @@ class LevelTree extends LevelTreeBlueprint {
         onGenerate: () {
           int z = randomMinMax(5, 10);
           int x = randomMinMax(0, z);
-          return [x, z-x, z];
+          return [x, z - x, z];
         },
         masks: ["x+Y=z"],
         valueRange: [0, 10],
@@ -287,7 +330,7 @@ class LevelTree extends LevelTreeBlueprint {
         onGenerate: () {
           int z = randomMinMax(5, 10);
           int x = randomMinMax(0, z);
-          return [x, z-x, z];
+          return [x, z - x, z];
         },
         masks: ["X+y=z"],
         valueRange: [0, 10],
@@ -300,7 +343,7 @@ class LevelTree extends LevelTreeBlueprint {
         onGenerate: () {
           int z = randomMinMax(5, 10);
           int x = randomMinMax(0, z);
-          return [x, z-x, z];
+          return [x, z - x, z];
         },
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 10],
@@ -579,7 +622,7 @@ class LevelTree extends LevelTreeBlueprint {
         xid: "aka",
         onGenerate: () {
           int x = randomMinMax(2, 9);
-          return [x, 11-x, 11];
+          return [x, 11 - x, 11];
         },
         masks: ["x+Y=z"],
         valueRange: [0, 20],
@@ -592,7 +635,7 @@ class LevelTree extends LevelTreeBlueprint {
         xid: "byv",
         onGenerate: () {
           int x = randomMinMax(3, 9);
-          return [x, 12-x, 12];
+          return [x, 12 - x, 12];
         },
         masks: ["x+Y=z"],
         valueRange: [0, 20],
@@ -606,7 +649,7 @@ class LevelTree extends LevelTreeBlueprint {
         onGenerate: () {
           int z = randomMinMax(11, 13);
           int x = randomMinMax(2, 4);
-          return [x, z-x, z];
+          return [x, z - x, z];
         },
         masks: ["x+y=Z"],
         valueRange: [0, 20],
@@ -620,7 +663,7 @@ class LevelTree extends LevelTreeBlueprint {
         xid: "cgk",
         onGenerate: () {
           int x = randomMinMax(4, 9);
-          return [x, 13-x, 13];
+          return [x, 13 - x, 13];
         },
         masks: ["x+Y=z"],
         valueRange: [0, 20],
@@ -646,7 +689,7 @@ class LevelTree extends LevelTreeBlueprint {
         xid: "akc",
         onGenerate: () {
           int x = randomMinMax(5, 9);
-          return [x, 14-x, 14];
+          return [x, 14 - x, 14];
         },
         masks: ["x+Y=z"],
         valueRange: [0, 20],
@@ -672,7 +715,7 @@ class LevelTree extends LevelTreeBlueprint {
         xid: "eeu",
         onGenerate: () {
           int x = randomMinMax(6, 9);
-          return [x, 15-x, 15];
+          return [x, 15 - x, 15];
         },
         masks: ["x+Y=z"],
         valueRange: [0, 20],
@@ -729,7 +772,6 @@ class LevelTree extends LevelTreeBlueprint {
           int z = randomMinMax(16, 18);
           int x = randomMinMax(z - 10 + 1, 9);
           return [x, z - x, z];
-
         },
         masks: ["x+Y=z"],
         valueRange: [0, 20],
@@ -743,8 +785,8 @@ class LevelTree extends LevelTreeBlueprint {
         xid: "akm",
         onGenerate: () {
           int z = randomMinMax(11, 18);
-          int x = randomMinMax(z-9, 9);
-          return [x, z-x, z];
+          int x = randomMinMax(z - 9, 9);
+          return [x, z - x, z];
         },
         masks: ["x+y=Z"],
         valueRange: [0, 20],
@@ -757,8 +799,8 @@ class LevelTree extends LevelTreeBlueprint {
         xid: "chj",
         onGenerate: () {
           int z = randomMinMax(11, 18);
-          int x = randomMinMax(z-9, 9);
-          return [x, z-x, z];
+          int x = randomMinMax(z - 9, 9);
+          return [x, z - x, z];
         },
         masks: ["x+Y=z"],
         valueRange: [0, 20],
@@ -770,8 +812,8 @@ class LevelTree extends LevelTreeBlueprint {
         xid: "ego",
         onGenerate: () {
           int z = randomMinMax(11, 18);
-          int x = randomMinMax(z-9, 9);
-          return [x, z-x, z];
+          int x = randomMinMax(z - 9, 9);
+          return [x, z - x, z];
         },
         masks: ["X+y=z"],
         valueRange: [0, 20],
@@ -783,8 +825,8 @@ class LevelTree extends LevelTreeBlueprint {
         xid: "fhf",
         onGenerate: () {
           int z = randomMinMax(11, 18);
-          int x = randomMinMax(z-9, 9);
-          return [x, z-x, z];
+          int x = randomMinMax(z - 9, 9);
+          return [x, z - x, z];
         },
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 20],

@@ -21,7 +21,7 @@ class DescriptionPane extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(0,6,0,0),
+      padding: EdgeInsets.fromLTRB(0, 6, 0, 0),
 //      decoration: BoxDecoration(border: Border(top: BorderSide(color: Colors.black12))),
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -43,7 +43,8 @@ class DescriptionPane extends StatelessWidget {
                         style: TextStyle(fontSize: 18, color: Colors.white)),
                     canPlayLevel
                         ? Text(
-                            "Vhodné pro xxxx. třídu (květen) a pro yyy. třídu (září).",
+                            tasksRegister[taskSelectedIndex]
+                                .getLevelSuitability(levelSelectedIndex),
                             style: TextStyle(color: Colors.white))
                         : Container(),
                     Divider(),
