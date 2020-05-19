@@ -132,7 +132,6 @@ class _TaskListScreenState extends State<TaskListScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text("EduKids / Matika do kapsy"),
-//            Text("(prototyp)"),
 //            Linkify(text: "www.edukids.cz"),
 //            GestureDetector(
 //                behavior: HitTestBehavior.translucent,
@@ -148,10 +147,6 @@ class _TaskListScreenState extends State<TaskListScreen> {
         ),
 //        shape: ShapeBorder(),
 
-//        bottom: PreferredSize(
-//          preferredSize: Size.fromHeight(56),
-//          child: AppTaskBar(taskSelectedIndex: taskSelectedIndex),
-//        ),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,

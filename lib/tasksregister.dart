@@ -204,7 +204,7 @@ int defaultOnSchoolClassToLevelIndex(int schoolYear, int schoolMonth) {
 
 String defaultLevelDescription(_) {
   print("Getting description not registered in Task register!");
-  return "Popis zatím není vyvtořen.";
+  return "Popis zatím není vytvořen.";
 }
 
 String defaultGetLevelXid(_) {
