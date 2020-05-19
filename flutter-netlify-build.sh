@@ -6,7 +6,7 @@ FLUTTER_REVISION=`grep revision: .metadata | sed 's/  revision: //g'`
 echo This is generated file. > ./lib/git_info.g.dart
 echo -n String shortSHA = \" >> ./lib/git_info.g.dart
 git rev-parse --short HEAD | tr -d '\n' >> ./lib/git_info.g.dart
-echo \" >> ./lib/git_info.g.dart
+echo \"\; >> ./lib/git_info.g.dart
 
 # Setup flutter
 FLUTTER=`which flutter`
