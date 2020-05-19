@@ -3,7 +3,7 @@ FLUTTER_BRANCH=`grep channel: .metadata | sed 's/  channel: //g'`
 FLUTTER_REVISION=`grep revision: .metadata | sed 's/  revision: //g'`
 
 # Generate the git info code for the version info
-echo This is generated file. > ./lib/git_info.g.dart
+echo // This is generated file. > ./lib/git_info.g.dart
 echo -n String shortSHA = \" >> ./lib/git_info.g.dart
 git rev-parse --short HEAD | tr -d '\n' >> ./lib/git_info.g.dart
 echo \"\; >> ./lib/git_info.g.dart
