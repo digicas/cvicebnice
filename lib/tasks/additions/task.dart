@@ -33,10 +33,6 @@ bool isLevelImplemented(int index) {
 
 int onSchoolClassToLevelIndex(int schoolYear, int schoolMonth) {
   return LevelTree.schoolClassToLevelIndex(schoolYear, schoolMonth);
-//
-//
-//  print("SchoolYear/schoolMonth proxy not implemented.");
-//  return 0;
 }
 
 String getLevelDescription(int index) {
@@ -45,8 +41,10 @@ String getLevelDescription(int index) {
   if (level == null) return "";
   String text = "";
   text += level.description ?? "Popis ješte není :(";
-  text += "\n\nPříklad: ";
-  text += level.example ?? "Příklad nám chybí :(";
+
+  // Example is not needed due to preview rendered
+//  text += "\n\nPříklad: ";
+//  text += level.example ?? "Příklad nám chybí :(";
   return text;
 }
 
@@ -92,29 +90,3 @@ Widget getLevelPreview(int levelIndex) {
     ),
   );
 }
-
-//class Preview extends StatelessWidget {
-//  const Preview({
-//    Key key,
-//  }) : super(key: key);
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    return Padding(
-//      padding: const EdgeInsets.fromLTRB(0, 130, 0, 0),
-//      child: Column(
-//        children: List.generate(
-//            questions.length,
-//                (index) => Padding(
-//              padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
-//              child: Question(
-//                textController: textControllers[index],
-//                mask: questions[index].selectedQuestionMask,
-//                solution: questions[index].solution,
-////                      solution: [4008, 3548, 7556]
-//              ),
-//            )),
-//      ),
-//    );
-//  }
-//}

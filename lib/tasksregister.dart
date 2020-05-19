@@ -1,6 +1,7 @@
 // Register (registry) of tasks environments
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 // Import particular tasks modules
 import 'tasks/additions/task.dart' as additions;
@@ -203,7 +204,7 @@ int defaultOnSchoolClassToLevelIndex(int schoolYear, int schoolMonth) {
 
 String defaultLevelDescription(_) {
   print("Getting description not registered in Task register!");
-  return "";
+  return "Popis zatím není vyvtořen.";
 }
 
 String defaultGetLevelXid(_) {
@@ -221,6 +222,6 @@ Widget defaultGetLevelPreview(_) {
     width: 100,
     height: 100,
 //    color: Colors.orange,
-    child: Center(child: Text("Náhled není k dispozici :(")),
+    child: Center(child: FaIcon(FontAwesomeIcons.handsHelping, size: 48)),
   );
 }

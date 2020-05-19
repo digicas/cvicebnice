@@ -1,5 +1,7 @@
+import 'dart:ui';
+
+import 'package:cvicebnice/widgets/launchurl.dart';
 import 'package:flutter/material.dart';
-import '../constants.dart';
 
 import '../tasksregister.dart';
 
@@ -18,61 +20,65 @@ class DescriptionPane extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Align(
-        alignment: Alignment.topLeft,
-        child: Container(
-//                        color: Colors.deepOrange,
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Divider(),
-                      Text(
-                          "${tasksRegister[taskSelectedIndex].label}, "
-                          "úroveň $levelSelectedIndex",
-                          style: TextStyle(fontSize: 18, color: Colors.white)),
-                      canPlayLevel
-                          ? Text(
-                              "Vhodné pro xxxx. třídu (květen) a pro yyy. třídu (září).",
-                              style: TextStyle(color: Colors.white))
-                          : Container(),
-                      Divider(),
-                      !canPlayLevel
-                          ? Text(
-                              "Ještě není připraveno :( \n\n"
-                              "Můžete nám pomoci - na www.edukids.cz\n",
-                              style: TextStyle(color: Colors.white))
-                          : Container(),
-                      Text(
-                          tasksRegister[taskSelectedIndex]
-                              .getLevelDescription(levelSelectedIndex),
-                          style: TextStyle(color: Colors.white)),
-                    ],
-                  ),
+    return Container(
+      padding: EdgeInsets.fromLTRB(0,6,0,0),
+//      decoration: BoxDecoration(border: Border(top: BorderSide(color: Colors.black12))),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Scrollbar(
+//              isAlwaysShown: true, // raises error
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                        "${tasksRegister[taskSelectedIndex].label}, "
+                        "úroveň $levelSelectedIndex",
+                        style: TextStyle(fontSize: 18, color: Colors.white)),
+                    canPlayLevel
+                        ? Text(
+                            "Vhodné pro xxxx. třídu (květen) a pro yyy. třídu (září).",
+                            style: TextStyle(color: Colors.white))
+                        : Container(),
+                    Divider(),
+                    !canPlayLevel
+                        ? TextWithLinks(
+                            "Ještě není připraveno :( \n\n"
+                            "Můžete nám pomoci - na https://www.edukids.cz\n",
+                            style: TextStyle(color: Colors.white),
+                            linkStyle: TextStyle(
+                                color: Colors.white,
+                                decoration: TextDecoration.underline),
+                          )
+                        : Container(),
+                    Text(
+                        tasksRegister[taskSelectedIndex]
+                            .getLevelDescription(levelSelectedIndex),
+                        style: TextStyle(color: Colors.white)),
+                  ],
                 ),
               ),
-              SizedBox(width: 8),
-              Container(
-                width: 150,
-                height: 200,
-                color: kColorTaskBackground,
-                child: Center(
-                  child: tasksRegister[taskSelectedIndex]
-                      .getLevelPreview(levelSelectedIndex),
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
+          SizedBox(width: 12),
+          SingleChildScrollView(
+            child: Container(
+              width: 150,
+              height: 200,
+              color: Color(0xb0ECE6E9),
+              child: Center(
+                child: tasksRegister[taskSelectedIndex]
+                    .getLevelPreview(levelSelectedIndex),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
