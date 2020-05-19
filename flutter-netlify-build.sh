@@ -22,6 +22,11 @@ cd ..
 
 $FLUTTER config --enable-web
 
+# Log config info
+echo Flutter branch $FLUTTER_BRANCH
+echo Flutter revision $FLUTTER_REVISION
+$FLUTTER --version
+
 # Setup dart
 DART=`echo $FLUTTER | sed 's/flutter$/cache\/dart-sdk\/bin\/dart/'`
 echo $DART
