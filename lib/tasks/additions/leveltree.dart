@@ -955,7 +955,9 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 9999],
         description:
-        "1. sčítanec je 4 ciferné číslo dělitelné 1000 s hodnotou v rozsahu 0 až 10000. 2. sčítanec je 3 ciferné číslo.",
+        "1. sčítanec je 4 ciferné číslo dělitelné 1000.\n"
+            "2. sčítanec je 3 ciferné číslo.\n"
+            "Nepřekračuje se přes tisícovky.",
         example: "4000 + ? = 4358, nebo ? + 358 = 4358",
       ),
 

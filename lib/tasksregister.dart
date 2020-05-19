@@ -1,6 +1,7 @@
 // Register (registry) of tasks environments
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 // Import particular tasks modules
 import 'tasks/additions/task.dart' as additions;
@@ -50,6 +51,10 @@ class TasksRegisterItem {
   /// Must return -1 if not found
   int Function(String levelWholeXid) getLevelIndexFromXid;
 
+  /// Callback to return the Widget for preview of the screen for
+  /// the Description Pane
+  Widget Function(int index) getLevelPreview;
+
   // Statistical functions / callbacks below
 
   /// Callback to calculate the amount of implemented levels of particular Task
@@ -83,6 +88,7 @@ class TasksRegisterItem {
       this.onOpenTaskScreen = defaultOpenTaskScreen,
       this.onSchoolClassToLevelIndex = defaultOnSchoolClassToLevelIndex,
       this.getLevelDescription = defaultLevelDescription,
+      this.getLevelPreview = defaultGetLevelPreview,
       this.onLevelsCount = defaultLevelsCount,
       this.onMasksCount = defaultMasksCount,
       this.onQuestionsCount = defaultQuestionsCount});
@@ -158,6 +164,7 @@ final List<TasksRegisterItem> tasksRegister = [
     getLevelXid: additions.getLevelXid,
     getLevelIndexFromXid: additions.getLevelIndexFromXid,
     onLevelsCount: additions.levelsCount,
+    getLevelPreview: additions.getLevelPreview,
   ),
   TasksRegisterItem(
     xid: "csb",
@@ -197,7 +204,7 @@ int defaultOnSchoolClassToLevelIndex(int schoolYear, int schoolMonth) {
 
 String defaultLevelDescription(_) {
   print("Getting description not registered in Task register!");
-  return "";
+  return "Popis zatím není vyvtořen.";
 }
 
 String defaultGetLevelXid(_) {
@@ -208,4 +215,13 @@ String defaultGetLevelXid(_) {
 int defaultGetLevelIndexFromXid(_) {
   print("Getting level index not registered in Task register!");
   return -1;
+}
+
+Widget defaultGetLevelPreview(_) {
+  return Container(
+    width: 100,
+    height: 100,
+//    color: Colors.orange,
+    child: Center(child: FaIcon(FontAwesomeIcons.handsHelping, size: 48)),
+  );
 }

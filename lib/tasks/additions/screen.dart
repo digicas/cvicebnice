@@ -4,6 +4,7 @@ import 'package:cvicebnice/screens/overlays/optionsoverlay.dart';
 import 'package:cvicebnice/widgets/small_numeric_keyboard.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'generator.dart';
 import 'level.dart';
 import 'leveltree.dart';
 import 'submissioncontroller.dart';
@@ -55,7 +56,7 @@ class _TaskScreenState extends State<TaskScreen> {
   void questionsControllerInit() {
     levelTree = LevelTree();
     _level = levelTree.getLevelByIndex(selectedLevelIndex);
-    questionsGenerate();
+    questions = questionsGenerate(amount: questionsAmount, level: _level);
 
     submissionController = SubmissionController(screenQuestions: questions);
     submissionController.addListener(_checkSolution);
@@ -71,33 +72,6 @@ class _TaskScreenState extends State<TaskScreen> {
   void questionsRegenerate() {
 //    submissionController.dispose(); // must not dispose here :(
     questionsControllerInit();
-  }
-
-  /// Generates the collection of questions
-  ///
-  /// tries x times to have unique questions
-  void questionsGenerate() {
-    questions = List.generate(questionsAmount, (_) => _level.clone());
-
-    bool questionsHaveZero = false;
-    for (int i = 0; i < questions.length; i++) {
-      bool mustRegenerate;
-      int tries = 10;
-      do {
-        questions[i].generate();
-        tries--;
-        /// avoid generating the same question / solution
-        mustRegenerate = false;
-        for (int j = 0; j < i; j++) {
-          if (listEquals(questions[j].solution, questions[i].solution))
-            mustRegenerate = true;
-        }
-        /// avoid more zeros among questions
-        if (questionsHaveZero & questions[i].solution.contains(0)) mustRegenerate = true;
-//        print("$i: $tries: ${questions[i].solution}");
-      } while (mustRegenerate & (tries > 0));
-      if (questions[i].solution.contains(0)) questionsHaveZero = true;
-    }
   }
 
   _checkSolution() {
@@ -343,13 +317,15 @@ class Question extends StatelessWidget {
   /// Controller for the editinput
   final TextEditingController textController;
 
-  static const double textSize = 32;
+  /// Whether to render preview
+  final bool preview;
 
   const Question({
     Key key,
     this.mask,
     this.solution,
     this.textController,
+    this.preview = false,
   }) : super(key: key);
 
   @override
@@ -358,17 +334,14 @@ class Question extends StatelessWidget {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          QText(solution[0].toString()),
-          QText("+"),
-          QText(solution[1].toString()),
-          QText("="),
+          QText("${solution[0]}", preview: preview),
+          QText("+", preview: preview),
+          QText("${solution[1]}", preview: preview),
+          QText("=", preview: preview),
           QuestionInputField(
             textController: textController,
+            preview: preview,
           ),
-//          Text(
-//            "????",
-//            style: TextStyle(fontSize: textSize),
-//          ),
         ],
       );
     }
@@ -379,11 +352,12 @@ class Question extends StatelessWidget {
         children: [
           QuestionInputField(
             textController: textController,
+            preview: preview,
           ),
-          QText("+"),
-          QText(solution[1].toString()),
-          QText("="),
-          QText(solution[2].toString()),
+          QText("+", preview: preview),
+          QText("${solution[1]}", preview: preview),
+          QText("=", preview: preview),
+          QText("${solution[2]}", preview: preview),
         ],
       );
     }
@@ -392,13 +366,14 @@ class Question extends StatelessWidget {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          QText(solution[0].toString()),
-          QText("+"),
+          QText("${solution[0]}", preview: preview),
+          QText("+", preview: preview),
           QuestionInputField(
             textController: textController,
+            preview: preview,
           ),
-          QText("="),
-          QText(solution[2].toString()),
+          QText("=", preview: preview),
+          QText("${solution[2]}", preview: preview),
         ],
       );
     }
@@ -407,14 +382,15 @@ class Question extends StatelessWidget {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          QText(solution[0].toString()),
-          QText("+"),
-          QText(solution[1].toString()),
-          QText("+"),
-          QText(solution[2].toString()),
-          QText("="),
+          QText("${solution[0]}", preview: preview),
+          QText("+", preview: preview),
+          QText("${solution[1]}", preview: preview),
+          QText("+", preview: preview),
+          QText("${solution[2]}", preview: preview),
+          QText("=", preview: preview),
           QuestionInputField(
             textController: textController,
+            preview: preview,
             length: 2,
           ),
         ],
@@ -425,12 +401,13 @@ class Question extends StatelessWidget {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          QText("100"),
-          QText("="),
-          QText(solution[0].toString()),
-          QText("+"),
+          QText("100", preview: preview),
+          QText("=", preview: preview),
+          QText("${solution[0]}", preview: preview),
+          QText("+", preview: preview),
           QuestionInputField(
             textController: textController,
+            preview: preview,
             length: 2,
           ),
         ],
@@ -447,15 +424,18 @@ class QText extends StatelessWidget {
   const QText(
     this.text, {
     Key key,
+    this.preview = false,
   }) : super(key: key);
 
   final String text;
+
+  final bool preview;
 
   @override
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: TextStyle(fontSize: 32),
+      style: TextStyle(fontSize: !preview ? 32 : 14),
     );
   }
 }
@@ -469,14 +449,27 @@ class QuestionInputField extends StatelessWidget {
   /// Max length of the input value
   final int length;
 
+  /// Whether to render preview
+  final bool preview;
+
   QuestionInputField({
     Key key,
     this.textController,
     this.length,
+    this.preview = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (preview)
+      return Container(
+        width: 20,
+        height: 16,
+        decoration: BoxDecoration(
+          color: Color(0x109C4D82),
+        ),
+        child: Center(child: Text("?", style: TextStyle(fontSize: 12))),
+      );
     return Container(
       width: 100,
       height: 50,
