@@ -55,7 +55,10 @@ class TasksRegisterItem {
   /// the Description Pane
   Widget Function(int index) getLevelPreview;
 
-  // Statistical functions / callbacks below
+  /// Callback to return
+  String Function(int index) getLevelSuitability;
+
+  // //////////////////////////// Statistical functions / callbacks below
 
   /// Callback to calculate the amount of implemented levels of particular Task
   int Function() onLevelsCount;
@@ -89,6 +92,7 @@ class TasksRegisterItem {
       this.onSchoolClassToLevelIndex = defaultOnSchoolClassToLevelIndex,
       this.getLevelDescription = defaultLevelDescription,
       this.getLevelPreview = defaultGetLevelPreview,
+      this.getLevelSuitability = defaultGetLevelSuitability,
       this.onLevelsCount = defaultLevelsCount,
       this.onMasksCount = defaultMasksCount,
       this.onQuestionsCount = defaultQuestionsCount});
@@ -161,6 +165,7 @@ final List<TasksRegisterItem> tasksRegister = [
     ),
     onSchoolClassToLevelIndex: additions.onSchoolClassToLevelIndex,
     getLevelDescription: additions.getLevelDescription,
+    getLevelSuitability: additions.getLevelSuitability,
     getLevelXid: additions.getLevelXid,
     getLevelIndexFromXid: additions.getLevelIndexFromXid,
     onLevelsCount: additions.levelsCount,
@@ -224,4 +229,9 @@ Widget defaultGetLevelPreview(_) {
 //    color: Colors.orange,
     child: Center(child: FaIcon(FontAwesomeIcons.handsHelping, size: 48)),
   );
+}
+
+String defaultGetLevelSuitability(_) {
+  print("Getting suitability not registered in Task register!");
+  return "...";
 }

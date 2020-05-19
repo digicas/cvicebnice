@@ -43,5 +43,13 @@ void main() {
         });
       });
     });
+
+    test("Level is mapped to school year and month:", () {
+      levelTree.levels.forEach((level) {
+        print(level.index);
+        expect(() => LevelTree.getMinimumSchoolClassAndMonth(level.index),
+            returnsNormally);
+      });
+    });
   });
 }

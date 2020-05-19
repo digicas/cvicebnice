@@ -11,3 +11,17 @@ final int kARGBPanel = kColorPanel.value;
 const Color kColorTaskBackground = Color(0xffECE6E9);
 final int kARGBTaskBackground = kColorTaskBackground.value;
 
+const List<String> kMonths = [
+  "září",
+  "říjen",
+  "listopad",
+  "prosinec",
+  "leden",
+  "únor",
+  "březen",
+  "duben",
+  "květen",
+  "červen",
+  "červenec",
+  "srpen"
+];

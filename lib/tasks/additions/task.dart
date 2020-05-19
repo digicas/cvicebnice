@@ -11,7 +11,9 @@ export 'screen.dart';
 export 'leveltree.dart';
 export 'level.dart';
 
+import 'package:cvicebnice/constants.dart';
 import 'package:cvicebnice/tasks/additions/generator.dart';
+import 'package:cvicebnice/tasks/additions/level.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -64,6 +66,7 @@ int getLevelIndexFromXid(String wholeXid) {
   return levelTree.getLevelIndexFromXid(wholeXid);
 }
 
+/// Generates the preview Widget for the classic additions
 Widget getLevelPreview(int levelIndex) {
   var levelTree = LevelTree();
   var level = levelTree.getLevelByIndex(levelIndex);
@@ -89,4 +92,21 @@ Widget getLevelPreview(int levelIndex) {
               )),
     ),
   );
+}
+
+/// Generates the string representation of the suitable school classes / months
+String getLevelSuitability(int levelIndex) {
+  List<List<int>> schoolYearMonth;
+  String text = "";
+  schoolYearMonth = LevelTree.getMinimumSchoolClassAndMonth(levelIndex);
+
+  String monthText = kMonths[schoolYearMonth[0][1]];
+  text += "Vhodné od ${schoolYearMonth[0][0]}. třídy ($monthText)";
+
+  // check whether we have additional occurrence of the level in the year
+  if (schoolYearMonth.length > 1) {
+    monthText = kMonths[schoolYearMonth[1][1]];
+    text += " a od ${schoolYearMonth[1][0]}. třídy ($monthText)";
+  }
+  return text;
 }
