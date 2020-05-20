@@ -162,7 +162,8 @@ class LevelTree extends LevelTreeBlueprint {
       result = getSchoolClassAndMonth(li);
       li--;
     }
-    assert(result.isNotEmpty, "Level $levelIndex does not have class/month assigned.");
+    assert(result
+        .isNotEmpty, "Level $levelIndex does not have class/month assigned.");
     return result;
   }
 
@@ -896,7 +897,166 @@ class LevelTree extends LevelTreeBlueprint {
       ),
 
 // //////////////////////////////////////////////////////////////////// Level 50+
+      Level(
+        index: 50,
+        xid: "cqz",
+        onGenerate: () {
+          int z = randomMinMax(2, 10);
+          int x = randomMinMax(0, z - 1) * 10;
+          z = z * 10;
+          return [[x, z - x, z], [z - x, x, z]][random(1)];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 100],
+        description: "Obor: 0 - 100\nSčítanci jsou dělitelní 10.",
+        example: "20 + 40 = ?",
+      ),
+      Level(
+        index: 51,
+        xid: "aqc",
+        onGenerate: () {
+          int z = randomMinMax(2, 10);
+          int x = randomMinMax(0, z - 1) * 10;
+          z = z * 10;
+          return [[x, z - x, z], [z - x, x, z]][random(1)];
+        },
+        masks: ["x+Y=z"],
+        valueRange: [0, 100],
+        description: "Obor: 0 - 100\nSčítanci jsou dělitelní 10.",
+        example: "20 + ? = 70",
+      ),
+      Level(
+        index: 52,
+        xid: "foq",
+        onGenerate: () {
+          int z = randomMinMax(2, 10);
+          int x = randomMinMax(0, z - 1) * 10;
+          z = z * 10;
+          return [[x, z - x, z], [z - x, x, z]][random(1)];
+        },
+        masks: ["X+y=z"],
+        valueRange: [0, 100],
+        description: "Obor: 0 - 100\nSčítanci jsou dělitelní 10.",
+        example: "? + 40 = 70",
+      ),
+
+      Level(
+        index: 53,
+        xid: "dzh",
+        onGenerate: () {
+          int x = randomMinMax(1, 9) * 10;
+          int y = randomMinMax(1, 9);
+          return [x,y,x+y];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 100],
+        description: "Obor: 0 - 100\n1. sčítanec je dělitelný 10, 2. sčítanec je jednociferné číslo.",
+        example: "60 + 4 = ?",
+      ),
+
+      Level(
+        index: 54,
+        xid: "dwu",
+        onGenerate: () {
+          int x = randomMinMax(1, 9) * 10;
+          int y = randomMinMax(1, 9);
+          return [x,y,x+y];
+        },
+        masks: ["x+Y=z"],
+        valueRange: [0, 100],
+        description: "Obor: 0 - 100\n1. sčítanec je dělitelný 10, 2. sčítanec je jednociferné číslo.",
+        example: "60 + ? = 64",
+      ),
+      Level(
+        index: 55,
+        xid: "enb",
+        onGenerate: () {
+          int x = randomMinMax(1, 9) * 10;
+          int y = randomMinMax(1, 9);
+          return [x,y,x+y];
+        },
+        masks: ["X+y=z"],
+        valueRange: [0, 100],
+        description: "Obor: 0 - 100\n1. sčítanec je dělitelný 10, 2. sčítanec je jednociferné číslo.",
+        example: "? + 4 = 74",
+      ),
+
+      Level(
+        index: 56,
+        xid: "cdf",
+        onGenerate: () {
+          int x = randomMinMax(1, 9) * 10;
+          int y = randomMinMax(1, 9);
+          return [x,y,x+y];
+        },
+        masks: ["x+Y=z", "X+y=z"],
+        valueRange: [0, 100],
+        description: "Obor: 0 - 100\n1. sčítanec je dělitelný 10, 2. sčítanec je jednociferné číslo.",
+        example: "60 + ? = 64, nebo ? + 4 = 74",
+      ),
+
+      Level(
+        index: 57,
+        xid: "ajk",
+        onGenerate: () {
+          int xx = randomMinMax(1, 9) * 10;
+          int xo = randomMinMax(1, 8);
+          int y = randomMinMax(1, 9-xo);
+          return [xx+xo,y,xx+xo+y];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 100],
+        description: "Obor: 0 - 100\n1. sčítanec je dvojciferné číslo, 2. sčítanec je jednociferné číslo, součet je bez překročení desítek.",
+        example: "63 + 5 = ?",
+      ),
+
+      Level(
+        index: 58,
+        xid: "ahe",
+        onGenerate: () {
+          int xx = randomMinMax(1, 9) * 10;
+          int xo = randomMinMax(1, 8);
+          int y = randomMinMax(1, 9-xo);
+          return [xx+xo,y,xx+xo+y];
+        },
+        masks: ["x+Y=z"],
+        valueRange: [0, 100],
+        description: "Obor: 0 - 100\n1. sčítanec je dvojciferné číslo, 2. sčítanec je jednociferné číslo, součet je bez překročení desítek.",
+        example: "63 + ? = 68",
+      ),
+      Level(
+        index: 59,
+        xid: "asu",
+        onGenerate: () {
+          int xx = randomMinMax(1, 9) * 10;
+          int xo = randomMinMax(1, 8);
+          int y = randomMinMax(1, 9-xo);
+          return [xx+xo,y,xx+xo+y];
+        },
+        masks: ["X+y=z"],
+        valueRange: [0, 100],
+        description: "Obor: 0 - 100\n1. sčítanec je dvojciferné číslo, 2. sčítanec je jednociferné číslo, součet je bez překročení desítek.",
+        example: "? + 5 = 67",
+      ),
+
 // //////////////////////////////////////////////////////////////////// Level 60+
+      Level(
+        index: 60,
+        xid: "fkp",
+        onGenerate: () {
+          int xx = randomMinMax(1, 9) * 10;
+          int xo = randomMinMax(1, 8);
+          int y = randomMinMax(1, 9-xo);
+          return [xx+xo,y,xx+xo+y];
+        },
+        masks: ["x+Y=z","X+y=z"],
+        valueRange: [0, 100],
+        description: "Obor: 0 - 100\n1. sčítanec je dvojciferné číslo, 2. sčítanec je jednociferné číslo, součet je bez překročení desítek.",
+        example: "54 + ? = 58, nebo ? + 5 = 67",
+      ),
+
+
+
 // //////////////////////////////////////////////////////////////////// Level 70+
 // //////////////////////////////////////////////////////////////////// Level 80+
 // //////////////////////////////////////////////////////////////////// Level 90+
