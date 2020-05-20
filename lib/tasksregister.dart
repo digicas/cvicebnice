@@ -160,9 +160,7 @@ final List<TasksRegisterItem> tasksRegister = [
     imageAssetName: "assets/menu_additions.png",
     label: "Sčítání",
     isLevelImplemented: additions.isLevelImplemented,
-    onOpenTaskScreen: (index) => additions.TaskScreen(
-      selectedLevelIndex: index,
-    ),
+    onOpenTaskScreen: additions.onOpenTaskScreen,
     onSchoolClassToLevelIndex: additions.onSchoolClassToLevelIndex,
     getLevelDescription: additions.getLevelDescription,
     getLevelSuitability: additions.getLevelSuitability,
@@ -179,7 +177,7 @@ final List<TasksRegisterItem> tasksRegister = [
   ),
 ];
 
-// Default callbacks for methods,
+// /////////////////////////  Default callbacks for methods,
 // which might not be implemented yet in corresponding task.dart file
 
 int defaultLevelsCount() => 0;
