@@ -1323,9 +1323,134 @@ class LevelTree extends LevelTreeBlueprint {
         description: "Obor: 0 - 100\nOba sčítance jsou dvojciferné číslo, kde součet přechází přes desítku.",
         example: "57 + ? = 74, nebo ? + 64 = 83",
       ),
+      Level(
+        index: 82,
+        xid: "bxj",
+        onGenerate: () {
+          int z = randomMinMax(5, 10)*10;
+          int a = randomMinMax(1, z~/10 - 3)*10 + randomMinMax(1, 9);
+          int b = randomMinMax(11, z - a - 11);
+          int c = z - (a + b);
+          return [
+            [a, b, c, z],
+            [b, c, a, z],
+            [c, a, b, z]
+          ][random(2)];
+        },
+        masks: ["x+y+w=ZZ"],
+        valueRange: [0, 100],
+        description:
+        "Obor 0-100\nSčítání více dvojciferných čísel.",
+        example: "47 + 18 + 26 = ?",
+      ),
+      Level(
+        index: 83,
+        xid: "cpr",
+        onGenerate: () {
+          var cno = getLevelByXid("cno").onGenerate();
+          var fhe = getLevelByXid("fhe").onGenerate();
+          var eyf = getLevelByXid("eyf").onGenerate();
+
+          return [cno, fhe, eyf][random(2)];
+        },
+        masks: ["x+Y=z", "X+y=z", "x+y=Z"],
+        valueRange: [0, 100],
+        description: "Obor: 0 - 100\nOba sčítance jsou dvojciferné číslo, MIX výsledky.",
+        example: "mix",
+      ),
+
+      Level(
+        index: 84,
+        xid: "csp",
+        onGenerate: () {
+          int x = randomMinMax(10, 90) * 10;
+          int y = 1000 - x;
+          return [x, y,1000];
+        },
+        masks: ["x+Y=z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nDopočítává se trojciferné číslo do 1000.",
+        example: "570 + ? = 1000",
+      ),
+      Level(
+        index: 85,
+        xid: "buf",
+        onGenerate: () {
+          int zh = randomMinMax(2, 10);
+          int xh = randomMinMax(1, zh - 1);
+          int yh = zh - xh;
+          return [[xh*100, yh*100, zh*100], [yh*100, xh*100, zh*100]][random(1)];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nOba sčítance jsou trojciferná čísla dělitelná 100.",
+        example: "500 + 200 = ?",
+      ),
+      Level(
+        index: 86,
+        xid: "bak",
+        onGenerate: () => getLevelByXid("buf").onGenerate(),
+        masks: ["x+Y=z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nOba sčítance jsou trojciferná čísla dělitelná 100.",
+        example: "500 + ? = 700",
+      ),
+      Level(
+        index: 87,
+        xid: "atf",
+        onGenerate: () => getLevelByXid("buf").onGenerate(),
+        masks: ["X+y=z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nOba sčítance jsou trojciferná čísla dělitelná 100.",
+        example: "? + 400 = 700",
+      ),
+      Level(
+        index: 88,
+        xid: "fmc",
+        onGenerate: () {
+          int x = randomMinMax(1, 9)*100;
+          int y = randomMinMax(1, 99);
+          return [x, y, x+y];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\n1. sčítanec je trojciferné číslo dělitelné 100, 2. je jedno až dvojciferné.",
+        example: "500 + 27 = ?",
+      ),
+      Level(
+        index: 89,
+        xid: "aih",
+        onGenerate: () => getLevelByXid("fmc").onGenerate(),
+        masks: ["x+Y=z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\n1. sčítanec je trojciferné číslo dělitelné 100, 2. je jedno až dvojciferné.",
+        example: "500 + ? = 543",
+      ),
+
 
 
 // //////////////////////////////////////////////////////////////////// Level 90+
+      Level(
+        index: 90,
+        xid: "awd",
+        onGenerate: () => getLevelByXid("fmc").onGenerate(),
+        masks: ["X+y=z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\n1. sčítanec je trojciferné číslo dělitelné 100, 2. je jedno až dvojciferné.",
+        example: "? + 43 = 543",
+      ),
+
+      Level(
+        index: 91,
+        xid: "ayf",
+        onGenerate: () => getLevelByXid("fmc").onGenerate(),
+        masks: ["x+Y=z", "X+y=z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\n1. sčítanec je trojciferné číslo dělitelné 100, 2. je jedno až dvojciferné.",
+        example: "500 + ? = 543, nebo ? + 78 = 678",
+      ),
+
+
 
 // //////////////////////////////////////////////////////////////////// Level 100+
 // //////////////////////////////////////////////////////////////////// Level 110+

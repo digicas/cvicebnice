@@ -94,7 +94,7 @@ String getLevelSuitability(int levelIndex) {
   // check whether we have additional occurrence of the level in the year
   if (schoolYearMonth.length > 1) {
     monthText = kMonths[schoolYearMonth[1][1]];
-    text += " a od ${schoolYearMonth[1][0]}. třídy ($monthText)";
+    text += " a zopakovat od ${schoolYearMonth[1][0]}. třídy ($monthText)";
   }
   return text;
 }
