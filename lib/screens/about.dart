@@ -23,10 +23,10 @@ void buildShowAboutDialog(BuildContext context) {
         "Chceme posilovat vzdělání dětí účinným využitím mobilů a minimalizovat tak digitální konzum.",
 //                  style: TextStyle(fontSize: 12),
       ),
-      SizedBox(height: 8),
-      TextWithLinks("web: https://www.edukids.cz\n"
+      SizedBox(height: 12),
+      TextWithLinks("web: https://www.edukids.cz\n\n"
           "(f) https://www.facebook.com/EduKids.cz"),
-      SizedBox(height: 8),
+      SizedBox(height: 12),
       TextWithLinks(
           "Budeme rádi, když nám pomůžete - https://www.edukids.cz/podporte-nas"),
     ],
