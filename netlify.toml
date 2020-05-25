@@ -1,3 +1,15 @@
 [build]
   command = "./flutter-netlify-build.sh"
   publish = "build/web"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # X-Frame-Options = "DENY"
+
+    #  Multi-value headers are expressed with multi-line strings
+	cache-control = '''
+	max-age=0,
+	no-cache,
+	no-store,
+	must-revalidate'''
