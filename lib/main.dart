@@ -153,7 +153,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
         child: Column(
           children: <Widget>[
             ListTile(
-              title: Text("Prostředí úloh",
+              title: Text("Prostředí a typ úloh",
                   style: Theme.of(context).textTheme.headline6),
             ),
             SingleChildScrollView(
