@@ -51,5 +51,13 @@ void main() {
             returnsNormally);
       });
     });
+
+    test("All levels should have unique xid", () {
+      var allXids = levelTree.levels.map((el) => el.xid);
+      var uniqueXids = allXids.toSet().toList();
+      for (var xid in uniqueXids) {
+        expect(allXids.where((el) => el == xid).length, equals(1), reason: "Duplicate: $xid");
+      }
+    });
   });
 }
