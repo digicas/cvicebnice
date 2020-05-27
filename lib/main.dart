@@ -1,12 +1,15 @@
 import 'package:cvicebnice/tasksregister.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share/share.dart';
+import 'package:cvicebnice/git_info.g.dart' as gitInfo;
 
 import './screens/level_select.dart';
+import 'constants.dart';
 import 'screens/about.dart';
 import 'screens/descriptionpane.dart';
 
@@ -106,119 +109,201 @@ class _TaskListScreenState extends State<TaskListScreen> {
       key: globalTaskListScaffoldKey,
       extendBody: true,
 //      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.info_outline),
-          onPressed: () {
-            buildShowAboutDialog(context);
-          },
-        ),
-//        automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            icon: FaIcon(FontAwesomeIcons.chalkboardTeacher),
-            onPressed: () {
-              setState(() {
-                descriptionPaneVisible = !descriptionPaneVisible;
-              });
-            },
-          ),
-        ],
-        title: InkWell(
-          onTap: () {
-            print("jojo");
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text("EduKids / Matika do kapsy"),
-//            Linkify(text: "www.edukids.cz"),
-//            GestureDetector(
-//                behavior: HitTestBehavior.translucent,
-//                onTap: () async {
-//                  await launchURL("https://www.edukids.cz");
-//                },
-//                child: Text(
-//                  "EduKids",
-//                  style: TextStyle(color: Color(0xffeeeeee)),
-//                )),
-            ],
-          ),
-        ),
-//        shape: ShapeBorder(),
-
-      ),
-      body: SingleChildScrollView(
+//      appBar: AppBar(
+//        leading: IconButton(
+//          icon: Icon(Icons.info_outline),
+//          onPressed: () {
+//            buildShowAboutDialog(context);
+//          },
+//        ),
+////        automaticallyImplyLeading: false,
+//        actions: [
+//          IconButton(
+//            icon: FaIcon(FontAwesomeIcons.chalkboardTeacher),
+//            onPressed: () {
+//              setState(() {
+//                descriptionPaneVisible = !descriptionPaneVisible;
+//              });
+//            },
+//          ),
+//        ],
+//        title: InkWell(
+//          onTap: () {
+//            print("jojo");
+//          },
+//          child: Row(
+//            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//            children: <Widget>[
+//              Text("EduKids / Matika do kapsy"),
+////            Linkify(text: "www.edukids.cz"),
+////            GestureDetector(
+////                behavior: HitTestBehavior.translucent,
+////                onTap: () async {
+////                  await launchURL("https://www.edukids.cz");
+////                },
+////                child: Text(
+////                  "EduKids",
+////                  style: TextStyle(color: Color(0xffeeeeee)),
+////                )),
+//            ],
+//          ),
+//        ),
+////        shape: ShapeBorder(),
+//      ),
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
         scrollDirection: Axis.vertical,
-        child: Column(
-          children: <Widget>[
-            ListTile(
-              title: Text("Prostředí a typ úloh",
-                  style: Theme.of(context).textTheme.headline6),
+        slivers: [
+          SliverAppBar(
+//            automaticallyImplyLeading: false,
+
+            expandedHeight: MediaQuery.of(context).size.height - (kPreviewBarHeight + 4),
+            floating: true,
+            pinned: true,
+            snap: false,
+            leading: IconButton(
+              icon: Icon(Icons.info_outline),
+              onPressed: () {
+                buildShowAboutDialog(context);
+              },
             ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: ToggleButtons(
-                borderRadius: BorderRadius.all(Radius.circular(8)),
-                children: List.generate(
-                  tasksRegister.length,
-                  (index) => Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Image.asset(
-                        tasksRegister[index].imageAssetName,
-                        width: 128,
-                      ),
-                      Text(tasksRegister[index].label),
-                      Container(height: 8),
-                    ],
-                  ),
-                ),
-                onPressed: (int index) {
+//            title: Text("Matika do kapsy"),
+            actions: [
+              IconButton(
+                icon: FaIcon(FontAwesomeIcons.chalkboardTeacher),
+                onPressed: () {
                   setState(() {
-                    taskSelectedIndex = index;
+                    descriptionPaneVisible = !descriptionPaneVisible;
                   });
                 },
-                isSelected: List.generate(
-                    tasksRegister.length, (i) => (i == taskSelectedIndex)),
               ),
+            ],
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text("Matika do kapsy"),
+              background: Stack(fit: StackFit.expand, children: [
+//                Image.asset("assets/math_sliver.png",fit: BoxFit.cover),
+                FractionallySizedBox(
+                  alignment: Alignment(-1, 0),
+                  heightFactor: 0.6,
+                  widthFactor: 0.4,
+                  child: Image.asset("assets/ada_full_body.png",
+                      fit: BoxFit.fitHeight),
+                ),
+                FractionallySizedBox(
+                  alignment: Alignment(0.7, 0),
+                  heightFactor: 0.3,
+                  widthFactor: 0.4,
+                  child: InkWell(
+                    onTap: () {
+                      buildShowAboutDialog(context);
+                    },
+                    child: Image.asset("assets/edukids_logo.png",
+                        fit: BoxFit.contain),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(48, 20, 0, 0),
+                    child: InkWell(
+                        onTap: () {
+                          // try to update the screen / page if on web to get the updated version
+                          Navigator.of(context)
+                              .pushNamedAndRemoveUntil("/", (route) => false);
+                        },
+                        child: Text("${gitInfo.shortSHA}")),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: FaIcon(FontAwesomeIcons.handPointDown, color: Colors.white, size: 32),
+                  ),
+                ),
+              ]),
             ),
-            LevelSelect(
-              onCheckLevelExists: (index) => checkLevelExists(index),
-              onSchoolClassToLevelIndex: (schoolYear, schoolMonth) {
-                var newIndex = tasksRegister[taskSelectedIndex]
-                    .onSchoolClassToLevelIndex(
-                        schoolYear.toInt(), schoolMonth.toInt());
-                setState(() {
-                  levelSelectedIndex = newIndex;
-                });
-                return newIndex;
-              },
-              onPlay: (int selectedLevelIndex) {
-                playWithSelectedLevelIndex();
-                //////////////////////////
-              },
+          ),
+          SliverToBoxAdapter(
+            child: Column(
+              children: <Widget>[
+                SizedBox(height: 24),
+                ListTile(
+                  title: Text("Prostředí a typ úloh",
+                      style: Theme.of(context).textTheme.headline6),
+                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: ToggleButtons(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    children: List.generate(
+                      tasksRegister.length,
+                      (index) => Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Image.asset(
+                            tasksRegister[index].imageAssetName,
+                            width: 128,
+                          ),
+                          Text(tasksRegister[index].label),
+                          Container(height: 8),
+                        ],
+                      ),
+                    ),
+                    onPressed: (int index) {
+                      setState(() {
+                        taskSelectedIndex = index;
+                      });
+                    },
+                    isSelected: List.generate(
+                        tasksRegister.length, (i) => (i == taskSelectedIndex)),
+                  ),
+                ),
+                LevelSelect(
+                  onCheckLevelExists: (index) => checkLevelExists(index),
+                  onSchoolClassToLevelIndex: (schoolYear, schoolMonth) {
+                    var newIndex = tasksRegister[taskSelectedIndex]
+                        .onSchoolClassToLevelIndex(
+                            schoolYear.toInt(), schoolMonth.toInt());
+
+                    setState(() {
+                      levelSelectedIndex = newIndex;
+                    });
+
+                    return newIndex;
+                  },
+                  onPlay: (int selectedLevelIndex) {
+                    playWithSelectedLevelIndex();
+
+                    //////////////////////////
+                  },
+                ),
+                AnimatedContainer(
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.fastOutSlowIn,
+                    height: descriptionPaneVisible ? kPreviewBarHeight : 48), // 256
+              ],
             ),
-            AnimatedContainer(
-                duration: Duration(milliseconds: 300),
-                curve: Curves.fastOutSlowIn,
-                height: descriptionPaneVisible ? 256 : 48),
-          ],
-        ),
+          ),
+        ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: canPlayLevel ? Color(0xffa02b5f) : Colors.grey,
-        mini: !canPlayLevel,
-        tooltip: "Procvičit",
-        elevation: 4,
-        child: canPlayLevel ? FaIcon(FontAwesomeIcons.play) : Icon(Icons.block),
-        onPressed: canPlayLevel
-            ? () {
-                playWithSelectedLevelIndex();
-              }
-            : null,
+      floatingActionButton: SizedBox(
+        width: 100, height: 100,
+        child: FloatingActionButton(
+          backgroundColor: canPlayLevel ? Color(0xffa02b5f) : Colors.grey,
+          mini: !canPlayLevel,
+
+          tooltip: "Procvičit",
+          elevation: 4,
+          child: canPlayLevel ? FaIcon(FontAwesomeIcons.play) : Icon(Icons.block),
+          onPressed: canPlayLevel
+              ? () {
+                  playWithSelectedLevelIndex();
+                }
+              : null,
+        ),
       ),
       bottomNavigationBar: BottomAppBar(
         child: AnimatedContainer(
@@ -351,5 +436,4 @@ class _TaskListScreenState extends State<TaskListScreen> {
       ),
     );
   }
-
 }

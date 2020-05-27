@@ -25,3 +25,5 @@ const List<String> kMonths = [
   "červenec",
   "srpen"
 ];
+
+const int kPreviewBarHeight = 256;
