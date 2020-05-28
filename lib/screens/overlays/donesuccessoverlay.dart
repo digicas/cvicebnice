@@ -46,12 +46,12 @@ class DoneSuccessOverlay extends StatelessWidget {
 //          Container(height: 20,),
           RaisedButton.icon(
             label: Text("ZKUSIT TĚŽŠÍ"),
-            icon: Icon(Icons.file_upload),
+            icon: Icon(Icons.landscape),
             shape: StadiumBorder(),
             onPressed: onNextUpLevel,
           ),
           RaisedButton.icon(
-            label: Text("JEŠTĚ JEDNOU STEJNĚ TĚŽKOU"),
+            label: Text("JEŠTĚ STEJNĚ TĚŽKOU"),
             icon: Icon(Icons.compare_arrows),
             shape: StadiumBorder(),
             onPressed: onNextSameLevel,

@@ -118,7 +118,10 @@ class _LevelSelectState extends State<LevelSelect> {
                     style: _fluidSliderTextStyle(context)),
                 end: Text(schoolMonths.last,
                     style: _fluidSliderTextStyle(context)),
-                valueTextStyle: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 13),
+                valueTextStyle: Theme.of(context)
+                    .textTheme
+                    .bodyText2
+                    .copyWith(fontSize: 13),
               ),
             ),
 //            Container(
@@ -206,6 +209,8 @@ class _LevelSelectState extends State<LevelSelect> {
 }
 
 /// Row enabling choosing the level: (-) 789 (+)
+///
+/// Not used anymore in this form as (-) and (+) are separated Widgets now
 class LevelNumberSelector extends StatelessWidget {
   /// Current level number to be rendered
   final int levelIndex;
@@ -226,84 +231,161 @@ class LevelNumberSelector extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         SizedBox(width: 4),
-        IconButton(
-          icon: Icon(Icons.remove_circle_outline),
-          color: Colors.white,
-          onPressed: () {
-            onIndexChange((levelIndex > 0) ? levelIndex - 1 : 0);
-          },
+        NumberDownButton(
+          onIndexChange: onIndexChange,
+          levelIndex: levelIndex,
         ),
-        InkWell(
-          onTap: () {
-            return enterNumberDialog(context);
-          },
-          child: Container(
-            width: 50,
-            child: Text(
-              levelIndex.toString(),
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 24, color: Colors.white),
-            ),
-          ),
+        NumberDialogButton(
+          levelIndex: levelIndex,
+          onIndexChange: onIndexChange,
         ),
-        IconButton(
-          icon: Icon(Icons.add_circle_outline),
-          color: Colors.white,
-          onPressed: () {
-            onIndexChange(levelIndex + 1);
-          },
+        NumberUpButton(
+          onIndexChange: onIndexChange,
+          levelIndex: levelIndex,
         ),
       ],
     ));
   }
+}
 
-  Future enterNumberDialog(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(
+/// Dialog to retrieve the level number
+Future enterNumberDialog(BuildContext context, Function onIndexChange) {
+  return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          title: Text("Číslo úrovně:"),
+          content: Container(
+            decoration: BoxDecoration(
+//                      color: Colors.deepOrange,
               borderRadius: BorderRadius.circular(12),
             ),
-            title: Text("Číslo úrovně:"),
-            content: Container(
-              decoration: BoxDecoration(
-//                      color: Colors.deepOrange,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              height: 100,
-              width: 300,
-              child: TextField(
+            height: 100,
+            width: 300,
+            child: TextField(
 //                controller: TextEditingController()
 //                  ..text = levelIndex.toString(), // providing the current value
-                // current value is not desired now as user wants to jump elsewhere
-                autofocus: true,
-                enableInteractiveSelection: true,
-                keyboardType: TextInputType.number,
+              // current value is not desired now as user wants to jump elsewhere
+              autofocus: true,
+              enableInteractiveSelection: true,
+              keyboardType: TextInputType.number,
 //                decoration: InputDecoration(hintText: "999"),
-                inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-                cursorColor: Color(0xffa02b5f),
-                autocorrect: false,
-                maxLength: 3,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 32,
-                ),
-                onSubmitted: (String str) {
-                  Navigator.of(context).pop();
-                  onIndexChange(int.parse(str));
-                },
+              inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+              cursorColor: Color(0xffa02b5f),
+              autocorrect: false,
+              maxLength: 3,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 32,
               ),
+              onSubmitted: (String str) {
+                Navigator.of(context).pop();
+                onIndexChange(int.parse(str));
+              },
             ),
-          );
-        });
+          ),
+        );
+      });
+}
+
+/// Widget to render the level number and open the Dialod for entering the new one
+class NumberDialogButton extends StatelessWidget {
+  const NumberDialogButton({
+    Key key,
+    this.levelIndex = 789,
+    @required this.onIndexChange,
+  }) : super(key: key);
+
+  /// Current level number to be rendered
+  final int levelIndex;
+
+  /// Callback with updated level number
+  final Function(int newIndex) onIndexChange;
+
+  @override
+  Widget build(BuildContext context) {
+    return ActionChip(
+      onPressed: () => enterNumberDialog(context, onIndexChange),
+      label: Text("#$levelIndex"),
+    );
+
+    // ///////////////// InkWell and Text version
+//    return InkWell(
+//      onTap: () {
+//        return enterNumberDialog(context, onIndexChange);
+//      },
+//      child: Container(
+////        width: 50,
+//        child: Text(
+//          "#$levelIndex",
+//          textAlign: TextAlign.center,
+//          style: TextStyle(fontSize: 24, color: Colors.white),
+//        ),
+//      ),
+//    );
+  }
+}
+
+/// IconButton for decreasing number down to 0
+class NumberDownButton extends StatelessWidget {
+  const NumberDownButton({
+    Key key,
+    @required this.onIndexChange,
+    @required this.levelIndex,
+  }) : super(key: key);
+
+  /// Callback with updated level number
+  final Function(int newIndex) onIndexChange;
+
+  /// Current level number for calculation
+  final int levelIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.remove_circle_outline),
+      color: Colors.white,
+      onPressed: () {
+        onIndexChange((levelIndex > 0) ? levelIndex - 1 : 0);
+      },
+    );
+  }
+}
+
+/// IconButton for increasing number
+class NumberUpButton extends StatelessWidget {
+  const NumberUpButton({
+    Key key,
+    @required this.onIndexChange,
+    @required this.levelIndex,
+  }) : super(key: key);
+
+  /// Callback with updated level number
+  final Function(int newIndex) onIndexChange;
+
+  /// Current level number for calculation
+  final int levelIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.add_circle_outline),
+      color: Colors.white,
+      onPressed: () {
+        onIndexChange(levelIndex + 1);
+      },
+    );
   }
 }
 
 /// Selector Widget for xids including AlertDialog for manual entering
 ///
 /// Final validation must be done in the callback
+/// Currently not used as Xids dialog is initiated otherwise
 class LevelXidSelector extends StatelessWidget {
   const LevelXidSelector({
     Key key,
@@ -333,43 +415,59 @@ class LevelXidSelector extends StatelessWidget {
           showDialog(
               context: context,
               builder: (BuildContext context) {
-                return AlertDialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  title: Text("Kód úlohy:"),
-                  content: Container(
-                    decoration: BoxDecoration(
-//                      color: Colors.deepOrange,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    height: 100,
-                    width: 300,
-                    child: TextField(
-                      autofocus: true,
-                      enableInteractiveSelection: true,
-                      keyboardType: TextInputType.text,
-                      decoration: InputDecoration(hintText: "abcghi"),
-                      inputFormatters: [
-                        WhitelistingTextInputFormatter(RegExp("[a-zA-Z]"))
-                      ],
-                      cursorColor: Color(0xffa02b5f),
-                      autocorrect: false,
-                      maxLength: 6,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 32,
-                      ),
-                      onSubmitted: (String str) {
-                        Navigator.of(context).pop();
-                        onSubmittedXid(str);
-                      },
-                    ),
-                  ),
-                );
+                return EnterXidDialog(onSubmittedXid: onSubmittedXid);
               });
         },
+      ),
+    );
+  }
+}
+
+/// AlertDialog for manual entry of Xid
+///
+/// Final validation must be done in the callback
+class EnterXidDialog extends StatelessWidget {
+  const EnterXidDialog({
+    Key key,
+    @required this.onSubmittedXid,
+  }) : super(key: key);
+
+  /// Callback with entered task xid
+  final Function(String newXid) onSubmittedXid;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      title: Text("Kód úlohy:"),
+      content: Container(
+        decoration: BoxDecoration(
+//                      color: Colors.deepOrange,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        height: 100,
+        width: 300,
+        child: TextField(
+          autofocus: true,
+          enableInteractiveSelection: true,
+          keyboardType: TextInputType.text,
+          decoration: InputDecoration(hintText: "abcghi"),
+          inputFormatters: [WhitelistingTextInputFormatter(RegExp("[a-zA-Z]"))],
+          cursorColor: Color(0xffa02b5f),
+          autocorrect: false,
+          maxLength: 6,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 32,
+          ),
+          onSubmitted: (String str) {
+            Navigator.of(context).pop();
+            onSubmittedXid(str);
+          },
+        ),
       ),
     );
   }

@@ -25,3 +25,7 @@ const List<String> kMonths = [
   "červenec",
   "srpen"
 ];
+
+const double kPreviewBarHeight = 256.0;
+
+const double kFABSizeRatio = 0.236;
