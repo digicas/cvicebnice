@@ -37,16 +37,9 @@ class DescriptionPane extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                        "${tasksRegister[taskSelectedIndex].label}, "
-                        "úroveň $levelSelectedIndex",
+                    Text("${tasksRegister[taskSelectedIndex].label}",
+//                        "úroveň $levelSelectedIndex",
                         style: TextStyle(fontSize: 18, color: Colors.white)),
-                    canPlayLevel
-                        ? Text(
-                            tasksRegister[taskSelectedIndex]
-                                .getLevelSuitability(levelSelectedIndex),
-                            style: TextStyle(color: Colors.white))
-                        : Container(),
                     Divider(),
                     !canPlayLevel
                         ? TextWithLinks(
@@ -61,6 +54,11 @@ class DescriptionPane extends StatelessWidget {
                     Text(
                         tasksRegister[taskSelectedIndex]
                             .getLevelDescription(levelSelectedIndex),
+                        style: TextStyle(color: Colors.white)),
+                    Divider(),
+                    Text(
+                        tasksRegister[taskSelectedIndex]
+                            .getLevelSuitability(levelSelectedIndex),
                         style: TextStyle(color: Colors.white)),
                   ],
                 ),

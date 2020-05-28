@@ -132,6 +132,50 @@ class _TaskListScreenState extends State<TaskListScreen> {
 //            title: Text("Matika do kapsy"),
             actions: [
               IconButton(
+                icon: FaIcon(FontAwesomeIcons.rocket),
+//                icon: Icon(Icons.launch),
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return EnterXidDialog(onSubmittedXid: (newXid) {
+                          print(
+                              "Nove xid: # $newXid # pro a) validaci b) prepnuti tasku / levelu / roku a mesicu");
+                          var newTaskTypeIndex =
+                              tasksRegister.getTaskTypeIndexFromXid(newXid);
+                          print("Task Type index: $newTaskTypeIndex");
+
+                          int newLevelIndex = -1;
+                          if (newTaskTypeIndex > -1) {
+                            newLevelIndex = tasksRegister[newTaskTypeIndex]
+                                .getLevelIndexFromXid(newXid);
+                            print("Task's selected index: $newLevelIndex");
+                            setState(() {
+                              taskSelectedIndex = newTaskTypeIndex;
+                              if (newLevelIndex > -1)
+                                levelSelectedIndex = newLevelIndex;
+                            });
+                          }
+
+                          if (newTaskTypeIndex == -1 || newLevelIndex == -1) {
+                            print("Show not found dialog");
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    title: Text("Kód $newXid neznám :("),
+                                  );
+                                });
+                          }
+                        });
+//                        TODO finish refactoring skip to Xid
+                      });
+                },
+              ),
+              IconButton(
                 icon: FaIcon(FontAwesomeIcons.chalkboardTeacher),
                 onPressed: () {
                   setState(() {
@@ -172,8 +216,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                       alignment: Alignment.topLeft,
                       child: Text(
                         "${gitInfo.shortSHA}",
-                        style:
-                            TextStyle(color: Colors.white70, fontSize: 14),
+                        style: TextStyle(color: Colors.white70, fontSize: 14),
                       ),
                     ),
                   ),
@@ -305,7 +348,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
           curve: Curves.fastOutSlowIn,
           height: descriptionPaneVisible ? 256 : 48,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 4),
             child: Column(
               children: [
                 Row(
@@ -313,102 +356,77 @@ class _TaskListScreenState extends State<TaskListScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    LevelNumberSelector(
+
+                    NumberDialogButton(
                       levelIndex: levelSelectedIndex,
-                      onIndexChange: (newLevelIndex) {
-                        setState(() {
-                          levelSelectedIndex = newLevelIndex;
-                        });
-                      },
+                      onIndexChange: updateLevelIndex,
+                    ),
+                    NumberDownButton(
+                      levelIndex: levelSelectedIndex,
+                      onIndexChange: updateLevelIndex,
                     ),
                     Container(
 //                  width: 80,
 //                  color: Colors.deepOrange,
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          LevelXidSelector(
-                            levelXid: levelXid,
-                            onSubmittedXid: (newXid) {
-                              print(
-                                  "Nove xid: # $newXid # pro a) validaci b) prepnuti tasku / levelu / roku a mesicu");
-                              var newTaskTypeIndex =
-                                  tasksRegister.getTaskTypeIndexFromXid(newXid);
-                              print("Task Type index: $newTaskTypeIndex");
-
-                              int newLevelIndex = -1;
-                              if (newTaskTypeIndex > -1) {
-                                newLevelIndex = tasksRegister[newTaskTypeIndex]
-                                    .getLevelIndexFromXid(newXid);
-                                print("Task's selected index: $newLevelIndex");
-                                setState(() {
-                                  taskSelectedIndex = newTaskTypeIndex;
-                                  if (newLevelIndex > -1)
-                                    levelSelectedIndex = newLevelIndex;
-                                });
-                              }
-
-                              if (newTaskTypeIndex == -1 ||
-                                  newLevelIndex == -1) {
-                                print("Show not found dialog");
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                        ),
-                                        title: Text("Kód $newXid neznám :("),
-                                      );
-                                    });
-                              }
-                            },
+                          NumberUpButton(
+                              levelIndex: levelSelectedIndex,
+                              onIndexChange: updateLevelIndex),
+                          ActionChip(
+                            label: Text("$levelXid"),
+                            onPressed: () {},
                           ),
-                          IconButton(
-                            icon: Icon(Icons.share, color: Colors.white),
-                            onPressed: () {
-                              String text =
-                                  "https://matikadokapsy.edukids.cz : "
-                                  "${tasksRegister[taskSelectedIndex].label} #$levelSelectedIndex -> "
-                                  "Kód úlohy: # $levelXid #";
-                              if (kIsWeb) {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: Text(
-                                            "Jak nasdílet vybranou úlohu?"),
-                                        content:
-                                            Text("Pošlete text:\n\n" + text),
-                                        actions: [
-                                          FlatButton.icon(
-                                            icon: Icon(Icons.content_copy),
-                                            label: Text("Zkopírovat"),
-                                            onPressed: () {
-                                              Clipboard.setData(
-                                                      ClipboardData(text: text))
-                                                  .then((_) {
-                                                Navigator.of(context).pop();
-                                                globalTaskListScaffoldKey
-                                                    .currentState
-                                                    .showSnackBar(SnackBar(
-                                                        duration: Duration(
-                                                            seconds: 3),
-                                                        content: Text(
-                                                            "Zkopírováno!")));
-                                              });
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    });
-                              } else {
-                                // Share intents work only on mobile devices
-                                Share.share(text,
-                                    subject: "#edukids úloha z matematiky");
-                              }
-                            },
-                          ),
+//                          LevelXidSelector(
+//                            levelXid: levelXid,
+//                            onSubmittedXid: (xid) {},
+//                          ),
+//                          IconButton(
+//                            icon: Icon(Icons.share, color: Colors.white),
+//                            onPressed: () {
+//                              String text =
+//                                  "https://matikadokapsy.edukids.cz : "
+//                                  "${tasksRegister[taskSelectedIndex].label} #$levelSelectedIndex -> "
+//                                  "Kód úlohy: # $levelXid #";
+//                              if (kIsWeb) {
+//                                showDialog(
+//                                    context: context,
+//                                    builder: (context) {
+//                                      return AlertDialog(
+//                                        title: Text(
+//                                            "Jak nasdílet vybranou úlohu?"),
+//                                        content:
+//                                            Text("Pošlete text:\n\n" + text),
+//                                        actions: [
+//                                          FlatButton.icon(
+//                                            icon: Icon(Icons.content_copy),
+//                                            label: Text("Zkopírovat"),
+//                                            onPressed: () {
+//                                              Clipboard.setData(
+//                                                      ClipboardData(text: text))
+//                                                  .then((_) {
+//                                                Navigator.of(context).pop();
+//                                                globalTaskListScaffoldKey
+//                                                    .currentState
+//                                                    .showSnackBar(SnackBar(
+//                                                        duration: Duration(
+//                                                            seconds: 3),
+//                                                        content: Text(
+//                                                            "Zkopírováno!")));
+//                                              });
+//                                            },
+//                                          ),
+//                                        ],
+//                                      );
+//                                    });
+//                              } else {
+//                                // Share intents work only on mobile devices
+//                                Share.share(text,
+//                                    subject: "#edukids úloha z matematiky");
+//                              }
+//                            },
+//                          ),
                         ],
                       ),
                     ),
@@ -430,4 +448,9 @@ class _TaskListScreenState extends State<TaskListScreen> {
       ),
     );
   }
+
+  /// Updates the index with refreshing the build
+  updateLevelIndex(newLevelIndex) => setState(() {
+                      levelSelectedIndex = newLevelIndex;
+                    });
 }
