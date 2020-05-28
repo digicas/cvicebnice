@@ -366,7 +366,9 @@ class _TaskListScreenState extends State<TaskListScreen> {
                   children: [
                     Container(
                       // Left side of the bottomBar
+                      width: (relativeWidth(context, 0.5))-(relativeSize(context, kFABSizeRatio)/2)-4,
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           NumberDialogButton(
                             levelIndex: levelSelectedIndex,
@@ -383,8 +385,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
 
                     Container(
                       // Right side of the bottom Bar
-//                  width: 80,
-//                  color: Colors.deepOrange,
+                      width: (relativeWidth(context, 0.5))-(relativeSize(context, kFABSizeRatio)/2)-4,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
