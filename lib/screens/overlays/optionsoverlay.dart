@@ -110,7 +110,7 @@ class OptionsOverlay extends StatelessWidget {
           /// show only if we can decrease level
           canDecreaseLevel
               ? RaisedButton.icon(
-            label: Text("TO JE MOC TĚŽKÉ, CHCI LEHČÍ"),
+            label: Text("MOC TĚŽKÉ, CHCI LEHČÍ"),
             icon: Icon(Icons.file_download),
             shape: StadiumBorder(),
             onPressed: onDecreaseLevel,
