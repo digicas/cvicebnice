@@ -26,4 +26,4 @@ const List<String> kMonths = [
   "srpen"
 ];
 
-const int kPreviewBarHeight = 256;
+const double kPreviewBarHeight = 256.0;

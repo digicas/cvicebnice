@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cvicebnice/tasksregister.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -12,6 +14,7 @@ import './screens/level_select.dart';
 import 'constants.dart';
 import 'screens/about.dart';
 import 'screens/descriptionpane.dart';
+import 'utils.dart';
 
 void main() => runApp(MyApp());
 
@@ -108,48 +111,6 @@ class _TaskListScreenState extends State<TaskListScreen> {
     return Scaffold(
       key: globalTaskListScaffoldKey,
       extendBody: true,
-//      extendBodyBehindAppBar: true,
-//      appBar: AppBar(
-//        leading: IconButton(
-//          icon: Icon(Icons.info_outline),
-//          onPressed: () {
-//            buildShowAboutDialog(context);
-//          },
-//        ),
-////        automaticallyImplyLeading: false,
-//        actions: [
-//          IconButton(
-//            icon: FaIcon(FontAwesomeIcons.chalkboardTeacher),
-//            onPressed: () {
-//              setState(() {
-//                descriptionPaneVisible = !descriptionPaneVisible;
-//              });
-//            },
-//          ),
-//        ],
-//        title: InkWell(
-//          onTap: () {
-//            print("jojo");
-//          },
-//          child: Row(
-//            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//            children: <Widget>[
-//              Text("EduKids / Matika do kapsy"),
-////            Linkify(text: "www.edukids.cz"),
-////            GestureDetector(
-////                behavior: HitTestBehavior.translucent,
-////                onTap: () async {
-////                  await launchURL("https://www.edukids.cz");
-////                },
-////                child: Text(
-////                  "EduKids",
-////                  style: TextStyle(color: Color(0xffeeeeee)),
-////                )),
-//            ],
-//          ),
-//        ),
-////        shape: ShapeBorder(),
-//      ),
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         scrollDirection: Axis.vertical,
@@ -157,8 +118,9 @@ class _TaskListScreenState extends State<TaskListScreen> {
           SliverAppBar(
 //            automaticallyImplyLeading: false,
 
-            expandedHeight: MediaQuery.of(context).size.height - (kPreviewBarHeight + 4),
-            floating: true,
+            expandedHeight:
+                MediaQuery.of(context).size.height - (kPreviewBarHeight + 32),
+            floating: false,
             pinned: true,
             snap: false,
             leading: IconButton(
@@ -183,7 +145,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
               background: Stack(fit: StackFit.expand, children: [
 //                Image.asset("assets/math_sliver.png",fit: BoxFit.cover),
                 FractionallySizedBox(
-                  alignment: Alignment(-1, 0),
+                  alignment: Alignment(-0.8, 0),
                   heightFactor: 0.6,
                   widthFactor: 0.4,
                   child: Image.asset("assets/ada_full_body.png",
@@ -202,23 +164,35 @@ class _TaskListScreenState extends State<TaskListScreen> {
                   ),
                 ),
                 Align(
-                  alignment: Alignment.topLeft,
+                  alignment: Alignment.bottomLeft,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(48, 20, 0, 0),
-                    child: InkWell(
-                        onTap: () {
-                          // try to update the screen / page if on web to get the updated version
-                          Navigator.of(context)
-                              .pushNamedAndRemoveUntil("/", (route) => false);
-                        },
-                        child: Text("${gitInfo.shortSHA}")),
+                    padding: const EdgeInsets.fromLTRB(4, 0, 0, 0),
+                    child: Transform.rotate(
+                      angle: -pi / 2,
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "${gitInfo.shortSHA}",
+                        style:
+                            TextStyle(color: Colors.white70, fontSize: 14),
+                      ),
+                    ),
                   ),
                 ),
                 Align(
                   alignment: Alignment.bottomLeft,
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: FaIcon(FontAwesomeIcons.handPointDown, color: Colors.white, size: 32),
+                    padding: const EdgeInsets.fromLTRB(4, 0, 0, 8),
+                    child: InkWell(
+                      onTap: () {
+                        // try to update the screen / page if on web to get the updated version
+                        Navigator.of(context)
+                            .pushNamedAndRemoveUntil("/", (route) => false);
+                      },
+                      child: Container(
+                        width: 24,
+                        height: 80,
+                      ),
+                    ),
                   ),
                 ),
               ]),
@@ -282,29 +256,49 @@ class _TaskListScreenState extends State<TaskListScreen> {
                 AnimatedContainer(
                     duration: Duration(milliseconds: 300),
                     curve: Curves.fastOutSlowIn,
-                    height: descriptionPaneVisible ? kPreviewBarHeight : 48), // 256
+                    height: descriptionPaneVisible ? kPreviewBarHeight : 48),
+                // 256
               ],
             ),
           ),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: SizedBox(
-        width: 100, height: 100,
-        child: FloatingActionButton(
-          backgroundColor: canPlayLevel ? Color(0xffa02b5f) : Colors.grey,
-          mini: !canPlayLevel,
+      floatingActionButton: Builder(builder: (BuildContext context) {
+        var fabSize = canPlayLevel
+            ? relativeSize(context, 0.236)
+            : relativeSize(context, 0.145);
 
-          tooltip: "Procvičit",
-          elevation: 4,
-          child: canPlayLevel ? FaIcon(FontAwesomeIcons.play) : Icon(Icons.block),
-          onPressed: canPlayLevel
-              ? () {
-                  playWithSelectedLevelIndex();
-                }
-              : null,
-        ),
-      ),
+        var fabIconSize = canPlayLevel
+            ? relativeSize(context, 0.236 * 0.5)
+            : relativeSize(context, 0.145 * 0.5);
+
+        return SizedBox(
+          width: fabSize,
+          height: fabSize,
+          child: FloatingActionButton(
+            backgroundColor: canPlayLevel ? Color(0xffa02b5f) : Colors.grey,
+//          mini: !canPlayLevel,
+
+            tooltip: "Procvičit",
+            elevation: 2,
+            child: canPlayLevel
+                ? FaIcon(
+                    FontAwesomeIcons.play,
+                    size: fabIconSize,
+                  )
+                : Icon(
+                    Icons.block,
+                    size: fabIconSize,
+                  ),
+            onPressed: canPlayLevel
+                ? () {
+                    playWithSelectedLevelIndex();
+                  }
+                : null,
+          ),
+        );
+      }),
       bottomNavigationBar: BottomAppBar(
         child: AnimatedContainer(
           duration: Duration(milliseconds: 300),
