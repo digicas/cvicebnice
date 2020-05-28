@@ -56,9 +56,9 @@ class DescriptionPane extends StatelessWidget {
                             .getLevelDescription(levelSelectedIndex),
                         style: TextStyle(color: Colors.white)),
                     Divider(),
-                    Text(
+                    Text(canPlayLevel ?
                         tasksRegister[taskSelectedIndex]
-                            .getLevelSuitability(levelSelectedIndex),
+                            .getLevelSuitability(levelSelectedIndex) : "",
                         style: TextStyle(color: Colors.white)),
                   ],
                 ),
