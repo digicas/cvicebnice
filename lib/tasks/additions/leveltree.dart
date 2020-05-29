@@ -180,7 +180,7 @@ class LevelTree extends LevelTreeBlueprint {
   static final List<List<int>> schoolClassToLevelMap = [
     //09   10   11   12   01   02   03   04   05   06 -- months in the school year
     [ 00,  00,  00,  00,  00,  00,  00,  00,  00,  00], // 0 class => tutorial
-    [ 02,  02,  06,  10,  15,  15,  20,  25,  30,  30], // 1st class
+    [ 02,  04,  06,  10,  15,  19,  20,  25,  30,  42], // 1st class
     [ 42,  47,  50,  61,  65,  70,  78,  82,  83,  83], // 2nd
     [ 70,  78,  78,  84,  85,  96, 100, 120, 132, 132], // 3rd
     [124, 136, 160, 176, 181, 184, 186, 190, 194, 194], // 4th
@@ -546,7 +546,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["x+y+w=ZZ"],
         valueRange: [0, 17],
         description:
-        "Sčítání v číselném oboru 0 - 17 bez přechodu přes 10, kde jeden ze sčítanců je ≥ 10.",
+        "Sčítání tří čísel v číselném oboru 0 - 17 bez přechodu přes 10, kde jeden ze sčítanců je ≥ 10.",
         example: "2 + 1 + 11 = ?",
       ),
 
@@ -632,7 +632,7 @@ class LevelTree extends LevelTreeBlueprint {
         },
         masks: ["x+Y=z"],
         valueRange: [0, 20],
-        description: "Obor: 0 - 11\nSčítání s přechodem přes 10, kde je součet 11.",
+        description: "Sčítání s přechodem přes desítku, kde je součet 11.",
         example: "3 + ? = 11",
       ),
 
@@ -645,7 +645,7 @@ class LevelTree extends LevelTreeBlueprint {
         },
         masks: ["x+Y=z"],
         valueRange: [0, 20],
-        description: "Sčítání v číselném oboru 0 - 20 s přechodem přes 10, kde je součet 12.",
+        description: "Sčítání s přechodem přes desítku, kde je součet 12.",
         example: "4 + ? = 12",
       ),
 
@@ -659,7 +659,7 @@ class LevelTree extends LevelTreeBlueprint {
         },
         masks: ["x+y=Z"],
         valueRange: [0, 20],
-        description: "Sčítání v číselném oboru 0 - 20 s přechodem přes 10, kde je součet do 13, přičemž první sčítanec je v rozsahu 2 - 4.",
+        description: "Sčítání s přechodem přes desítku, kde je součet do 13, přičemž první sčítanec je v rozsahu 2 - 4.",
         example: "4 + 8 = ?",
       ),
 
@@ -673,7 +673,7 @@ class LevelTree extends LevelTreeBlueprint {
         },
         masks: ["x+Y=z"],
         valueRange: [0, 20],
-        description: "Sčítání v číselném oboru 0 - 20 s přechodem přes 10, kde je součet 13.",
+        description: "Sčítání s přechodem přes desítku, kde je součet 13.",
         example: "5 + ? = 13",
       ),
 
@@ -686,7 +686,7 @@ class LevelTree extends LevelTreeBlueprint {
         },
         masks: ["x+y=Z"],
         valueRange: [0, 20],
-        description: "Sčítání v číselném oboru 0 - 20 s přechodem přes 10, kde je součet do 14.",
+        description: "Sčítání s přechodem přes desítku, kde je součet do 14.",
         example: "5 + 7 = ?",
       ),
 
@@ -699,7 +699,7 @@ class LevelTree extends LevelTreeBlueprint {
         },
         masks: ["x+Y=z"],
         valueRange: [0, 20],
-        description: "Sčítání v číselném oboru 0 - 20 s přechodem přes 10, kde je součet 14.",
+        description: "Sčítání s přechodem přes desítku, kde je součet 14.",
         example: "5 + ? = 14",
       ),
 
@@ -712,7 +712,7 @@ class LevelTree extends LevelTreeBlueprint {
         },
         masks: ["x+y=Z"],
         valueRange: [0, 20],
-        description: "Sčítání v číselném oboru 0 - 20 s přechodem přes 10, kde je součet do 15.",
+        description: "Sčítání s přechodem přes desítku, kde je součet do 15.",
         example: "6 + 8 = ?",
       ),
 
@@ -725,7 +725,7 @@ class LevelTree extends LevelTreeBlueprint {
         },
         masks: ["x+Y=z"],
         valueRange: [0, 20],
-        description: "Sčítání v číselném oboru 0 - 20 s přechodem přes 10, kde je součet 15.",
+        description: "Sčítání s přechodem přes desítku, kde je součet 15.",
         example: "7 + ? = 15",
       ),
 
@@ -738,7 +738,7 @@ class LevelTree extends LevelTreeBlueprint {
         },
         masks: ["x+y=Z"],
         valueRange: [0, 20],
-        description: "Sčítání v číselném oboru 0 - 20 s přechodem přes 10, kde je součet do 16.",
+        description: "Sčítání s přechodem přes desítku, kde je součet do 16.",
         example: "7 + 8 = ?",
       ),
 
@@ -751,7 +751,7 @@ class LevelTree extends LevelTreeBlueprint {
         },
         masks: ["x+y=Z"],
         valueRange: [0, 20],
-        description: "Sčítání v číselném oboru 0 - 20 s přechodem přes 10, kde je součet do 17.",
+        description: "Sčítání s přechodem přes desítku, kde je součet do 17.",
         example: "8 + 5 = ?",
       ),
 
@@ -766,7 +766,7 @@ class LevelTree extends LevelTreeBlueprint {
         },
         masks: ["x+y=Z"],
         valueRange: [0, 20],
-        description: "Sčítání v číselném oboru 0 - 20 s přechodem přes 10, kde je součet do 18.",
+        description: "Sčítání s přechodem přes desítku, kde je součet do 18.",
         example: "9 + 4 = ?",
       ),
 
@@ -782,7 +782,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["x+Y=z"],
         valueRange: [0, 20],
         description:
-        "Sčítání v číselném oboru 0 - 20 s přechodem přes 10, kde je součet 16, 17, 18.",
+        "Sčítání s přechodem přes desítku, kde je součet 16, 17, 18.",
         example: "9 + ? = 17",
       ),
 
@@ -845,15 +845,23 @@ class LevelTree extends LevelTreeBlueprint {
         xid: "eud",
         onGenerate: () {
           int x, y, w;
+          bool again;
+          Set xywSet;
           do {
+            again = false;
             x = randomMinMax(1, 9);
             y = randomMinMax(1, 9);
             w = randomMinMax(
                 (x + y) > 10 ? 1 : 11 - (x + y),
                 (x + y) < 10 ? 9 : 19 - (x + y));
-          } while ([x, y, w]
-              .toSet()
-              .length < 2);
+            xywSet = [x, y, w].toSet();
+            if (xywSet.length == 2) {
+              // check that if two same numbers => must be > 3
+              var check = [x,y,w];
+              for (var e in xywSet) check.remove(e);
+              if (check[0] < 4) again = true;
+            }
+          } while (again | (xywSet.length < 2));
           return [x, y, w, x + y + w];
         },
         masks: ["x+y+w=ZZ"],
@@ -995,7 +1003,7 @@ class LevelTree extends LevelTreeBlueprint {
         },
         masks: ["x+y=Z"],
         valueRange: [0, 100],
-        description: "Obor: 0 - 100\n1. sčítanec je dvojciferné číslo, 2. sčítanec je jednociferné číslo, součet je bez přechodu přes desítku.",
+        description: "Obor: 0 - 100\nSoučet jednociferného a dvojciferného čísla bez přechodu přes desítku.",
         example: "63 + 5 = ?",
       ),
 
@@ -1005,7 +1013,7 @@ class LevelTree extends LevelTreeBlueprint {
         onGenerate: () => getLevelByXid("ajk").onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 100],
-        description: "Obor: 0 - 100\n1. sčítanec je dvojciferné číslo, 2. sčítanec je jednociferné číslo, součet je bez přechodu přes desítku.",
+        description: "Obor: 0 - 100\nSoučet jednociferného a dvojciferného čísla bez přechodu přes desítku.",
         example: "63 + ? = 68",
       ),
       Level(
@@ -1014,7 +1022,7 @@ class LevelTree extends LevelTreeBlueprint {
         onGenerate: () => getLevelByXid("ajk").onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 100],
-        description: "Obor: 0 - 100\n1. sčítanec je dvojciferné číslo, 2. sčítanec je jednociferné číslo, součet je bez přechodu přes desítku.",
+        description: "Obor: 0 - 100\nSoučet jednociferného a dvojciferného čísla bez přechodu přes desítku.",
         example: "? + 5 = 67",
       ),
 
@@ -1025,7 +1033,7 @@ class LevelTree extends LevelTreeBlueprint {
         onGenerate: () => getLevelByXid("ajk").onGenerate(),
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 100],
-        description: "Obor: 0 - 100\n1. sčítanec je dvojciferné číslo, 2. sčítanec je jednociferné číslo, součet je bez přechodu přes desítku.",
+        description: "Obor: 0 - 100\nSoučet jednociferného a dvojciferného čísla bez přechodu přes desítku.",
         example: "54 + ? = 58, nebo ? + 5 = 67",
       ),
 
