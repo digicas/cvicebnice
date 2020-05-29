@@ -65,7 +65,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
   bool descriptionPaneVisible = false;
 
   final GlobalKey<ScaffoldState> globalTaskListScaffoldKey =
-  GlobalKey<ScaffoldState>();
+      GlobalKey<ScaffoldState>();
 
   // we use [tasksRegister] List here - imported from tasksregister.dart
 
@@ -86,8 +86,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
     if (!tasksRegister[taskSelectedIndex]
         .isLevelImplemented(levelSelectedIndex)) {
       print(
-          "Cannot practise: $levelSelectedIndex for ${tasksRegister[taskSelectedIndex]
-              .label}");
+          "Cannot practise: $levelSelectedIndex for ${tasksRegister[taskSelectedIndex].label}");
     } else {
       Navigator.push(
         context,
@@ -120,10 +119,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
 //            automaticallyImplyLeading: false,
 
             expandedHeight:
-            MediaQuery
-                .of(context)
-                .size
-                .height - (kPreviewBarHeight + 32),
+                MediaQuery.of(context).size.height - (kPreviewBarHeight + 32),
             floating: false,
             pinned: true,
             snap: false,
@@ -146,7 +142,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                           print(
                               "Nove xid: # $newXid # pro a) validaci b) prepnuti tasku / levelu / roku a mesicu");
                           var newTaskTypeIndex =
-                          tasksRegister.getTaskTypeIndexFromXid(newXid);
+                              tasksRegister.getTaskTypeIndexFromXid(newXid);
                           print("Task Type index: $newTaskTypeIndex");
 
                           int newLevelIndex = -1;
@@ -250,10 +246,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                 SizedBox(height: 24),
                 ListTile(
                   title: Text("Prostředí a typ úloh",
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .headline6),
+                      style: Theme.of(context).textTheme.headline6),
                 ),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -262,18 +255,17 @@ class _TaskListScreenState extends State<TaskListScreen> {
                     borderRadius: BorderRadius.all(Radius.circular(8)),
                     children: List.generate(
                       tasksRegister.length,
-                          (index) =>
-                          Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Image.asset(
-                                tasksRegister[index].imageAssetName,
-                                width: 128,
-                              ),
-                              Text(tasksRegister[index].label),
-                              Container(height: 8),
-                            ],
+                      (index) => Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Image.asset(
+                            tasksRegister[index].imageAssetName,
+                            width: 128,
                           ),
+                          Text(tasksRegister[index].label),
+                          Container(height: 8),
+                        ],
+                      ),
                     ),
                     onPressed: (int index) {
                       setState(() {
@@ -289,7 +281,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                   onSchoolClassToLevelIndex: (schoolYear, schoolMonth) {
                     var newIndex = tasksRegister[taskSelectedIndex]
                         .onSchoolClassToLevelIndex(
-                        schoolYear.toInt(), schoolMonth.toInt());
+                            schoolYear.toInt(), schoolMonth.toInt());
 
                     setState(() {
                       levelSelectedIndex = newIndex;
@@ -334,17 +326,17 @@ class _TaskListScreenState extends State<TaskListScreen> {
             elevation: 2,
             child: canPlayLevel
                 ? FaIcon(
-              FontAwesomeIcons.play,
-              size: fabIconSize,
-            )
+                    FontAwesomeIcons.play,
+                    size: fabIconSize,
+                  )
                 : Icon(
-              Icons.block,
-              size: fabIconSize,
-            ),
+                    Icons.block,
+                    size: fabIconSize,
+                  ),
             onPressed: canPlayLevel
                 ? () {
-              playWithSelectedLevelIndex();
-            }
+                    playWithSelectedLevelIndex();
+                  }
                 : null,
           ),
         );
@@ -366,7 +358,9 @@ class _TaskListScreenState extends State<TaskListScreen> {
                   children: [
                     Container(
                       // Left side of the bottomBar
-                      width: (relativeWidth(context, 0.5))-(relativeSize(context, kFABSizeRatio)/2)-4,
+                      width: (relativeWidth(context, 0.5)) -
+                          (relativeSize(context, kFABSizeRatio) / 2) -
+                          4,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -378,23 +372,29 @@ class _TaskListScreenState extends State<TaskListScreen> {
                             levelIndex: levelSelectedIndex,
                             onIndexChange: updateLevelIndex,
                           ),
-
                         ],
                       ),
                     ),
-
                     Container(
                       // Right side of the bottom Bar
-                      width: (relativeWidth(context, 0.5))-(relativeSize(context, kFABSizeRatio)/2)-4,
+                      width: (relativeWidth(context, 0.5)) -
+                          (relativeSize(context, kFABSizeRatio) / 2) -
+                          4,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           NumberUpButton(
                               levelIndex: levelSelectedIndex,
                               onIndexChange: updateLevelIndex),
-                          ActionChip(
-                            label: Text("$levelXid"),
-                            onPressed: () => showShareDialog(context),
+                          Expanded(
+                            // For narrower devices
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: ActionChip(
+                                label: Text("$levelXid"),
+                                onPressed: () => showShareDialog(context),
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -419,15 +419,14 @@ class _TaskListScreenState extends State<TaskListScreen> {
   }
 
   /// Updates the index with refreshing the build
-  updateLevelIndex(newLevelIndex) =>
-      setState(() {
+  updateLevelIndex(newLevelIndex) => setState(() {
         levelSelectedIndex = newLevelIndex;
       });
 
-
-  void showShareDialog(BuildContext context,) {
-    String text =
-        "https://matikadokapsy.edukids.cz : "
+  void showShareDialog(
+    BuildContext context,
+  ) {
+    String text = "https://matikadokapsy.edukids.cz : "
         "${tasksRegister[taskSelectedIndex].label} #$levelSelectedIndex -> "
         "Kód úlohy: # $levelXid #";
     if (kIsWeb) {
@@ -435,26 +434,19 @@ class _TaskListScreenState extends State<TaskListScreen> {
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: Text(
-                  "Jak nasdílet vybranou úlohu?"),
-              content:
-              Text("Pošlete text:\n\n" + text),
+              title: Text("Jak nasdílet vybranou úlohu?"),
+              content: Text("Pošlete text:\n\n" + text),
               actions: [
                 FlatButton.icon(
                   icon: Icon(Icons.content_copy),
                   label: Text("Zkopírovat"),
                   onPressed: () {
-                    Clipboard.setData(
-                        ClipboardData(text: text))
-                        .then((_) {
+                    Clipboard.setData(ClipboardData(text: text)).then((_) {
                       Navigator.of(context).pop();
-                      globalTaskListScaffoldKey
-                          .currentState
-                          .showSnackBar(SnackBar(
-                          duration: Duration(
-                              seconds: 3),
-                          content: Text(
-                              "Zkopírováno!")));
+                      globalTaskListScaffoldKey.currentState.showSnackBar(
+                          SnackBar(
+                              duration: Duration(seconds: 3),
+                              content: Text("Zkopírováno!")));
                     });
                   },
                 ),
@@ -463,9 +455,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
           });
     } else {
       // Share intents work only on mobile devices
-      Share.share(text,
-          subject: "#edukids úloha z matematiky");
+      Share.share(text, subject: "#edukids úloha z matematiky");
     }
   }
-
 }
