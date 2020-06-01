@@ -16,7 +16,11 @@ import 'screens/about.dart';
 import 'screens/descriptionpane.dart';
 import 'utils.dart';
 
-void main() => runApp(MyApp());
+import 'services/analytics_service.dart';
+
+void main() {
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of the application.
@@ -421,6 +425,8 @@ class _TaskListScreenState extends State<TaskListScreen> {
   /// Updates the index with refreshing the build
   updateLevelIndex(newLevelIndex) => setState(() {
         levelSelectedIndex = newLevelIndex;
+        // TODO change log info
+        analytics.log("event_name", {'levelIndex': newLevelIndex});
       });
 
   void showShareDialog(

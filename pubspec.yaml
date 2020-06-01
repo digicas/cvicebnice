@@ -28,6 +28,9 @@ dependencies:
   share: '>=0.6.4+1 <2.0.0'
   font_awesome_flutter: ^8.8.1
   google_fonts: ^1.1.0
+  firebase: ^7.3.0
+  firebase_core: ^0.4.5
+  firebase_analytics: ^5.0.14
 
 #  zoom_widget:
 

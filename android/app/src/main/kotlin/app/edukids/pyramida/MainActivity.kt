@@ -1,4 +1,4 @@
-package app.edukids.pyramida
+package cz.edukids.matikadokapsy
 
 import android.os.Bundle
 import io.flutter.app.FlutterActivity
