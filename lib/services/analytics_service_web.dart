@@ -23,6 +23,11 @@ class AnalyticsWeb implements Analytics {
     _analytics.logEvent(eventName, eventParams);
     print("log to web analytics: $eventName, $eventParams");
   }
+
+  void setUserProperties(Map<String, String> properties) {
+    _analytics.setUserProperties(properties);
+    print("set user properties $properties");
+  }
 }
 
 Analytics getAnalytics() =>

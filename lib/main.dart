@@ -26,6 +26,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of the application.
   @override
   Widget build(BuildContext context) {
+    analytics.setUserProperties({"app_revision": gitInfo.shortSHA});
+
     return MaterialApp(
       debugShowCheckedModeBanner: false, // dev banner on/off
       title: 'EduKids.cz: Matika do kapsy',
@@ -182,6 +184,12 @@ class _TaskListScreenState extends State<TaskListScreen> {
                 icon: FaIcon(FontAwesomeIcons.chalkboardTeacher),
                 onPressed: () {
                   setState(() {
+                    analytics.log("tap", {
+                      "tapped": "Teacher button",
+                      "where": "selection screen appbar",
+                      "purpose": "show/hide preview pane",
+                      "info": descriptionPaneVisible ? "hide" : "show",
+                    });
                     descriptionPaneVisible = !descriptionPaneVisible;
                   });
                 },
@@ -374,7 +382,15 @@ class _TaskListScreenState extends State<TaskListScreen> {
                           ),
                           NumberDownButton(
                             levelIndex: levelSelectedIndex,
-                            onIndexChange: updateLevelIndex,
+                            onIndexChange: (newIndex) {
+                              analytics.log("tap", {
+                                "tapped": "Minus button",
+                                "where": "selection screen bottombar",
+                                "purpose": "decrease selected level",
+                                "info": "new level: $newIndex",
+                              });
+                              updateLevelIndex(newIndex);
+                            },
                           ),
                         ],
                       ),
@@ -388,8 +404,17 @@ class _TaskListScreenState extends State<TaskListScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           NumberUpButton(
-                              levelIndex: levelSelectedIndex,
-                              onIndexChange: updateLevelIndex),
+                            levelIndex: levelSelectedIndex,
+                            onIndexChange: (newIndex) {
+                              analytics.log("tap", {
+                                "tapped": "Plus button",
+                                "where": "selection screen bottombar",
+                                "purpose": "increase selected level",
+                                "info": "new level: $newIndex",
+                              });
+                              updateLevelIndex(newIndex);
+                            },
+                          ),
                           Expanded(
                             // For narrower devices
                             child: Align(
@@ -425,8 +450,6 @@ class _TaskListScreenState extends State<TaskListScreen> {
   /// Updates the index with refreshing the build
   updateLevelIndex(newLevelIndex) => setState(() {
         levelSelectedIndex = newLevelIndex;
-        // TODO change log info
-        analytics.log("event_name", {'levelIndex': newLevelIndex});
       });
 
   void showShareDialog(
