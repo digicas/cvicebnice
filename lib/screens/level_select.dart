@@ -83,8 +83,7 @@ class _LevelSelectState extends State<LevelSelect> {
                   setState(() {
                     if (schoolYear.toInt() != newValue.toInt())
                       levelIndex = widget.onSchoolClassToLevelIndex(
-                          schoolYear.toInt(), schoolMonth.toInt());
-
+                          newValue.toInt(), schoolMonth.toInt());
                     schoolYear = newValue;
                   });
                 },
@@ -108,7 +107,7 @@ class _LevelSelectState extends State<LevelSelect> {
                   setState(() {
                     if (schoolMonth.toInt() != newValue.toInt())
                       levelIndex = widget.onSchoolClassToLevelIndex(
-                          schoolYear.toInt(), schoolMonth.toInt());
+                          schoolYear.toInt(), newValue.toInt());
                     schoolMonth = newValue;
                   });
                 },
