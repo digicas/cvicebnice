@@ -81,9 +81,10 @@ class _LevelSelectState extends State<LevelSelect> {
                 value: schoolYear,
                 onChanged: (double newValue) {
                   setState(() {
+                    if (schoolYear.toInt() != newValue.toInt())
+                      levelIndex = widget.onSchoolClassToLevelIndex(
+                          newValue.toInt(), schoolMonth.toInt());
                     schoolYear = newValue;
-                    levelIndex = widget.onSchoolClassToLevelIndex(
-                        schoolYear.toInt(), schoolMonth.toInt());
                   });
                 },
                 min: 1.0,
@@ -104,9 +105,10 @@ class _LevelSelectState extends State<LevelSelect> {
                 value: schoolMonth,
                 onChanged: (double newValue) {
                   setState(() {
+                    if (schoolMonth.toInt() != newValue.toInt())
+                      levelIndex = widget.onSchoolClassToLevelIndex(
+                          schoolYear.toInt(), newValue.toInt());
                     schoolMonth = newValue;
-                    levelIndex = widget.onSchoolClassToLevelIndex(
-                        schoolYear.toInt(), schoolMonth.toInt());
                   });
                 },
                 mapValueToString: (double value) {

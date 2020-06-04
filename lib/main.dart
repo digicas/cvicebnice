@@ -16,12 +16,18 @@ import 'screens/about.dart';
 import 'screens/descriptionpane.dart';
 import 'utils.dart';
 
-void main() => runApp(MyApp());
+import 'services/analytics_service.dart';
+
+void main() {
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of the application.
   @override
   Widget build(BuildContext context) {
+    analytics.setUserProperties({"app_revision": gitInfo.shortSHA});
+
     return MaterialApp(
       debugShowCheckedModeBanner: false, // dev banner on/off
       title: 'EduKids.cz: Matika do kapsy',
@@ -88,6 +94,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
       print(
           "Cannot practise: $levelSelectedIndex for ${tasksRegister[taskSelectedIndex].label}");
     } else {
+      analytics.log("practice_start", {"task": "$levelXid #$levelSelectedIndex"});
       Navigator.push(
         context,
         // Open task screen
@@ -126,6 +133,12 @@ class _TaskListScreenState extends State<TaskListScreen> {
             leading: IconButton(
               icon: Icon(Icons.info_outline),
               onPressed: () {
+                analytics.log("tap", {
+                  "tapped": "Info button",
+                  "where": "selection screen appbar",
+                  "purpose": "show info about app",
+                  "info": "",
+                });
                 buildShowAboutDialog(context);
               },
             ),
@@ -135,6 +148,12 @@ class _TaskListScreenState extends State<TaskListScreen> {
                 icon: FaIcon(FontAwesomeIcons.rocket),
 //                icon: Icon(Icons.launch),
                 onPressed: () {
+                  analytics.log("tap", {
+                    "tapped": "Rocket button",
+                    "where": "selection screen appbar",
+                    "purpose": "open level code dialog",
+                    "info": "",
+                  });
                   showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -157,6 +176,9 @@ class _TaskListScreenState extends State<TaskListScreen> {
                             });
                           }
 
+                          analytics.log("select_content",
+                              {"content_type": "task", "item_id": newXid});
+
                           if (newTaskTypeIndex == -1 || newLevelIndex == -1) {
                             print("Show not found dialog");
                             showDialog(
@@ -178,6 +200,12 @@ class _TaskListScreenState extends State<TaskListScreen> {
                 icon: FaIcon(FontAwesomeIcons.chalkboardTeacher),
                 onPressed: () {
                   setState(() {
+                    analytics.log("tap", {
+                      "tapped": "Teacher button",
+                      "where": "selection screen appbar",
+                      "purpose": "show/hide preview pane",
+                      "info": descriptionPaneVisible ? "hide" : "show",
+                    });
                     descriptionPaneVisible = !descriptionPaneVisible;
                   });
                 },
@@ -200,6 +228,12 @@ class _TaskListScreenState extends State<TaskListScreen> {
                   widthFactor: 0.4,
                   child: InkWell(
                     onTap: () {
+                      analytics.log("tap", {
+                        "tapped": "Logo",
+                        "where": "selection screen",
+                        "purpose": "show info about app",
+                        "info": "",
+                      });
                       buildShowAboutDialog(context);
                     },
                     child: Image.asset("assets/edukids_logo.png",
@@ -268,6 +302,10 @@ class _TaskListScreenState extends State<TaskListScreen> {
                       ),
                     ),
                     onPressed: (int index) {
+                      analytics.log("select_content", {
+                        "content_type": "task_type",
+                        "item_id": tasksRegister[index].label
+                      });
                       setState(() {
                         taskSelectedIndex = index;
                       });
@@ -282,7 +320,11 @@ class _TaskListScreenState extends State<TaskListScreen> {
                     var newIndex = tasksRegister[taskSelectedIndex]
                         .onSchoolClassToLevelIndex(
                             schoolYear.toInt(), schoolMonth.toInt());
-
+                    analytics.log("select_content", {
+                      "content_type": "year_month",
+                      "item_id":
+                          "${schoolYear.toInt()} - ${schoolMonth.toInt()}"
+                    });
                     setState(() {
                       levelSelectedIndex = newIndex;
                     });
@@ -366,11 +408,26 @@ class _TaskListScreenState extends State<TaskListScreen> {
                         children: [
                           NumberDialogButton(
                             levelIndex: levelSelectedIndex,
-                            onIndexChange: updateLevelIndex,
+                            onIndexChange: (newIndex) {
+                              analytics.log("select_content", {
+                                "content_type": "task_level",
+                                "item_id": "#${levelXid.substring(0, 3)}: $newIndex"
+                              });
+                              updateLevelIndex(newIndex);
+                            },
                           ),
                           NumberDownButton(
                             levelIndex: levelSelectedIndex,
-                            onIndexChange: updateLevelIndex,
+                            onIndexChange: (newIndex) {
+                              analytics.log("tap", {
+                                "tapped": "Minus button",
+                                "where": "selection screen bottombar",
+                                "purpose": "decrease selected level",
+                                "info":
+                                    "new level for #${levelXid.substring(0, 3)}: $newIndex",
+                              });
+                              updateLevelIndex(newIndex);
+                            },
                           ),
                         ],
                       ),
@@ -384,8 +441,18 @@ class _TaskListScreenState extends State<TaskListScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           NumberUpButton(
-                              levelIndex: levelSelectedIndex,
-                              onIndexChange: updateLevelIndex),
+                            levelIndex: levelSelectedIndex,
+                            onIndexChange: (newIndex) {
+                              analytics.log("tap", {
+                                "tapped": "Plus button",
+                                "where": "selection screen bottombar",
+                                "purpose": "increase selected level",
+                                "info":
+                                    "new level for #${levelXid.substring(0, 3)}: $newIndex",
+                              });
+                              updateLevelIndex(newIndex);
+                            },
+                          ),
                           Expanded(
                             // For narrower devices
                             child: Align(
@@ -426,6 +493,8 @@ class _TaskListScreenState extends State<TaskListScreen> {
   void showShareDialog(
     BuildContext context,
   ) {
+    analytics.log("share", {"content_type": "task", "item_id": levelXid});
+
     String text = "https://matikadokapsy.edukids.cz : "
         "${tasksRegister[taskSelectedIndex].label} #$levelSelectedIndex -> "
         "Kód úlohy: # $levelXid #";
