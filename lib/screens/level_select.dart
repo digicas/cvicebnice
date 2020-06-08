@@ -1,3 +1,4 @@
+import 'package:cvicebnice/services/analytics_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../widgets/fluid_slider.dart';
@@ -42,7 +43,7 @@ class LevelSelect extends StatefulWidget {
 }
 
 class _LevelSelectState extends State<LevelSelect> {
-  double schoolYear = 1;
+  int schoolYear = 1;
   double schoolMonth = 0;
   int levelIndex = 0;
 
@@ -76,20 +77,31 @@ class _LevelSelectState extends State<LevelSelect> {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
-              child: FluidSlider(
-                sliderColor: Color(0xff2ba06b),
-                value: schoolYear,
-                onChanged: (double newValue) {
+              child:
+              ToggleButtons(
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+                constraints:  BoxConstraints(minWidth: 48.0, minHeight: 48.0),
+                textStyle: TextStyle(fontSize: 24),
+                children: List.generate(5, (i) => Text("${i+1}")),
+
+                onPressed: (index) {
                   setState(() {
-                    if (schoolYear.toInt() != newValue.toInt())
+                    var newSchoolYear = index + 1;
+                    if (schoolYear != newSchoolYear)
                       levelIndex = widget.onSchoolClassToLevelIndex(
-                          newValue.toInt(), schoolMonth.toInt());
-                    schoolYear = newValue;
+                          newSchoolYear, schoolMonth.toInt());
+                    schoolYear = newSchoolYear;
                   });
+                  analytics.log("tap", {
+                    "tapped": "YearSelection",
+                    "where": "selection screen",
+                    "purpose": "Select year difficulty",
+                    "info": "#${index+1}",
+                  });
+
                 },
-                min: 1.0,
-                max: 5.0,
-              ),
+                isSelected: List.generate(5, (i) => (i == schoolYear-1)),
+              )
             ),
             Container(
               height: 24,

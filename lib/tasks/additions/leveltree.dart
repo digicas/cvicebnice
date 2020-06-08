@@ -3,6 +3,7 @@
 //
 
 import 'dart:core';
+import 'dart:math';
 import 'package:flutter/foundation.dart';
 
 import '../core/level.dart';
@@ -169,6 +170,25 @@ class LevelTree extends LevelTreeBlueprint {
     }
     assert(result.isNotEmpty,
         "Level $levelIndex does not have class/month assigned.");
+    return result;
+  }
+
+
+  /// Returns the List of List<int> schoolClass based on the given index
+  /// or of the closest lower possible index, if the given index is not found
+  /// in the mapping table
+  static List<int> getSchoolClasses(int levelIndex) {
+    var result = List<int>();
+
+    for (int yIndex = 0; yIndex < schoolClassToLevelMap.length; yIndex++) {
+      var y = schoolClassToLevelMap[yIndex];
+      var yMin = y.reduce(min);
+      var yMax = y.reduce(max);
+
+      if ((yMin <= levelIndex) & (levelIndex <= yMax)) result.add(yIndex);
+    }
+
+    assert(result.isNotEmpty, "Level $levelIndex does not have class assigned.");
     return result;
   }
 

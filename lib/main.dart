@@ -319,11 +319,11 @@ class _TaskListScreenState extends State<TaskListScreen> {
                   onSchoolClassToLevelIndex: (schoolYear, schoolMonth) {
                     var newIndex = tasksRegister[taskSelectedIndex]
                         .onSchoolClassToLevelIndex(
-                            schoolYear.toInt(), schoolMonth.toInt());
+                            schoolYear, schoolMonth.toInt());
                     analytics.log("select_content", {
                       "content_type": "year_month",
                       "item_id":
-                          "${schoolYear.toInt()} - ${schoolMonth.toInt()}"
+                          "$schoolYear - ${schoolMonth.toInt()}"
                     });
                     setState(() {
                       levelSelectedIndex = newIndex;
