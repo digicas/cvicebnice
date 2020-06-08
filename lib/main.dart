@@ -68,6 +68,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
   /// Currently selected xid of the particular task level
   String levelXid;
 
+  /// Indicator for the visibility of description pane in bottom appbar
   bool descriptionPaneVisible = false;
 
   GlobalKey<ScaffoldState> globalTaskListScaffoldKey =
@@ -94,7 +95,8 @@ class _TaskListScreenState extends State<TaskListScreen> {
       print(
           "Cannot practise: $levelSelectedIndex for ${tasksRegister[taskSelectedIndex].label}");
     } else {
-      analytics.log("practice_start", {"task": "$levelXid #$levelSelectedIndex"});
+      analytics
+          .log("practice_start", {"task": "$levelXid #$levelSelectedIndex"});
       Navigator.push(
         context,
         // Open task screen
@@ -411,7 +413,8 @@ class _TaskListScreenState extends State<TaskListScreen> {
                             onIndexChange: (newIndex) {
                               analytics.log("select_content", {
                                 "content_type": "task_level",
-                                "item_id": "#${levelXid.substring(0, 3)}: $newIndex"
+                                "item_id":
+                                    "#${levelXid.substring(0, 3)}: $newIndex"
                               });
                               updateLevelIndex(newIndex);
                             },
@@ -470,9 +473,21 @@ class _TaskListScreenState extends State<TaskListScreen> {
                 ),
                 Expanded(
                   child: DescriptionPane(
-                      taskSelectedIndex: taskSelectedIndex,
-                      levelSelectedIndex: levelSelectedIndex,
-                      canPlayLevel: canPlayLevel),
+                    taskSelectedIndex: taskSelectedIndex,
+                    levelSelectedIndex: levelSelectedIndex,
+                    canPlayLevel: canPlayLevel,
+                    onHideDescriptionPane: () {
+                      setState(() {
+                        analytics.log("tap", {
+                          "tapped": "Preview pane #ddrag",
+                          "where": "selection bottombar",
+                          "purpose": "hide preview pane",
+                          "info": "drag down to hide",
+                        });
+                        descriptionPaneVisible = false;
+                      });
+                    },
+                  ),
                 ),
               ],
             ),

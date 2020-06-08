@@ -12,11 +12,20 @@ class DescriptionPane extends StatelessWidget {
     @required this.taskSelectedIndex,
     @required this.levelSelectedIndex,
     @required this.canPlayLevel,
+    @required this.onHideDescriptionPane,
   }) : super(key: key);
 
+  /// Currently selected task type index (for labels, etc.)
   final int taskSelectedIndex;
+
+  /// Currently selected level index (for description, etc.)
   final int levelSelectedIndex;
+
+  /// Indicator whether the current level can be practised
   final bool canPlayLevel;
+
+  /// Callback function when drag down is triggered on preview
+  final Function onHideDescriptionPane;
 
   @override
   Widget build(BuildContext context) {
@@ -56,9 +65,11 @@ class DescriptionPane extends StatelessWidget {
                             .getLevelDescription(levelSelectedIndex),
                         style: TextStyle(color: Colors.white)),
                     Divider(),
-                    Text(canPlayLevel ?
-                        tasksRegister[taskSelectedIndex]
-                            .getLevelSuitability(levelSelectedIndex) : "",
+                    Text(
+                        canPlayLevel
+                            ? tasksRegister[taskSelectedIndex]
+                                .getLevelSuitability(levelSelectedIndex)
+                            : "",
                         style: TextStyle(color: Colors.white)),
                   ],
                 ),
@@ -67,13 +78,16 @@ class DescriptionPane extends StatelessWidget {
           ),
           SizedBox(width: 12),
           SingleChildScrollView(
-            child: Container(
-              width: 150,
-              height: 200,
-              color: Color(0xb0ECE6E9),
-              child: Center(
-                child: tasksRegister[taskSelectedIndex]
-                    .getLevelPreview(levelSelectedIndex),
+            child: GestureDetector(
+              onVerticalDragEnd: (_) => onHideDescriptionPane(),
+              child: Container(
+                width: 150,
+                height: 200,
+                color: Color(0xb0ECE6E9),
+                child: Center(
+                  child: tasksRegister[taskSelectedIndex]
+                      .getLevelPreview(levelSelectedIndex),
+                ),
               ),
             ),
           ),
