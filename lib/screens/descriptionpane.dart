@@ -79,6 +79,7 @@ class DescriptionPane extends StatelessWidget {
           SizedBox(width: 12),
           SingleChildScrollView(
             child: GestureDetector(
+              onTap: () {}, // must be defined, otherwise onVerticalDragEnd is fired
               onVerticalDragEnd: (_) => onHideDescriptionPane(),
               child: Container(
                 width: 150,

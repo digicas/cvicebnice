@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'screen.dart';
 import 'triangle_levels.dart';
 
+export 'preview.dart'; // for getLevelPreview()
+
 /// Returns the number of implemented levels
 int levelsCount() {
   return LevelTree.levels.length;

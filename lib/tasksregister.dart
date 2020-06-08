@@ -136,15 +136,17 @@ extension TaskRegister<TasksRegisterItem> on List<TasksRegisterItem> {
 /// Register of Tasks (environments) for selection on the selection / main screens
 final List<TasksRegisterItem> tasksRegister = [
   TasksRegisterItem(
-      xid: "prm",
-      imageAssetName: "assets/menu_pyramid.png",
-      label: "Pyramidy",
-      isLevelImplemented: pyramidsAndFunnels.isLevelImplemented,
-      onOpenTaskScreen: pyramidsAndFunnels.openPyramidsTaskScreen,
-      onSchoolClassToLevelIndex: pyramidsAndFunnels.schoolClassToLevelIndex,
-      onLevelsCount: pyramidsAndFunnels.levelsCount,
-      onMasksCount: pyramidsAndFunnels.masksCount,
-      onQuestionsCount: pyramidsAndFunnels.questionsCount),
+    xid: "prm",
+    imageAssetName: "assets/menu_pyramid.png",
+    label: "Pyramidy",
+    isLevelImplemented: pyramidsAndFunnels.isLevelImplemented,
+    onOpenTaskScreen: pyramidsAndFunnels.openPyramidsTaskScreen,
+    onSchoolClassToLevelIndex: pyramidsAndFunnels.schoolClassToLevelIndex,
+    onLevelsCount: pyramidsAndFunnels.levelsCount,
+    onMasksCount: pyramidsAndFunnels.masksCount,
+    onQuestionsCount: pyramidsAndFunnels.questionsCount,
+    getLevelPreview: pyramidsAndFunnels.getLevelPreviewPyramid,
+  ),
   TasksRegisterItem(
       xid: "fnl",
       imageAssetName: "assets/menu_funnel.png",
