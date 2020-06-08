@@ -1,7 +1,6 @@
 import 'package:cvicebnice/services/analytics_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../widgets/fluid_slider.dart';
 
 final List<String> schoolMonths = [
   "Září",
@@ -43,7 +42,10 @@ class LevelSelect extends StatefulWidget {
 }
 
 class _LevelSelectState extends State<LevelSelect> {
+  /// 1..5
   int schoolYear = 1;
+
+  /// 0..9
   double schoolMonth = 0;
   int levelIndex = 0;
 
@@ -51,6 +53,8 @@ class _LevelSelectState extends State<LevelSelect> {
 
   @override
   void initState() {
+    int currentMonth = (DateTime.now().month +3).remainder(12);
+    schoolMonth = currentMonth.clamp(0, 9).toDouble();
     levelFieldController = TextEditingController();
     super.initState();
   }
@@ -76,33 +80,29 @@ class _LevelSelectState extends State<LevelSelect> {
                   style: Theme.of(context).textTheme.headline6),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
-              child:
-              ToggleButtons(
-                borderRadius: BorderRadius.all(Radius.circular(8)),
-                constraints:  BoxConstraints(minWidth: 48.0, minHeight: 48.0),
-                textStyle: TextStyle(fontSize: 24),
-                children: List.generate(5, (i) => Text("${i+1}")),
-
-                onPressed: (index) {
-                  setState(() {
-                    var newSchoolYear = index + 1;
-                    if (schoolYear != newSchoolYear)
-                      levelIndex = widget.onSchoolClassToLevelIndex(
-                          newSchoolYear, schoolMonth.toInt());
-                    schoolYear = newSchoolYear;
-                  });
-                  analytics.log("tap", {
-                    "tapped": "YearSelection",
-                    "where": "selection screen",
-                    "purpose": "Select year difficulty",
-                    "info": "#${index+1}",
-                  });
-
-                },
-                isSelected: List.generate(5, (i) => (i == schoolYear-1)),
-              )
-            ),
+                padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
+                child: ToggleButtons(
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                  constraints: BoxConstraints(minWidth: 48.0, minHeight: 48.0),
+                  textStyle: TextStyle(fontSize: 24),
+                  children: List.generate(5, (i) => Text("${i + 1}")),
+                  onPressed: (index) {
+                    setState(() {
+                      var newSchoolYear = index + 1;
+                      if (schoolYear != newSchoolYear)
+                        levelIndex = widget.onSchoolClassToLevelIndex(
+                            newSchoolYear, schoolMonth.toInt());
+                      schoolYear = newSchoolYear;
+                    });
+                    analytics.log("tap", {
+                      "tapped": "YearSelection",
+                      "where": "selection screen",
+                      "purpose": "Select year difficulty",
+                      "info": "#${index + 1}",
+                    });
+                  },
+                  isSelected: List.generate(5, (i) => (i == schoolYear - 1)),
+                )),
             Container(
               height: 24,
             ),
@@ -110,116 +110,56 @@ class _LevelSelectState extends State<LevelSelect> {
               title: Text("Měsíc ve školním roce",
                   style: Theme.of(context).textTheme.headline6),
             ),
+
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
-              child: FluidSlider(
-                sliderColor: Color(0xff2ba06b),
-                value: schoolMonth,
-                onChanged: (double newValue) {
-                  setState(() {
-                    if (schoolMonth.toInt() != newValue.toInt())
-                      levelIndex = widget.onSchoolClassToLevelIndex(
-                          schoolYear.toInt(), newValue.toInt());
-                    schoolMonth = newValue;
-                  });
-                },
-                mapValueToString: (double value) {
-                  return schoolMonths[value.toInt()];
-                },
-                min: 0.0,
-                max: 9.0,
-                start: Text(schoolMonths.first,
-                    style: _fluidSliderTextStyle(context)),
-                end: Text(schoolMonths.last,
-                    style: _fluidSliderTextStyle(context)),
-                valueTextStyle: Theme.of(context)
-                    .textTheme
-                    .bodyText2
-                    .copyWith(fontSize: 13),
+//              padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
+              padding: const EdgeInsets.fromLTRB(0,0,16,0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: SliderTheme(
+                      data: SliderThemeData(
+//                  showValueIndicator: ShowValueIndicator.never,
+                      ),
+                      child: Slider(
+                        min: 0,
+                        max: 9,
+                        divisions: 9,
+                        label: schoolMonths[schoolMonth.toInt()],
+                        value: schoolMonth,
+                        onChanged: (newValue) {
+                          setState(() {
+                            if (schoolMonth.toInt() != newValue.toInt())
+                              levelIndex = widget.onSchoolClassToLevelIndex(
+                                  schoolYear.toInt(), newValue.toInt());
+                            schoolMonth = newValue;
+                          });
+                          analytics.log("tap", {
+                            "tapped": "MonthSelection",
+                            "where": "selection screen",
+                            "purpose": "Select month difficulty",
+                            "info": "#$newValue",
+                          });
+
+                        },
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 64,
+                      child: Text(schoolMonths[schoolMonth.toInt()])),
+                ],
               ),
             ),
-//            Container(
-//              height: 24,
-//            ),
-//            ListTile(
-//              contentPadding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-//              leading: widget.onCheckLevelExists(levelIndex)
-//                  ? Icon(Icons.assignment_turned_in)
-//                  : Icon(Icons.block),
-//              title:
-//                  Text("Úroveň:", style: Theme.of(context).textTheme.headline6),
-////              trailing: Text("$levelIndex", style: Theme.of(context).textTheme.title),
-//              trailing: Row(
-//                mainAxisSize: MainAxisSize.min,
-//                children: <Widget>[
-//                  IconButton(
-//                    icon: Icon(Icons.remove_circle_outline),
-//                    color: Color(0xff2ba06b),
-//                    onPressed: () {
-//                      setState(() {
-//                        if (levelIndex > 0) levelIndex--;
-//                      });
-//                    },
-//                  ),
-//                  SizedBox(
-//                    width: 48,
-//                    child: Text(levelIndex.toString(),
-//                        textAlign: TextAlign.center,
-//                        style: Theme.of(context).textTheme.headline6),
-//
-////                    child: TextField(
-////                      style: Theme.of(context).textTheme.title,
-////                      textAlign: TextAlign.end,
-////                      controller: levelFieldController,
-////                      keyboardType: TextInputType.number,
-////                      onSubmitted: (text) {
-////                        setState(() {
-////                          levelIndex = int.parse(text);
-////                        });
-////                      },
-////                    ),
-//                  ),
-//                  IconButton(
-//                    icon: Icon(Icons.add_circle_outline),
-//                    color: Color(0xff2ba06b),
-//                    onPressed: () {
-//                      setState(() {
-//                        levelIndex++;
-//                      });
-//                    },
-//                  ),
-//                ],
-//              ),
-//            ),
-//            Container(
-//              height: 24,
-//            ),
-//            SizedBox(
-//              height: 62,
-////              width: 180,
-//              child: RaisedButton.icon(
-//                icon: Icon(
-//                  Icons.play_circle_outline,
-//                  size: 40,
-//                ),
-////                color: Colors.blue,
-//                onPressed: widget.onCheckLevelExists(levelIndex)
-//                    ? () {
-//                        widget.onPlay(levelIndex);
-//                      }
-//                    : null,
-//                label: Text("Procvičit", style: TextStyle(fontSize: 28)),
-//              ),
-//            ),
             Container(
-              height: 32,
+              height: 96,
             ),
+
           ]),
     );
   }
 
-  TextStyle _fluidSliderTextStyle(BuildContext context) =>
-      Theme.of(context).accentTextTheme.subtitle2;
 }
 
 /// Row enabling choosing the level: (-) 789 (+)
@@ -306,7 +246,7 @@ Future enterNumberDialog(BuildContext context, Function onIndexChange) {
       });
 }
 
-/// Widget to render the level number and open the Dialod for entering the new one
+/// Widget to render the level number and open the Dialog for entering the new one
 class NumberDialogButton extends StatelessWidget {
   const NumberDialogButton({
     Key key,
