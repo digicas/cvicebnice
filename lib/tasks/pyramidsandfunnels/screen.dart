@@ -442,8 +442,9 @@ class PyramidPainter extends CustomPainter {
 /// Background painting for Funnel
 class FunnelPainter extends CustomPainter {
   Paint _paint;
+  final double factor;
 
-  FunnelPainter() {
+  FunnelPainter({this.factor = 1}) {
     _paint = Paint()
       ..color = Color(0xff829c4d)
       ..style = PaintingStyle.fill;
@@ -452,12 +453,12 @@ class FunnelPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     var path = Path()
-      ..moveTo(-20, 8)
-      ..lineTo(size.width + 20, 8)
-      ..lineTo(size.width / 2 + 30, size.height - 5)
-      ..lineTo(size.width / 2 + 30, size.height + 68)
-      ..lineTo(size.width / 2 - 30, size.height + 48)
-      ..lineTo(size.width / 2 - 30, size.height - 5 )
+      ..moveTo(-20*factor, 8*factor)
+      ..lineTo(size.width + 20*factor, 8*factor)
+      ..lineTo(size.width / 2 + 30*factor, size.height - 5*factor)
+      ..lineTo(size.width / 2 + 30*factor, size.height + 68*factor)
+      ..lineTo(size.width / 2 - 30*factor, size.height + 48*factor)
+      ..lineTo(size.width / 2 - 30*factor, size.height - 5*factor )
       ..close();
 
     canvas.drawPath(path, _paint);
