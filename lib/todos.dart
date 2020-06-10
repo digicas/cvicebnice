@@ -2,7 +2,7 @@
 
 // TODO fix keyboard error - potom, co je aktivovana custom keyboard nejde pak pustit normalni
 
-// TODO fix web version does not refresh on iphone Safari
+// DONE fix web version does not refresh on iphone Safari
 
 // DONE fix/refactor year / month selection
 
