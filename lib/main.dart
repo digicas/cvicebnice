@@ -17,6 +17,7 @@ import 'screens/descriptionpane.dart';
 import 'utils.dart';
 
 import 'services/analytics_service.dart';
+import 'services/version_service.dart';
 
 void main() {
   runApp(MyApp());
@@ -262,9 +263,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
                     padding: const EdgeInsets.fromLTRB(4, 0, 0, 8),
                     child: InkWell(
                       onTap: () {
-                        // try to update the screen / page if on web to get the updated version
-                        Navigator.of(context)
-                            .pushNamedAndRemoveUntil("/", (route) => false);
+                        versionService.upgrade();
                       },
                       child: Container(
                         width: 24,
