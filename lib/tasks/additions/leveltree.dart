@@ -126,7 +126,7 @@ class LevelTree extends LevelTreeBlueprint {
     assert(schoolClass > -1); // 0 schoolClass is tutorial
     assert(monthInSchool > -1 && monthInSchool < 10); // 0..Sept, 9..June
     schoolClass =
-        (schoolClass > 5) ? 5 : schoolClass; // highest defined schoolClass
+    (schoolClass > 5) ? 5 : schoolClass; // highest defined schoolClass
 
     return schoolClassToLevelMap[schoolClass][monthInSchool];
   }
@@ -169,7 +169,7 @@ class LevelTree extends LevelTreeBlueprint {
       li--;
     }
     assert(result.isNotEmpty,
-        "Level $levelIndex does not have class/month assigned.");
+    "Level $levelIndex does not have class/month assigned.");
     return result;
   }
 
@@ -188,7 +188,8 @@ class LevelTree extends LevelTreeBlueprint {
       if ((yMin <= levelIndex) & (levelIndex <= yMax)) result.add(yIndex);
     }
 
-    assert(result.isNotEmpty, "Level $levelIndex does not have class assigned.");
+    assert(result
+        .isNotEmpty, "Level $levelIndex does not have class assigned.");
     return result;
   }
 
@@ -802,7 +803,7 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["x+Y=z"],
         valueRange: [0, 20],
         description:
-        "Sčítání s přechodem přes desítku, kde je součet 16, 17, 18.",
+        "Sčítání s přechodem přes desítku, kde je součet 16/17/18.",
         example: "9 + ? = 17",
       ),
 
@@ -877,8 +878,9 @@ class LevelTree extends LevelTreeBlueprint {
             xywSet = [x, y, w].toSet();
             if (xywSet.length == 2) {
               // check that if two same numbers => must be > 3
-              var check = [x,y,w];
-              for (var e in xywSet) check.remove(e);
+              var check = [x, y, w];
+              for (var e in xywSet)
+                check.remove(e);
               if (check[0] < 4) again = true;
             }
           } while (again | (xywSet.length < 2));
@@ -1150,11 +1152,11 @@ class LevelTree extends LevelTreeBlueprint {
         index: 69,
         xid: "cxi",
         onGenerate: () {
-          var ajk = getLevelByXid("ajk").onGenerate();
-          var evc = getLevelByXid("evc").onGenerate();
-          var czx = getLevelByXid("czx").onGenerate();
+          int z = randomMinMax(35, 99);
+          int y = randomMinMax(1, 9);
+          int x = z - y;
 
-          return [ajk, evc, czx][random(2)];
+          return [[x, y, z], [y, x, z]][random(1)];
         },
         masks: ["x+Y=z", "X+y=z", "x+y=Z"],
         valueRange: [0, 100],
@@ -1214,7 +1216,7 @@ class LevelTree extends LevelTreeBlueprint {
         index: 74,
         xid: "fhe",
         onGenerate: () {
-          int zt = randomMinMax(3, 10);
+          int zt = randomMinMax(4, 10);
           int xt = randomMinMax(1, zt - 2);
           int xo = randomMinMax(1, 9);
           int y = zt * 10 - xt * 10 - xo;
@@ -1258,7 +1260,7 @@ class LevelTree extends LevelTreeBlueprint {
         index: 78,
         xid: "eyf",
         onGenerate: () {
-          int zt = randomMinMax(3, 9);
+          int zt = randomMinMax(4, 9);
           int zo = randomMinMax(1, 8);
           int xt = randomMinMax(1, zt - 2);
           int xo = randomMinMax(zo + 1, 9);
@@ -1304,10 +1306,13 @@ class LevelTree extends LevelTreeBlueprint {
         index: 82,
         xid: "bxj",
         onGenerate: () {
+          int a,b,c;
           int z = randomMinMax(5, 10) * 10;
-          int a = randomMinMax(1, z ~/ 10 - 3) * 10 + randomMinMax(1, 9);
-          int b = randomMinMax(11, z - a - 11);
-          int c = z - (a + b);
+          do {
+            a = randomMinMax(1, z ~/ 10 - 3) * 10 + randomMinMax(1, 9);
+            b = randomMinMax(11, z - a - 11);
+            c = z - (a + b);
+          } while ((b.remainder(10)==0) || (c.remainder(10)==0));
           return [
             [a, b, c, z],
             [b, c, a, z],
@@ -1317,22 +1322,21 @@ class LevelTree extends LevelTreeBlueprint {
         masks: ["x+y+w=ZZ"],
         valueRange: [0, 100],
         description:
-        "Obor 0-100\nSčítání více dvojciferných čísel.",
+        "Obor 0-100\nSoučet tří dvojciferných čísel s přechodem přes desítku.",
         example: "47 + 18 + 26 = ?",
       ),
       Level(
         index: 83,
         xid: "cpr",
         onGenerate: () {
-          var cno = getLevelByXid("cno").onGenerate();
-          var fhe = getLevelByXid("fhe").onGenerate();
-          var eyf = getLevelByXid("eyf").onGenerate();
-
-          return [cno, fhe, eyf][random(2)];
+          int z = randomMinMax(40, 84);
+          int x = randomMinMax(11, z - 12);
+          int y = z - x;
+          return [[x,y,z],[y,x,z]][random(1)];
         },
         masks: ["x+Y=z", "X+y=z", "x+y=Z"],
         valueRange: [0, 100],
-        description: "Obor: 0 - 100\nOba sčítance jsou dvojciferné číslo, MIX výsledky.",
+        description: "Obor: 0 - 100\nSoučet libovolných dvou dvojciferných čísel..",
         example: "mix",
       ),
 
@@ -1346,7 +1350,7 @@ class LevelTree extends LevelTreeBlueprint {
         },
         masks: ["x+Y=z"],
         valueRange: [0, 1000],
-        description: "Obor: 0 - 1000\nDopočítává se trojciferné číslo do 1000.",
+        description: "Obor: 0 - 1000\nRozklad 1000. První sčítanec je trojciferné číslo dělitelné deseti.",
         example: "570 + ? = 1000",
       ),
       Level(
@@ -1363,7 +1367,7 @@ class LevelTree extends LevelTreeBlueprint {
         },
         masks: ["x+y=Z"],
         valueRange: [0, 1000],
-        description: "Obor: 0 - 1000\nOba sčítance jsou trojciferná čísla dělitelná 100.",
+        description: "Obor: 0 - 1000\nSoučet dvou trojciferných čísel dělitelných 100.",
         example: "500 + 200 = ?",
       ),
       Level(
@@ -1372,7 +1376,7 @@ class LevelTree extends LevelTreeBlueprint {
         onGenerate: () => getLevelByXid("buf").onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 1000],
-        description: "Obor: 0 - 1000\nOba sčítance jsou trojciferná čísla dělitelná 100.",
+        description: "Obor: 0 - 1000\nSoučet dvou trojciferných čísel dělitelných 100.",
         example: "500 + ? = 700",
       ),
       Level(
@@ -1381,7 +1385,7 @@ class LevelTree extends LevelTreeBlueprint {
         onGenerate: () => getLevelByXid("buf").onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 1000],
-        description: "Obor: 0 - 1000\nOba sčítance jsou trojciferná čísla dělitelná 100.",
+        description: "Obor: 0 - 1000\nSoučet dvou trojciferných čísel dělitelných 100.",
         example: "? + 400 = 700",
       ),
       Level(
@@ -1394,7 +1398,7 @@ class LevelTree extends LevelTreeBlueprint {
         },
         masks: ["x+y=Z"],
         valueRange: [0, 1000],
-        description: "Obor: 0 - 1000\n1. sčítanec je trojciferné číslo dělitelné 100, 2. je jedno až dvojciferné.",
+        description: "Obor: 0 - 1000\nSoučet trojciferného čísla dělitelného 100 a jedno/ dvojciferného čísla.",
         example: "500 + 27 = ?",
       ),
       Level(
@@ -1403,7 +1407,7 @@ class LevelTree extends LevelTreeBlueprint {
         onGenerate: () => getLevelByXid("fmc").onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 1000],
-        description: "Obor: 0 - 1000\n1. sčítanec je trojciferné číslo dělitelné 100, 2. je jedno až dvojciferné.",
+        description: "Obor: 0 - 1000\nSoučet trojciferného čísla dělitelného 100 a jedno/ dvojciferného čísla.",
         example: "500 + ? = 543",
       ),
 
@@ -1415,7 +1419,7 @@ class LevelTree extends LevelTreeBlueprint {
         onGenerate: () => getLevelByXid("fmc").onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 1000],
-        description: "Obor: 0 - 1000\n1. sčítanec je trojciferné číslo dělitelné 100, 2. je jedno až dvojciferné.",
+        description: "Obor: 0 - 1000\nSoučet trojciferného čísla dělitelného 100 a jedno/ dvojciferného čísla.",
         example: "? + 43 = 543",
       ),
 
@@ -1425,7 +1429,7 @@ class LevelTree extends LevelTreeBlueprint {
         onGenerate: () => getLevelByXid("fmc").onGenerate(),
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 1000],
-        description: "Obor: 0 - 1000\n1. sčítanec je trojciferné číslo dělitelné 100, 2. je jedno až dvojciferné.",
+        description: "Obor: 0 - 1000\nSoučet trojciferného čísla dělitelného 100 a jedno/ dvojciferného čísla.",
         example: "500 + ? = 543, nebo ? + 78 = 678",
       ),
       Level(
@@ -1441,7 +1445,7 @@ class LevelTree extends LevelTreeBlueprint {
         },
         masks: ["x+y=Z"],
         valueRange: [0, 1000],
-        description: "Obor: 0 - 1000\n1. sčítanec je trojciferné číslo, 2. je jedno až dvojciferné dělitelné 10.",
+        description: "Obor: 0 - 1000\nSoučet trojciferného čísla a čísla jedno/dvojciferného dělitelného 10 bez přechodu řádu stovek.",
         example: "725 + 9 = ?, resp. 631 + 20 = ?",
       ),
       Level(
@@ -1450,7 +1454,7 @@ class LevelTree extends LevelTreeBlueprint {
         onGenerate: () => getLevelByXid("dcb").onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 1000],
-        description: "Obor: 0 - 1000\n1. sčítanec je trojciferné číslo, 2. je jedno až dvojciferné dělitelné 10.",
+        description: "Obor: 0 - 1000\nSoučet trojciferného čísla a čísla jedno/dvojciferného dělitelného 10 bez přechodu řádu stovek.",
         example: "725 + ? = 731, resp. 631 + ? = 661",
       ),
       Level(
@@ -1459,7 +1463,7 @@ class LevelTree extends LevelTreeBlueprint {
         onGenerate: () => getLevelByXid("dcb").onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 1000],
-        description: "Obor: 0 - 1000\n1. sčítanec je trojciferné číslo, 2. je jedno až dvojciferné dělitelné 10.",
+        description: "Obor: 0 - 1000\nSoučet trojciferného čísla a čísla jedno/dvojciferného dělitelného 10 bez přechodu řádu stovek.",
         example: "? + 8 = 731, resp. ? + 30 = 661",
       ),
       Level(
@@ -1468,7 +1472,7 @@ class LevelTree extends LevelTreeBlueprint {
         onGenerate: () => getLevelByXid("dcb").onGenerate(),
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 1000],
-        description: "Obor: 0 - 1000\n1. sčítanec je trojciferné číslo, 2. je jedno až dvojciferné dělitelné 10.",
+        description: "Obor: 0 - 1000\nSoučet trojciferného čísla a čísla jedno/dvojciferného dělitelného 10 bez přechodu řádu stovek.",
         example: "725 + ? = 731, resp. ? + 20 = 661",
       ),
 
