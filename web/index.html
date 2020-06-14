@@ -50,9 +50,11 @@
 <script>
     function upgradeApp() {
     if ('serviceWorker' in navigator) {
-       navigator.serviceWorker.getRegistration().then(swr => {swr.unregister()});
-    }
-    location.reload(true);
+       navigator.serviceWorker.getRegistration().then(swr => {swr.unregister().then(
+         () => {location.reload(true)}
+       )});
+    } else {location.reload(true)}
+
     // window.location.href = window.location.href;
     console.log("reloaded?");}
 </script>
