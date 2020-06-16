@@ -1679,6 +1679,103 @@ class LevelTree extends LevelTreeBlueprint {
         description: "Obor: 0 - 1000\nSoučet trojciferného a jednociferného čísla s přechodem přes řády desítek i stovek.",
         example: "294 + ? = 302, nebo ? + 9 = 305",
       ),
+      Level(
+        index: 113,
+        xid: "ftn",
+        onGenerate: () {
+          int x, xh, xt, xo, y, z;
+
+          xh = randomMinMax(1, 8);
+          xt = randomMinMax(1, 9);
+          xo = randomMinMax(1, 9);
+
+          x = xh * 100 + xt * 10 + xo;
+          y = randomMinMax(10 - xt, 9) * 10;
+          z = x + y;
+
+          return [x, y, z];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nSoučet trojciferného čísla s dvojciferným číslem dělitelným 10 s přechodem přes řád stovek.",
+        example: "467 + 80 = ?",
+      ),
+      Level(
+        index: 114,
+        xid: "bqv",
+        onGenerate: () => getLevelByXid("ftn").onGenerate(),
+        masks: ["x+Y=z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nSoučet trojciferného čísla s dvojciferným číslem dělitelným 10 s přechodem přes řád stovek.",
+        example: "467 + ? = 537",
+      ),
+      Level(
+        index: 115,
+        xid: "ajd",
+        onGenerate: () => getLevelByXid("ftn").onGenerate(),
+        masks: ["X+y=z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nSoučet trojciferného čísla s dvojciferným číslem dělitelným 10 s přechodem přes řád stovek.",
+        example: "? + 60 = 537",
+      ),
+      Level(
+        index: 116,
+        xid: "dum",
+        onGenerate: () => getLevelByXid("ftn").onGenerate(),
+        masks: ["x+Y=z", "X+y=z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nSoučet trojciferného čísla s dvojciferným číslem dělitelným 10 s přechodem přes řád stovek.",
+        example: "467 + ? = 537, nebo ? + 60 = 537",
+      ),
+      Level(
+        index: 117,
+        xid: "adv",
+        onGenerate: () {
+          int x, xh, xt, xo, y, z;
+
+          xh = randomMinMax(1, 8);
+          xt = randomMinMax(1, 9);
+          xo = randomMinMax(1, 9);
+
+          x = xh * 100 + xt * 10 + xo;
+          y = (randomMinMax(10 - xt, 9) * 10) + (randomMinMax(1, 9));
+          z = x + y;
+
+          return [x, y, z];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nSoučet trojciferného čísla s dvojciferným číslem s přechodem přes řád stovek.",
+        example: "467 + 85 = ?",
+      ),
+
+      Level(
+        index: 118,
+        xid: "add",
+        onGenerate: () => getLevelByXid("adv").onGenerate(),
+        masks: ["x+Y=z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nSoučet trojciferného čísla s dvojciferným číslem s přechodem přes řád stovek.",
+        example: "467 + ? = 534",
+      ),
+      Level(
+        index: 119,
+        xid: "abm",
+        onGenerate: () => getLevelByXid("adv").onGenerate(),
+        masks: ["X+y=z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nSoučet trojciferného čísla s dvojciferným číslem s přechodem přes řád stovek.",
+        example: "? + 459 = 534",
+      ),
+      Level(
+        index: 120,
+        xid: "cqm",
+        onGenerate: () => getLevelByXid("adv").onGenerate(),
+        masks: ["x+Y=z", "X+y=z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nSoučet trojciferného čísla s dvojciferným číslem s přechodem přes řád stovek.",
+        example: "467 + ? = 534, nebo ? + 459 = 534",
+      ),
 
 
 // //////////////////////////////////////////////////////////////////// Level 120+
