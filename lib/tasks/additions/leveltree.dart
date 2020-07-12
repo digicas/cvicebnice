@@ -202,8 +202,8 @@ class LevelTree extends LevelTreeBlueprint {
     [ 00,  00,  00,  00,  00,  00,  00,  00,  00,  00], // 0 class => tutorial
     [ 02,  04,  06,  10,  15,  19,  20,  25,  30,  42], // 1st class
     [ 42,  47,  50,  61,  65,  70,  78,  82,  83,  84], // 2nd
-    [ 70,  78,  83,  85,  86,  96, 100, 120, 132, 132], // 3rd
-    [124, 136, 160, 176, 181, 184, 186, 190, 194, 194], // 4th
+    [ 70,  78,  83,  85,  86,  97, 101, 121, 125, 133], // 3rd
+    [125, 137, 161, 177, 182, 185, 187, 191, 195, 195], // 4th
     [191, 195, 195, 195, 198, 198, 198, 198, 198, 198], // 5th
   ]; //@formatter:on
 
@@ -1779,9 +1779,272 @@ class LevelTree extends LevelTreeBlueprint {
 
 
 // //////////////////////////////////////////////////////////////////// Level 120+
+      Level(
+        index: 121,
+        xid: "dpe",
+        onGenerate: () {
+          int x, xh, xt, xo, y, yh, yt, yo, z;
+
+          xh = randomMinMax(1, 8);
+          xt = 0;
+          xo = 0;
+          x = xh * 100 + xt * 10 + xo;
+
+          yh = randomMinMax(1, 9 - xh);
+          yt = randomMinMax(0, 9);
+          yo = randomMinMax(1, 9);
+          y = yh * 100 + yt * 10 + yo;
+
+          z = x + y;
+
+          return [[x, y, z], [y, x, z]][random(1)];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nSoučet dvou trojciferných čísel, kdy jedno z nich je dělitelné 100.",
+        example: "400 + 185 = ?",
+      ),
+
+      Level(
+        index: 122,
+        xid: "axu",
+        onGenerate: () => getLevelByXid("dpe").onGenerate(),
+        masks: ["x+Y=z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nSoučet dvou trojciferných čísel, kdy jedno z nich je dělitelné 100.",
+        example: "134 + ??? = 534",
+      ),
+      Level(
+        index: 123,
+        xid: "cde",
+        onGenerate: () => getLevelByXid("dpe").onGenerate(),
+        masks: ["X+y=z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nSoučet dvou trojciferných čísel, kdy jedno z nich je dělitelné 100.",
+        example: "??? + 400 = 534",
+      ),
+      Level(
+        index: 124,
+        xid: "atu",
+        onGenerate: () => getLevelByXid("dpe").onGenerate(),
+        masks: ["x+Y=z", "X+y=z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nSoučet dvou trojciferných čísel, kdy jedno z nich je dělitelné 100.",
+        example: "400 + ? = 534, nebo ? + 134 = 534",
+      ),
+      Level(
+        index: 125,
+        xid: "edh",
+        onGenerate: () {
+          int x, xh, xt, xo, y, yh, yt, yo, z;
+
+          xh = randomMinMax(1, 8);
+          xt = randomMinMax(0, 9);
+          xo = randomMinMax(0, 9);
+          x = xh * 100 + xt * 10 + xo;
+
+          yh = randomMinMax(1, 8 - xh);
+          yt = randomMinMax(0, 9 - xt);
+          yo = randomMinMax(1, 9 - xo);
+          y = yh * 100 + yt * 10 + yo;
+
+          z = x + y;
+
+          return [[x, y, z], [y, x, z]][random(1)];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nSoučet dvou trojciferných čísel bez přechodu přes řády.",
+        example: "413 + 185 = ?",
+      ),
+      Level(
+        index: 126,
+        xid: "feo",
+        onGenerate: () => getLevelByXid("edh").onGenerate(),
+        masks: ["x+Y=z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nSoučet dvou trojciferných čísel, kdy jedno z nich je dělitelné 100.",
+        example: "212 + ??? = 534",
+      ),
+      Level(
+        index: 127,
+        xid: "ewm",
+        onGenerate: () => getLevelByXid("edh").onGenerate(),
+        masks: ["X+y=z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nSoučet dvou trojciferných čísel, kdy jedno z nich je dělitelné 100.",
+        example: "??? + 212 = 534",
+      ),
+      Level(
+        index: 128,
+        xid: "aeg",
+        onGenerate: () => getLevelByXid("edh").onGenerate(),
+        masks: ["x+Y=z", "X+y=z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nSoučet dvou trojciferných čísel, kdy jedno z nich je dělitelné 100.",
+        example: "412 + ? = 534, nebo ? + 312 = 534",
+      ),
+
+      Level(
+        index: 129,
+        xid: "ayo",
+        onGenerate: () {
+          int x, xh, xt, xo, y, yh, yt, yo, z;
+
+          xh = randomMinMax(1, 8);
+          xt = randomMinMax(2, 9);
+          xo = randomMinMax(2, 9);
+          x = xh * 100 + xt * 10 + xo;
+
+          yh = randomMinMax(1, 8 - xh);
+          yt = randomMinMax(11 - xt, 9);
+          yo = randomMinMax(11 - xo, 9);
+          y = yh * 100 + yt * 10 + yo;
+
+          z = x + y;
+
+          return [[x, y, z], [y, x, z]][random(1)];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nSoučet dvou trojciferných čísel s přechodem přes řády desítek i stovek.",
+        example: "483 + 188 = ???",
+      ),
 // //////////////////////////////////////////////////////////////////// Level 130+
+      Level(
+        index: 130,
+        xid: "fpf",
+        onGenerate: () => getLevelByXid("ayo").onGenerate(),
+        masks: ["x+Y=z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nSoučet dvou trojciferných čísel s přechodem přes řády desítek i stovek.",
+        example: "483 + ??? = 542",
+      ),
+      Level(
+        index: 131,
+        xid: "ccb",
+        onGenerate: () => getLevelByXid("ayo").onGenerate(),
+        masks: ["X+y=z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nSoučet dvou trojciferných čísel s přechodem přes řády desítek i stovek.",
+        example: "??? + 483 = 542",
+      ),
+      Level(
+        index: 132,
+        xid: "fbz",
+        onGenerate: () => getLevelByXid("ayo").onGenerate(),
+        masks: ["x+Y=z", "X+y=z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nSoučet dvou trojciferných čísel s přechodem přes řády desítek i stovek.",
+        example: "475 + ? = 654, nebo ??? + 395 = 534",
+      ),
+
+      Level(
+        index: 133,
+        xid: "btk",
+        onGenerate: () {
+          int x, xh, xt, xo, y, yh, yt, yo, z;
+
+          xh = randomMinMax(1, 8);
+          xt = randomMinMax(0, 9);
+          xo = randomMinMax(0, 9);
+          x = xh * 100 + xt * 10 + xo;
+
+          yh = randomMinMax(1, 8 - xh);
+
+          do {
+            yt = randomMinMax(0, 9);
+            yo = randomMinMax(0, 9);
+          } while (((yt + xt) == 10) | ((yo + xo) == 10));
+
+          y = yh * 100 + yt * 10 + yo;
+
+          z = x + y;
+
+          return [[x, y, z], [y, x, z]][random(1)];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nSoučet dvou libovolných trojciferných čísel.",
+        example: "483 + 388 = ???",
+      ),
+
+      Level(
+        index: 134,
+        xid: "cfg",
+        onGenerate: () => getLevelByXid("fpf").onGenerate(),
+        masks: ["x+Y=z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nSoučet dvou libovolných trojciferných čísel.",
+        example: "483 + ??? = 542",
+      ),
+      Level(
+        index: 135,
+        xid: "evm",
+        onGenerate: () => getLevelByXid("fpf").onGenerate(),
+        masks: ["X+y=z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nSoučet dvou libovolných trojciferných čísel.",
+        example: "483 + ??? = 542",
+      ),
+      Level(
+        index: 136,
+        xid: "bne",
+        onGenerate: () => getLevelByXid("fpf").onGenerate(),
+        masks: ["x+Y=z", "X+y=z"],
+        valueRange: [0, 1000],
+        description: "Obor: 0 - 1000\nSoučet dvou libovolných trojciferných čísel.",
+        example: "475 + ??? = 654, nebo ??? + 395 = 534",
+      ),
+
+      Level(
+        index: 137,
+        xid: "eyq",
+        onGenerate: () {
+          int x, y, z;
+
+          x = randomMinMax(1, 9) * 1000;
+          y = randomMinMax(1, 9) * [1, 10, 100][random(2)];
+
+          z = x + y;
+
+          return [[x, y, z], [y, x, z]][random(1)];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 10000],
+        description: "Obor: 0 - 10000\nSoučet 4 ciferného čísla dělitelného 1000 a čísla 1/2/3 ciferného dělitelného 1/10/100.",
+        example: "4000 + 27 = ???",
+      ),
+      Level(
+        index: 138,
+        xid: "eex",
+        onGenerate: () => getLevelByXid("eyq").onGenerate(),
+        masks: ["x+Y=z"],
+        valueRange: [0, 10000],
+        description: "Obor: 0 - 10000\nSoučet 4 ciferného čísla dělitelného 1000 a čísla 1/2/3 ciferného dělitelného 1/10/100.",
+        example: "4000 + ??? = 4042",
+      ),
+      Level(
+        index: 139,
+        xid: "frk",
+        onGenerate: () => getLevelByXid("eyq").onGenerate(),
+        masks: ["X+y=z"],
+        valueRange: [0, 10000],
+        description: "Obor: 0 - 10000\nSoučet 4 ciferného čísla dělitelného 1000 a čísla 1/2/3 ciferného dělitelného 1/10/100.",
+        example: "?? + 42 = 5042",
+      ),
+
 
 // //////////////////////////////////////////////////////////////////// Level 140+
+      Level(
+        index: 140,
+        xid: "dry",
+        onGenerate: () => getLevelByXid("eyq").onGenerate(),
+        masks: ["x+Y=z", "X+y=z"],
+        valueRange: [0, 10000],
+        description: "Obor: 0 - 10000\nSoučet 4 ciferného čísla dělitelného 1000 a čísla 1/2/3 ciferného dělitelného 1/10/100.",
+        example: "4000 + ? = 4654, nebo ??? + 395 = 3395",
+      ),
 
       Level(
         index: 141,
