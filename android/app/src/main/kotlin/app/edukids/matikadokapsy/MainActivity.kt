@@ -1,4 +1,4 @@
-package cz.edukids.matikadokapsy
+package app.edukids.matikadokapsy
 
 //import android.os.Bundle // v1 flutter embedding
 //import io.flutter.app.FlutterActivity // v1 flutter embedding
