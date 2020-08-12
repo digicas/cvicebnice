@@ -49,3 +49,4 @@ app.*.map.json
 # Other files
 /tools/.ipynb_checkpoints/
 /lib/git_info.g.dart
+/android/key.properties
