@@ -30,7 +30,7 @@ int questionsCount() {
       (p, e) =>
           p +
           e.masksAmount *
-              (pow((e.maxTotal ~/ (e.solutionRows - 1)), e.solutionRows)));
+              (pow((e.maxTotal! ~/ (e.solutionRows - 1)), e.solutionRows) as int));
 }
 
 /// Gets Information whether particular level with index is implemented

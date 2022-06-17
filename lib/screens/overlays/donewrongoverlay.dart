@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import './shaderoverlay.dart';
 
 class DoneWrongOverlay extends StatelessWidget {
-  const DoneWrongOverlay({Key key, this.onBackToLevel}) : super(key: key);
+  const DoneWrongOverlay({Key? key, this.onBackToLevel}) : super(key: key);
 
-  final VoidCallback onBackToLevel;
+  final VoidCallback? onBackToLevel;
 
   @override
   Widget build(BuildContext context) {

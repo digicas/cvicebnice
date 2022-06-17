@@ -5,8 +5,8 @@ import 'level.dart';
 /// Generates the collection of questions
 ///
 /// tries x times to have unique questions
-List<Level> questionsGenerate({Level level, int amount}) {
-  var questions = List.generate(amount, (_) => level.clone());
+List<Level> questionsGenerate({Level? level, required int amount}) {
+  var questions = List.generate(amount, (_) => level!.clone());
 
   bool questionsHaveZero = false;
   for (int i = 0; i < questions.length; i++) {
@@ -24,11 +24,11 @@ List<Level> questionsGenerate({Level level, int amount}) {
       }
 
       /// avoid more zeros among questions
-      if (questionsHaveZero & questions[i].solution.contains(0))
+      if (questionsHaveZero & questions[i].solution!.contains(0))
         mustRegenerate = true;
 //        print("$i: $tries: ${questions[i].solution}");
     } while (mustRegenerate & (tries > 0));
-    if (questions[i].solution.contains(0)) questionsHaveZero = true;
+    if (questions[i].solution!.contains(0)) questionsHaveZero = true;
   }
   return questions;
 }

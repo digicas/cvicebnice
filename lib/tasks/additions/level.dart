@@ -3,7 +3,7 @@
 //
 
 import 'dart:core';
-import 'package:flutter/foundation.dart';
+//import 'package:flutter/foundation.dart';
 import 'dart:math';
 import '../core/level.dart';
 
@@ -15,40 +15,40 @@ class Level extends LevelBlueprint {
   /// callback to check the submission
   ///
   /// not used in this case - static [checkSubmission] is used instead
-  bool Function(List generated, List filled) onCheck;
+  bool Function(List generated, List filled)? onCheck;
 
   /// Collection of masks to be applied onto task
   ///
   /// Capital letter (e.g. Z in x+y=Z) means input place => x+y=?
   /// Small letters (x, y, in x+y=Z) means visible number
   /// If there are more than 1 mask, one of them is selected during the task generation
-  List<String> masks;
+  List<String>? masks;
 
   /// Declared range limit on generated values - used in unit tests
   List<int> valueRange;
 
   /// Human description
-  String description;
+  String? description;
 
   /// Printable example
-  String example;
+  String? example;
 
   /// Generated values typically x,y,w,z
-  List<int> solution;
+  List<int>? solution;
 
   /// Selected mask index for UI
   int selectedQuestionMaskID = 0;
 
   /// Selected mask for UI
-  String get selectedQuestionMask => masks[selectedQuestionMaskID];
+  String get selectedQuestionMask => masks![selectedQuestionMaskID];
 
   /// Constructor
-  Level({@required index,
+  Level({required index,
     xid,
-    @required this.onGenerate,
+    required this.onGenerate,
     this.onCheck,
     this.masks,
-    @required this.valueRange,
+    required this.valueRange,
     this.description,
     this.example})
       : super(index: index, xid: xid);
@@ -73,30 +73,30 @@ class Level extends LevelBlueprint {
   @override
   void generate() {
     solution = onGenerate();
-    selectedQuestionMaskID = rnd.nextInt(masks.length);
+    selectedQuestionMaskID = rnd.nextInt(masks!.length);
   }
 
   /// Returns true if submitted data correspond to generated data and mask
   ///
   /// Implementation for this type of task, other task types need different one
-  static bool checkSubmission(List generated, List filled, String mask) {
+  static bool checkSubmission(List? generated, List filled, String mask) {
 
     /// In case of empty submission - we cannot calculate with null
     if(filled[0]==null) return false;
 
     if (["x+y=Z"].contains(mask))
-      return generated[0] + generated[1] == filled[0];
+      return generated![0] + generated[1] == filled[0];
 
     if (["x+Y=z"].contains(mask))
-      return generated[0] + filled[0] == generated[2];
+      return generated![0] + filled[0] == generated[2];
 
     if (["X+y=z"].contains(mask))
-      return filled[0] + generated[1] == generated[2];
+      return filled[0] + generated![1] == generated[2];
 
     if (["x+y+w=ZZ"].contains(mask))
-      return generated[0] + generated[1] + generated[2] == filled[0];
+      return generated![0] + generated[1] + generated[2] == filled[0];
 
-    if (["100=k+X"].contains(mask)) return 100 == generated[0] + filled[0];
+    if (["100=k+X"].contains(mask)) return 100 == generated![0] + filled[0];
 
     assert(false, "Mask $mask not implemented");
 
@@ -105,5 +105,5 @@ class Level extends LevelBlueprint {
 
   @override
   String toString() =>
-      "level: $index - $xid - $solution - ${masks[selectedQuestionMaskID]}";
+      "level: $index - $xid - $solution - ${masks![selectedQuestionMaskID]}";
 }

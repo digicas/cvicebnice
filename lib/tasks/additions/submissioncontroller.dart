@@ -6,13 +6,13 @@ import 'level.dart';
 ///
 class SubmissionController extends ChangeNotifier {
   /// data placeholder for cells indexed 0.. amount of questions
-  List<TextEditingController> cells;
+  List<TextEditingController?>? cells;
 
   /// whether the submission is correct
-  bool isSolved;
+  late bool isSolved;
 
   /// whether all to be filled cells have some value
-  bool isFilled;
+  late bool isFilled;
 
   /// Related screen questions (de facto levels), which must be generated up front
   List<Level> screenQuestions;
@@ -21,8 +21,10 @@ class SubmissionController extends ChangeNotifier {
   /// not valid here as rather the list of questions is provided
 //  Level _level;
 
-  SubmissionController({this.screenQuestions}) {
-    cells = new List<TextEditingController>(screenQuestions.length);
+  SubmissionController({required this.screenQuestions}) {
+
+    List<TextEditingController> cells = List.generate(screenQuestions.length, (i) => TextEditingController());
+    //cells = new List<TextEditingController?>(screenQuestions.length);
 
     for (int i = 0; i < cells.length; i++) {
       cells[i] = (TextEditingController());
@@ -49,24 +51,24 @@ class SubmissionController extends ChangeNotifier {
   /// Empties the submission but does NOT initiates with the predefined (visible) values
   /// for those cells where mask allows visibility to user
   void eraseSubmission() {
-    cells.forEach((tController) => tController.clear());
+    cells!.forEach((tController) => tController!.clear());
   }
 
   /// disposes all resources as required by [TextEditingController]
   void dispose() {
-    cells.forEach((tController) => tController.dispose());
+    cells!.forEach((tController) => tController!.dispose());
     super.dispose();
   }
 
   String toString() {
-    return (cells.map((cell) => cell.text).join(", "));
+    return (cells!.map((cell) => cell!.text).join(", "));
   }
 
   /// checks whether the submitted solution is equal to generated solution
   bool checkSolution() {
     bool done = true;
     for (int i = 0; i < screenQuestions.length; i++) {
-      int filled = int.tryParse(cells[i].text);
+      int? filled = int.tryParse(cells![i]!.text);
       if (!Level.checkSubmission(screenQuestions[i].solution, [filled],
           screenQuestions[i].selectedQuestionMask)) done = false;
 //      if (!screenQuestions[i].onCheck(screenQuestions[i].solution, [filled])) done = false;
@@ -78,8 +80,8 @@ class SubmissionController extends ChangeNotifier {
   bool checkIfAllFilled() {
     bool filled = true;
 
-    for (var cell in cells) {
-      if (cell.text == "") filled = false;
+    for (var cell in cells!) {
+      if (cell!.text == "") filled = false;
     }
 
 //    if (filled) print("vyplneno");

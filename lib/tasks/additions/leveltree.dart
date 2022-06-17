@@ -4,6 +4,7 @@
 
 import 'dart:core';
 import 'dart:math';
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/foundation.dart';
 
 import '../core/level.dart';
@@ -15,7 +16,7 @@ import 'level.dart';
 class LevelTree extends LevelTreeBlueprint {
   /// Collection of defined levels
   ///
-  List<Level> levels;
+  late List<Level> levels;
 
   /// Constructor , which also generates the collection of levels
   LevelTree() {
@@ -30,14 +31,13 @@ class LevelTree extends LevelTreeBlueprint {
       LevelTreeBlueprint.randomMinMax(minimum, maximum);
 
   /// Returns [Level] by searching given index or null if not found
-  Level getLevelByIndex(int levelIndex) {
-    return levels.singleWhere((level) => level.index == levelIndex,
-        orElse: () => null);
+  Level? getLevelByIndex(int? levelIndex) {
+    return levels.singleWhereOrNull((level) => level.index == levelIndex);
   }
 
   /// Returns [Level] by searching given xid or null if not found
-  Level getLevelByXid(String xid) {
-    return levels.singleWhere((level) => level.xid == xid, orElse: () => null);
+  Level? getLevelByXid(String xid) {
+    return levels.singleWhereOrNull((level) => level.xid == xid);
   }
 
   /// Returns true if level exists in LevelTree, false otherwise
@@ -48,7 +48,7 @@ class LevelTree extends LevelTreeBlueprint {
   /// Gets the levelIndex in [LevelTree] based on whole xid "abcghi"
   ///
   /// Returns -1 if levelIndex is not found.
-  int getLevelIndexFromXid(String wholeXid) {
+  int? getLevelIndexFromXid(String wholeXid) {
     if (wholeXid == null) return -1;
     if (wholeXid.length < 6) return -1;
     var levelXid = wholeXid.substring(3, 6).toLowerCase();
@@ -58,12 +58,12 @@ class LevelTree extends LevelTreeBlueprint {
 
   /// Returns more difficult [Level] if there is any or the same one
   Level getMoreDifficultLevel(Level level) {
-    Level newLevel;
-    int newLevelIndex = level.index;
+    Level? newLevel;
+    int? newLevelIndex = level.index;
 
     /// avoid not implemented levels
     while (newLevel == null) {
-      newLevelIndex++;
+      newLevelIndex = newLevelIndex !+ 1;
 
       /// max level -> return the same level
       if (level.index == levels.last.index) return level;
@@ -73,16 +73,16 @@ class LevelTree extends LevelTreeBlueprint {
   }
 
   /// Returns more difficult levelIndex if there is any or the same one
-  int getMoreDifficultLevelIndex(int currentIndex) {
-    Level newLevel;
-    int newIndex = currentIndex;
+  int? getMoreDifficultLevelIndex(int? currentIndex) {
+    Level? newLevel;
+    int? newIndex = currentIndex;
 
     /// avoid not implemented levels
     while (newLevel == null) {
-      newIndex++;
+      newIndex = newIndex !+ 1;
 
       /// max level -> return the same level index
-      if (newIndex > levels.last.index) return currentIndex;
+      if (newIndex > levels.last.index!) return currentIndex;
       newLevel = getLevelByIndex(newIndex);
     }
 
@@ -91,12 +91,12 @@ class LevelTree extends LevelTreeBlueprint {
 
   /// returns less difficult level if there is any
   Level getLessDifficultLevel(Level level) {
-    int newLevelIndex = level.index;
-    Level newLevel;
+    int? newLevelIndex = level.index;
+    Level? newLevel;
 
     /// avoid not implemented levels
     while (newLevel == null) {
-      newLevelIndex--;
+      newLevelIndex = newLevelIndex !- 1;
 
       /// min level -> return the same level
       if (newLevelIndex == 0) return level;
@@ -106,13 +106,13 @@ class LevelTree extends LevelTreeBlueprint {
   }
 
   /// Returns less difficult levelIndex if there is any or the same one
-  int getLessDifficultLevelIndex(int currentIndex) {
-    Level newLevel;
-    int newLevelIndex = currentIndex;
+  int? getLessDifficultLevelIndex(int? currentIndex) {
+    Level? newLevel;
+    int? newLevelIndex = currentIndex;
 
     /// avoid not implemented levels
     while (newLevel == null) {
-      newLevelIndex--;
+      newLevelIndex = newLevelIndex !- 1;
 
       /// min level -> return the same level
       if (newLevelIndex == 0) return currentIndex;
@@ -136,7 +136,7 @@ class LevelTree extends LevelTreeBlueprint {
   /// Can generate more tuples as the references overlap in time
   /// Returns empty [] if the given level index is not int the map
   static List<List<int>> getSchoolClassAndMonth(int levelIndex) {
-    var result = List<List<int>>();
+    var result = <List<int>>[];
     var tmp = [0, 0];
 
     for (int i = 0; i < schoolClassToLevelMap.length; i++) {
@@ -162,7 +162,7 @@ class LevelTree extends LevelTreeBlueprint {
   ///
   /// Can generate more tuples as the references overlap in time
   static List<List<int>> getMinimumSchoolClassAndMonth(int levelIndex) {
-    var result = List<List<int>>();
+    var result = <List<int>>[];
     var li = levelIndex;
     while (result.isEmpty & (li > 0)) {
       result = getSchoolClassAndMonth(li);
@@ -177,7 +177,7 @@ class LevelTree extends LevelTreeBlueprint {
   /// or of the closest lower possible index, if the given index is not found
   /// in the mapping table
   static List<int> getSchoolClasses(int levelIndex) {
-    var result = List<int>();
+    var result = <int>[];
 
     for (int yIndex = 0; yIndex < schoolClassToLevelMap.length; yIndex++) {
       var y = schoolClassToLevelMap[yIndex];
@@ -588,7 +588,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 26,
         xid: "gcd",
-        onGenerate: () => getLevelByXid("btj").onGenerate(),
+        onGenerate: () => getLevelByXid("btj")!.onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 20],
         description:
@@ -599,7 +599,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 27,
         xid: "anu",
-        onGenerate: () => getLevelByXid("btj").onGenerate(),
+        onGenerate: () => getLevelByXid("btj")!.onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 20],
         description:
@@ -610,7 +610,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 28,
         xid: "erv",
-        onGenerate: () => getLevelByXid("btj").onGenerate(),
+        onGenerate: () => getLevelByXid("btj")!.onGenerate(),
         masks: ["X+y=z", "x+Y=z"],
         valueRange: [0, 20],
         description:
@@ -954,7 +954,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 51,
         xid: "aqc",
-        onGenerate: () => getLevelByXid("cqz").onGenerate(),
+        onGenerate: () => getLevelByXid("cqz")!.onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 100],
         description: "Obor: 0 - 100\nSčítanci jsou dělitelní 10.",
@@ -963,7 +963,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 52,
         xid: "foq",
-        onGenerate: () => getLevelByXid("cqz").onGenerate(),
+        onGenerate: () => getLevelByXid("cqz")!.onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 100],
         description: "Obor: 0 - 100\nSčítanci jsou dělitelní 10.",
@@ -987,7 +987,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 54,
         xid: "dwu",
-        onGenerate: () => getLevelByXid("dzh").onGenerate(),
+        onGenerate: () => getLevelByXid("dzh")!.onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 100],
         description: "Obor: 0 - 100\nSoučet jednociferného a dvojciferného čísla dělitelného 10.",
@@ -996,7 +996,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 55,
         xid: "enb",
-        onGenerate: () => getLevelByXid("dzh").onGenerate(),
+        onGenerate: () => getLevelByXid("dzh")!.onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 100],
         description: "Obor: 0 - 100\nSoučet jednociferného a dvojciferného čísla dělitelného 10.",
@@ -1006,7 +1006,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 56,
         xid: "cdf",
-        onGenerate: () => getLevelByXid("dzh").onGenerate(),
+        onGenerate: () => getLevelByXid("dzh")!.onGenerate(),
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 100],
         description: "Obor: 0 - 100\nSoučet jednociferného a dvojciferného čísla dělitelného 10.",
@@ -1031,7 +1031,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 58,
         xid: "ahe",
-        onGenerate: () => getLevelByXid("ajk").onGenerate(),
+        onGenerate: () => getLevelByXid("ajk")!.onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 100],
         description: "Obor: 0 - 100\nSoučet jednociferného a dvojciferného čísla bez přechodu přes desítku.",
@@ -1040,7 +1040,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 59,
         xid: "asu",
-        onGenerate: () => getLevelByXid("ajk").onGenerate(),
+        onGenerate: () => getLevelByXid("ajk")!.onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 100],
         description: "Obor: 0 - 100\nSoučet jednociferného a dvojciferného čísla bez přechodu přes desítku.",
@@ -1051,7 +1051,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 60,
         xid: "fkp",
-        onGenerate: () => getLevelByXid("ajk").onGenerate(),
+        onGenerate: () => getLevelByXid("ajk")!.onGenerate(),
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 100],
         description: "Obor: 0 - 100\nSoučet jednociferného a dvojciferného čísla bez přechodu přes desítku.",
@@ -1076,7 +1076,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 62,
         xid: "fse",
-        onGenerate: () => getLevelByXid("evc").onGenerate(),
+        onGenerate: () => getLevelByXid("evc")!.onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 100],
         description: "Obor: 0 - 100\nSoučet jednociferného a dvojciferného čísla, kdy součet je dělitelný 10.",
@@ -1085,7 +1085,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 63,
         xid: "fuf",
-        onGenerate: () => getLevelByXid("evc").onGenerate(),
+        onGenerate: () => getLevelByXid("evc")!.onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 100],
         description: "Obor: 0 - 100\nSoučet jednociferného a dvojciferného čísla, kdy součet je dělitelný 10.",
@@ -1094,7 +1094,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 64,
         xid: "awe",
-        onGenerate: () => getLevelByXid("evc").onGenerate(),
+        onGenerate: () => getLevelByXid("evc")!.onGenerate(),
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 100],
         description: "Obor: 0 - 100\nSoučet jednociferného a dvojciferného čísla, kdy součet je dělitelný 10.",
@@ -1122,7 +1122,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 66,
         xid: "eyh",
-        onGenerate: () => getLevelByXid("czx").onGenerate(),
+        onGenerate: () => getLevelByXid("czx")!.onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 100],
         description: "Obor: 0 - 100\nSoučet jednociferného a dvojciferného čísla s přechodem přes desítku.",
@@ -1131,7 +1131,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 67,
         xid: "bqb",
-        onGenerate: () => getLevelByXid("czx").onGenerate(),
+        onGenerate: () => getLevelByXid("czx")!.onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 100],
         description: "Obor: 0 - 100\nSoučet jednociferného a dvojciferného čísla s přechodem přes desítku.",
@@ -1140,7 +1140,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 68,
         xid: "bhj",
-        onGenerate: () => getLevelByXid("czx").onGenerate(),
+        onGenerate: () => getLevelByXid("czx")!.onGenerate(),
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 100],
         description: "Obor: 0 - 100\nSoučet jednociferného a dvojciferného čísla s přechodem přes desítku.",
@@ -1185,7 +1185,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 71,
         xid: "ccy",
-        onGenerate: () => getLevelByXid("cno").onGenerate(),
+        onGenerate: () => getLevelByXid("cno")!.onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 100],
         description: "Obor: 0 - 100\nSoučet dvou dvojciferných čísel bez přechodu desítek.",
@@ -1195,7 +1195,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 72,
         xid: "edf",
-        onGenerate: () => getLevelByXid("cno").onGenerate(),
+        onGenerate: () => getLevelByXid("cno")!.onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 100],
         description: "Obor: 0 - 100\nSoučet dvou dvojciferných čísel bez přechodu desítek.",
@@ -1204,7 +1204,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 73,
         xid: "fkj",
-        onGenerate: () => getLevelByXid("cno").onGenerate(),
+        onGenerate: () => getLevelByXid("cno")!.onGenerate(),
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 100],
         description: "Obor: 0 - 100\nSoučet dvou dvojciferných čísel bez přechodu desítek.",
@@ -1230,7 +1230,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 75,
         xid: "dtw",
-        onGenerate: () => getLevelByXid("fhe").onGenerate(),
+        onGenerate: () => getLevelByXid("fhe")!.onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 100],
         description: "Obor: 0 - 100\nSoučet dvou dvojciferných čísel, kde součet je dělitelný 10.",
@@ -1239,7 +1239,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 76,
         xid: "esf",
-        onGenerate: () => getLevelByXid("fhe").onGenerate(),
+        onGenerate: () => getLevelByXid("fhe")!.onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 100],
         description: "Obor: 0 - 100\nSoučet dvou dvojciferných čísel, kde součet je dělitelný 10.",
@@ -1248,7 +1248,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 77,
         xid: "dyz",
-        onGenerate: () => getLevelByXid("fhe").onGenerate(),
+        onGenerate: () => getLevelByXid("fhe")!.onGenerate(),
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 100],
         description: "Obor: 0 - 100\nSoučet dvou dvojciferných čísel, kde součet je dělitelný 10.",
@@ -1275,7 +1275,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 79,
         xid: "fja",
-        onGenerate: () => getLevelByXid("eyf").onGenerate(),
+        onGenerate: () => getLevelByXid("eyf")!.onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 100],
         description: "Obor: 0 - 100\nSoučet dvou dvojciferných čísel s přechodem přes desítku.",
@@ -1286,7 +1286,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 80,
         xid: "gaz",
-        onGenerate: () => getLevelByXid("eyf").onGenerate(),
+        onGenerate: () => getLevelByXid("eyf")!.onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 100],
         description: "Obor: 0 - 100\nSoučet dvou dvojciferných čísel s přechodem přes desítku.",
@@ -1295,7 +1295,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 81,
         xid: "ewu",
-        onGenerate: () => getLevelByXid("eyf").onGenerate(),
+        onGenerate: () => getLevelByXid("eyf")!.onGenerate(),
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 100],
         description: "Obor: 0 - 100\nSoučet dvou dvojciferných čísel s přechodem přes desítku.",
@@ -1389,7 +1389,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 87,
         xid: "bak",
-        onGenerate: () => getLevelByXid("buf").onGenerate(),
+        onGenerate: () => getLevelByXid("buf")!.onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet dvou trojciferných čísel dělitelných 100.",
@@ -1398,7 +1398,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 88,
         xid: "atf",
-        onGenerate: () => getLevelByXid("buf").onGenerate(),
+        onGenerate: () => getLevelByXid("buf")!.onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet dvou trojciferných čísel dělitelných 100.",
@@ -1420,7 +1420,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 90,
         xid: "aih",
-        onGenerate: () => getLevelByXid("fmc").onGenerate(),
+        onGenerate: () => getLevelByXid("fmc")!.onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet trojciferného čísla dělitelného 100 a jedno/ dvojciferného čísla.",
@@ -1432,7 +1432,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 91,
         xid: "awd",
-        onGenerate: () => getLevelByXid("fmc").onGenerate(),
+        onGenerate: () => getLevelByXid("fmc")!.onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet trojciferného čísla dělitelného 100 a jedno/ dvojciferného čísla.",
@@ -1442,7 +1442,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 92,
         xid: "ayf",
-        onGenerate: () => getLevelByXid("fmc").onGenerate(),
+        onGenerate: () => getLevelByXid("fmc")!.onGenerate(),
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet trojciferného čísla dělitelného 100 a jedno/ dvojciferného čísla.",
@@ -1468,7 +1468,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 94,
         xid: "bxi",
-        onGenerate: () => getLevelByXid("dcb").onGenerate(),
+        onGenerate: () => getLevelByXid("dcb")!.onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet trojciferného čísla a čísla jedno/dvojciferného dělitelného 10 bez přechodu řádu stovek.",
@@ -1477,7 +1477,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 95,
         xid: "ftt",
-        onGenerate: () => getLevelByXid("dcb").onGenerate(),
+        onGenerate: () => getLevelByXid("dcb")!.onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet trojciferného čísla a čísla jedno/dvojciferného dělitelného 10 bez přechodu řádu stovek.",
@@ -1486,7 +1486,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 96,
         xid: "axt",
-        onGenerate: () => getLevelByXid("dcb").onGenerate(),
+        onGenerate: () => getLevelByXid("dcb")!.onGenerate(),
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet trojciferného čísla a čísla jedno/dvojciferného dělitelného 10 bez přechodu řádu stovek.",
@@ -1517,7 +1517,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 98,
         xid: "brr",
-        onGenerate: () => getLevelByXid("bza").onGenerate(),
+        onGenerate: () => getLevelByXid("bza")!.onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet trojciferného a dvojciferného čísla bez přechodu řádů.",
@@ -1526,7 +1526,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 99,
         xid: "enk",
-        onGenerate: () => getLevelByXid("bza").onGenerate(),
+        onGenerate: () => getLevelByXid("bza")!.onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet trojciferného a dvojciferného čísla bez přechodu řádů.",
@@ -1535,7 +1535,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 100,
         xid: "dqn",
-        onGenerate: () => getLevelByXid("bza").onGenerate(),
+        onGenerate: () => getLevelByXid("bza")!.onGenerate(),
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet trojciferného a dvojciferného čísla bez přechodu řádů.",
@@ -1566,7 +1566,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 102,
         xid: "ant",
-        onGenerate: () => getLevelByXid("djp").onGenerate(),
+        onGenerate: () => getLevelByXid("djp")!.onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet trojciferného a dvojciferného čísla s přechodem přes desítku.",
@@ -1575,7 +1575,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 103,
         xid: "fyy",
-        onGenerate: () => getLevelByXid("djp").onGenerate(),
+        onGenerate: () => getLevelByXid("djp")!.onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet trojciferného a dvojciferného čísla s přechodem přes desítku.",
@@ -1584,7 +1584,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 104,
         xid: "dzf",
-        onGenerate: () => getLevelByXid("djp").onGenerate(),
+        onGenerate: () => getLevelByXid("djp")!.onGenerate(),
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet trojciferného a dvojciferného čísla s přechodem přes desítku.",
@@ -1610,7 +1610,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 106,
         xid: "cwk",
-        onGenerate: () => getLevelByXid("ejg").onGenerate(),
+        onGenerate: () => getLevelByXid("ejg")!.onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet trojciferného a jedno/dvojciferného čísla, kde součet je dělitelný 100.",
@@ -1619,7 +1619,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 107,
         xid: "fim",
-        onGenerate: () => getLevelByXid("ejg").onGenerate(),
+        onGenerate: () => getLevelByXid("ejg")!.onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet trojciferného a jedno/dvojciferného čísla, kde součet je dělitelný 100.",
@@ -1628,7 +1628,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 108,
         xid: "ftg",
-        onGenerate: () => getLevelByXid("ejg").onGenerate(),
+        onGenerate: () => getLevelByXid("ejg")!.onGenerate(),
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet trojciferného a jedno/dvojciferného čísla, kde součet je dělitelný 100.",
@@ -1653,7 +1653,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 110,
         xid: "cyh",
-        onGenerate: () => getLevelByXid("aia").onGenerate(),
+        onGenerate: () => getLevelByXid("aia")!.onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet trojciferného a jednociferného čísla s přechodem přes řády desítek i stovek.",
@@ -1664,7 +1664,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 111,
         xid: "efg",
-        onGenerate: () => getLevelByXid("aia").onGenerate(),
+        onGenerate: () => getLevelByXid("aia")!.onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet trojciferného a jednociferného čísla s přechodem přes řády desítek i stovek.",
@@ -1673,7 +1673,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 112,
         xid: "eks",
-        onGenerate: () => getLevelByXid("aia").onGenerate(),
+        onGenerate: () => getLevelByXid("aia")!.onGenerate(),
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet trojciferného a jednociferného čísla s přechodem přes řády desítek i stovek.",
@@ -1703,7 +1703,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 114,
         xid: "bqv",
-        onGenerate: () => getLevelByXid("ftn").onGenerate(),
+        onGenerate: () => getLevelByXid("ftn")!.onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet trojciferného čísla s dvojciferným číslem dělitelným 10 s přechodem přes řád stovek.",
@@ -1712,7 +1712,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 115,
         xid: "ajd",
-        onGenerate: () => getLevelByXid("ftn").onGenerate(),
+        onGenerate: () => getLevelByXid("ftn")!.onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet trojciferného čísla s dvojciferným číslem dělitelným 10 s přechodem přes řád stovek.",
@@ -1721,7 +1721,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 116,
         xid: "dum",
-        onGenerate: () => getLevelByXid("ftn").onGenerate(),
+        onGenerate: () => getLevelByXid("ftn")!.onGenerate(),
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet trojciferného čísla s dvojciferným číslem dělitelným 10 s přechodem přes řád stovek.",
@@ -1752,7 +1752,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 118,
         xid: "add",
-        onGenerate: () => getLevelByXid("adv").onGenerate(),
+        onGenerate: () => getLevelByXid("adv")!.onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet trojciferného čísla s dvojciferným číslem s přechodem přes řád stovek.",
@@ -1761,7 +1761,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 119,
         xid: "abm",
-        onGenerate: () => getLevelByXid("adv").onGenerate(),
+        onGenerate: () => getLevelByXid("adv")!.onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet trojciferného čísla s dvojciferným číslem s přechodem přes řád stovek.",
@@ -1770,7 +1770,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 120,
         xid: "cqm",
-        onGenerate: () => getLevelByXid("adv").onGenerate(),
+        onGenerate: () => getLevelByXid("adv")!.onGenerate(),
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet trojciferného čísla s dvojciferným číslem s přechodem přes řád stovek.",
@@ -1808,7 +1808,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 122,
         xid: "axu",
-        onGenerate: () => getLevelByXid("dpe").onGenerate(),
+        onGenerate: () => getLevelByXid("dpe")!.onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet dvou trojciferných čísel, kdy jedno z nich je dělitelné 100.",
@@ -1817,7 +1817,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 123,
         xid: "cde",
-        onGenerate: () => getLevelByXid("dpe").onGenerate(),
+        onGenerate: () => getLevelByXid("dpe")!.onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet dvou trojciferných čísel, kdy jedno z nich je dělitelné 100.",
@@ -1826,7 +1826,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 124,
         xid: "atu",
-        onGenerate: () => getLevelByXid("dpe").onGenerate(),
+        onGenerate: () => getLevelByXid("dpe")!.onGenerate(),
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet dvou trojciferných čísel, kdy jedno z nich je dělitelné 100.",
@@ -1860,7 +1860,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 126,
         xid: "feo",
-        onGenerate: () => getLevelByXid("edh").onGenerate(),
+        onGenerate: () => getLevelByXid("edh")!.onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet dvou trojciferných čísel, kdy jedno z nich je dělitelné 100.",
@@ -1869,7 +1869,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 127,
         xid: "ewm",
-        onGenerate: () => getLevelByXid("edh").onGenerate(),
+        onGenerate: () => getLevelByXid("edh")!.onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet dvou trojciferných čísel, kdy jedno z nich je dělitelné 100.",
@@ -1878,7 +1878,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 128,
         xid: "aeg",
-        onGenerate: () => getLevelByXid("edh").onGenerate(),
+        onGenerate: () => getLevelByXid("edh")!.onGenerate(),
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet dvou trojciferných čísel, kdy jedno z nich je dělitelné 100.",
@@ -1914,7 +1914,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 130,
         xid: "fpf",
-        onGenerate: () => getLevelByXid("ayo").onGenerate(),
+        onGenerate: () => getLevelByXid("ayo")!.onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet dvou trojciferných čísel s přechodem přes řády desítek i stovek.",
@@ -1923,7 +1923,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 131,
         xid: "ccb",
-        onGenerate: () => getLevelByXid("ayo").onGenerate(),
+        onGenerate: () => getLevelByXid("ayo")!.onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet dvou trojciferných čísel s přechodem přes řády desítek i stovek.",
@@ -1932,7 +1932,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 132,
         xid: "fbz",
-        onGenerate: () => getLevelByXid("ayo").onGenerate(),
+        onGenerate: () => getLevelByXid("ayo")!.onGenerate(),
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet dvou trojciferných čísel s přechodem přes řády desítek i stovek.",
@@ -1972,7 +1972,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 134,
         xid: "cfg",
-        onGenerate: () => getLevelByXid("fpf").onGenerate(),
+        onGenerate: () => getLevelByXid("fpf")!.onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet dvou libovolných trojciferných čísel.",
@@ -1981,7 +1981,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 135,
         xid: "evm",
-        onGenerate: () => getLevelByXid("fpf").onGenerate(),
+        onGenerate: () => getLevelByXid("fpf")!.onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet dvou libovolných trojciferných čísel.",
@@ -1990,7 +1990,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 136,
         xid: "bne",
-        onGenerate: () => getLevelByXid("fpf").onGenerate(),
+        onGenerate: () => getLevelByXid("fpf")!.onGenerate(),
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 1000],
         description: "Obor: 0 - 1000\nSoučet dvou libovolných trojciferných čísel.",
@@ -2018,7 +2018,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 138,
         xid: "eex",
-        onGenerate: () => getLevelByXid("eyq").onGenerate(),
+        onGenerate: () => getLevelByXid("eyq")!.onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 10000],
         description: "Obor: 0 - 10000\nSoučet 4 ciferného čísla dělitelného 1000 a čísla 1/2/3 ciferného dělitelného 1/10/100.",
@@ -2027,7 +2027,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 139,
         xid: "frk",
-        onGenerate: () => getLevelByXid("eyq").onGenerate(),
+        onGenerate: () => getLevelByXid("eyq")!.onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 10000],
         description: "Obor: 0 - 10000\nSoučet 4 ciferného čísla dělitelného 1000 a čísla 1/2/3 ciferného dělitelného 1/10/100.",
@@ -2039,7 +2039,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 140,
         xid: "dry",
-        onGenerate: () => getLevelByXid("eyq").onGenerate(),
+        onGenerate: () => getLevelByXid("eyq")!.onGenerate(),
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 10000],
         description: "Obor: 0 - 10000\nSoučet 4 ciferného čísla dělitelného 1000 a čísla 1/2/3 ciferného dělitelného 1/10/100.",
@@ -2064,7 +2064,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 142,
         xid: "ebd",
-        onGenerate: () => getLevelByXid("ejb").onGenerate(),
+        onGenerate: () => getLevelByXid("ejb")!.onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 9999],
         description:
@@ -2074,7 +2074,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 143,
         xid: "dnq",
-        onGenerate: () => getLevelByXid("ejb").onGenerate(),
+        onGenerate: () => getLevelByXid("ejb")!.onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 9999],
         description:
@@ -2084,7 +2084,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 144,
         xid: "cqy",
-        onGenerate: () => getLevelByXid("ejb").onGenerate(),
+        onGenerate: () => getLevelByXid("ejb")!.onGenerate(),
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 9999],
         description:
@@ -2109,7 +2109,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 146,
         xid: "ens",
-        onGenerate: () => getLevelByIndex(144).onGenerate(),
+        onGenerate: () => getLevelByIndex(144)!.onGenerate(),
         masks: ["x+Y=z"],
         valueRange: [0, 9999],
         description:
@@ -2120,7 +2120,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 147,
         xid: "fwk",
-        onGenerate: () => getLevelByIndex(144).onGenerate(),
+        onGenerate: () => getLevelByIndex(144)!.onGenerate(),
         masks: ["X+y=z"],
         valueRange: [0, 9999],
         description:
@@ -2131,7 +2131,7 @@ class LevelTree extends LevelTreeBlueprint {
       Level(
         index: 148,
         xid: "ckz",
-        onGenerate: () => getLevelByIndex(144).onGenerate(),
+        onGenerate: () => getLevelByIndex(144)!.onGenerate(),
         masks: ["x+Y=z", "X+y=z"],
         valueRange: [0, 9999],
         description:

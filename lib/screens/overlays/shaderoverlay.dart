@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 /// Overlay widget to be used in [Stack]. Creates shade and container for child padded by 20.
 class ShaderOverlay extends StatelessWidget {
-  ShaderOverlay({Key key, this.child}) : super(key: key);
+  ShaderOverlay({Key? key, this.child}) : super(key: key);
 
-  final Widget child;
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,5 @@
 // Register (registry) of tasks environments
-import 'package:flutter/foundation.dart';
+//import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -44,12 +44,12 @@ class TasksRegisterItem {
   String Function(int index) getLevelDescription;
 
   /// Callback to get the level external ID (xid)
-  String Function(int index) getLevelXid;
+  String? Function(int index) getLevelXid;
 
   /// Callback to ge the level internal index
   ///
   /// Must return -1 if not found
-  int Function(String levelWholeXid) getLevelIndexFromXid;
+  int? Function(String levelWholeXid) getLevelIndexFromXid;
 
   /// Callback to return the Widget for preview of the screen for
   /// the Description Pane
@@ -82,9 +82,9 @@ class TasksRegisterItem {
   int get questionsCount => onQuestionsCount();
 
   TasksRegisterItem(
-      {@required this.xid,
-      @required this.imageAssetName,
-      @required this.label,
+      {required this.xid,
+      required this.imageAssetName,
+      required this.label,
       this.getLevelXid = defaultGetLevelXid,
       this.getLevelIndexFromXid = defaultGetLevelIndexFromXid,
       this.isLevelImplemented = defaultLevelIsNotImplemented,
@@ -103,7 +103,7 @@ extension TaskRegister<TasksRegisterItem> on List<TasksRegisterItem> {
   /// Gets the <task>xid-<level>xid for sharing purposes
   String getWholeXid(int taskIndex, int levelIndex) {
     return tasksRegister[taskIndex].xid +
-        tasksRegister[taskIndex].getLevelXid(levelIndex);
+        tasksRegister[taskIndex].getLevelXid(levelIndex)!;
   }
 
   /// Gets the Task Type in [tasksRegister] based on whole xid "abcghi"

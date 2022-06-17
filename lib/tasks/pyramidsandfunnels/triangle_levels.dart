@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
 
 
@@ -8,27 +9,28 @@ import 'package:flutter/material.dart';
 class SubmissionController extends ChangeNotifier{
 
   /// data placeholder for up to 10 cells indexed 0.. solution length
-  List<TextEditingController> cells;
+  late List<TextEditingController?> cells;
 
   /// whether the submission is correct
-  bool isSolved;
+  late bool isSolved;
 
   /// whether all to be filled cells have some value
-  bool isFilled;
+  late bool isFilled;
 
   /// related level, which must be generated up front
-  Level _level;
+  Level? _level;
 
-  SubmissionController({Level level}) : _level = level {
+  SubmissionController({Level? level}) : _level = level {
 
-    cells = new List<TextEditingController>(_level.solution.length);
+    List<TextEditingController> cells = List.generate(_level!.solution!.length, (i) => TextEditingController());
+    //cells = new List<TextEditingController?>(_level!.solution!.length);
 
     for (int i = 0; i<cells.length; i++) {
       cells[i]=(TextEditingController());
       cells[i].addListener(onChanged);
     }
 
-    initiateForLevel(_level);
+    initiateForLevel(_level!);
 
     isSolved = false;
     isFilled = false;
@@ -52,35 +54,35 @@ class SubmissionController extends ChangeNotifier{
   /// empties the submission but does NOT initiates with the predefined (visible) values
   /// for those cells where mask allows visibility to user
   void eraseSubmission(){
-    cells.forEach((tController) => tController.clear());
+    cells.forEach((tController) => tController!.clear());
 
   }
 
   /// apply level data to submission
   /// level [_solution] must be generated before this call!
   void initiateForLevel(Level level) {
-    for (int i = 0; i<level.solution.length; i++){
-      cells[i].text = level.solutionMask.mask[i]
-          ? level.solution[i].toString()
+    for (int i = 0; i<level.solution!.length; i++){
+      cells[i]!.text = level.solutionMask.mask[i]
+          ? level.solution![i].toString()
           : "";
     }
   }
 
   /// disposes all resources as required by [TextEditingController]
   void dispose() {
-    cells.forEach((tController) => tController.dispose());
+    cells.forEach((tController) => tController!.dispose());
     super.dispose();
   }
 
   String toString(){
-    return (cells.map((cell) => cell.text).join(", "));
+    return (cells.map((cell) => cell!.text).join(", "));
   }
 
   /// checks whether the submitted solution is equal to generated solution
   bool checkSolution() {
     bool done = true;
-    for (int i = 0; i<_level.solution.length; i++){
-      if (int.tryParse(cells[i].text) != _level.solution[i])
+    for (int i = 0; i<_level!.solution!.length; i++){
+      if (int.tryParse(cells[i]!.text) != _level!.solution![i])
         done = false;
     }
     return done;
@@ -89,11 +91,11 @@ class SubmissionController extends ChangeNotifier{
   /// checks whether all to be submitted cells are non empty
   bool checkIfAllFilled() {
     bool filled = true;
-    for (int i = 0; i<_level.solution.length; i++){
+    for (int i = 0; i<_level!.solution!.length; i++){
       // consider only editable cells
-      if (_level.solutionMask.mask[i] == false) {
+      if (_level!.solutionMask.mask[i] == false) {
         // if some editable cell is empty
-        if (cells[i].text == "") {
+        if (cells[i]!.text == "") {
           filled = false;
         }
       }
@@ -106,17 +108,17 @@ class SubmissionController extends ChangeNotifier{
 //////////////////////////////////////////////// Level generator //////////////////////////////
 
 class Level {
-  int levelIndex;
-  int maxTotal;
-  List<PyramidMask> _masks;
+  int? levelIndex;
+  int? maxTotal;
+  late List<PyramidMask> _masks;
 
   static Random rng = Random();
   int _selectedTaskMask = 0;
-  List<int> _solution;
+  List<int>? _solution;
 
 //  List<int> _task; // task has applied mask - in fact not used - only solution is used
 
-  Level({this.levelIndex, this.maxTotal, List<List<int>> masks}) {
+  Level({this.levelIndex, this.maxTotal, required List<List<int>> masks}) {
 //    this._masks = masks;
     _masks = masks.map((listMask) => PyramidMask(listMask)).toList();
 //    generate();
@@ -125,7 +127,7 @@ class Level {
 //
 // important for rendering
 //
-  List<int> get solution => _solution;
+  List<int>? get solution => _solution;
 
   PyramidMask get solutionMask => _masks[_selectedTaskMask];
 
@@ -152,9 +154,9 @@ class Level {
   ///
   ///  generates number 0..maximum : inclusive
   ///
-  static int random(int maximum) {
+  static int random(int? maximum) {
     if (maximum == 0) return 0;
-    return rng.nextInt(maximum + 1);
+    return rng.nextInt(maximum! + 1);
   }
 
   void generate() {
@@ -177,22 +179,22 @@ class Level {
         case 2:
           {
             _solution = [];
-            _solution.add(random(maxTotal - 1) + 1); // a+b
-            _solution.add(random(_solution[0])); // a
-            _solution.add(_solution[0] - _solution[1]); // b
-            regenerationNeeded = (_solution[1] + _solution[2] == 0);
+            _solution!.add(random(maxTotal! - 1) + 1); // a+b
+            _solution!.add(random(_solution![0])); // a
+            _solution!.add(_solution![0] - _solution![1]); // b
+            regenerationNeeded = (_solution![1] + _solution![2] == 0);
           }
           break;
         case 3:
           {
             _solution = [];
             var b = random(maxTotal) ~/ 2;
-            var c = random(maxTotal - (2 * b));
-            var a = random(maxTotal - (2 * b + c));
-            _solution.add(a + 2 * b + c);
-            _solution.add(a + b);
-            _solution.add(b + c);
-            _solution.addAll([a, b, c]);
+            var c = random(maxTotal! - (2 * b));
+            var a = random(maxTotal! - (2 * b + c));
+            _solution!.add(a + 2 * b + c);
+            _solution!.add(a + b);
+            _solution!.add(b + c);
+            _solution!.addAll([a, b, c]);
             regenerationNeeded = [a, b, c].where((it) => it == 0).length > 1;
 //            print("$regenerationNeeded $_solution");
           }
@@ -201,16 +203,16 @@ class Level {
           {
             _solution = [];
             var b = random(maxTotal) ~/ 3;
-            var c = random(maxTotal - (3 * b)) ~/ 3;
-            var a = random(maxTotal - (3 * b + 3 * c));
-            var d = random(maxTotal - (a + 3 * b + 3 * c));
-            _solution.add(a + 3 * b + 3 * c + d);
-            _solution.add(a + 2 * b + c);
-            _solution.add(b + 2 * c + d);
-            _solution.add(a + b);
-            _solution.add(b + c);
-            _solution.add(c + d);
-            _solution.addAll([a, b, c, d]);
+            var c = random(maxTotal! - (3 * b)) ~/ 3;
+            var a = random(maxTotal! - (3 * b + 3 * c));
+            var d = random(maxTotal! - (a + 3 * b + 3 * c));
+            _solution!.add(a + 3 * b + 3 * c + d);
+            _solution!.add(a + 2 * b + c);
+            _solution!.add(b + 2 * c + d);
+            _solution!.add(a + b);
+            _solution!.add(b + c);
+            _solution!.add(c + d);
+            _solution!.addAll([a, b, c, d]);
             regenerationNeeded = [a, b, c, d].where((it) => it == 0).length > 1;
           }
           break;
@@ -282,20 +284,19 @@ class PyramidMask {
 /// ///////////////////////// Tree of levels (incl. definitions) //////////////////////////////
 ///
 class LevelTree {
-  static Level getLevelByLevelIndex(int levelIndex) {
-    return LevelTree.levels.singleWhere(
-        (level) => level.levelIndex == levelIndex,
-        orElse: () => null);
+  static Level? getLevelByLevelIndex(int levelIndex) {
+    return LevelTree.levels.singleWhereOrNull(
+        (level) => level.levelIndex == levelIndex);
   }
 
   /// returns more difficult level if there is any
   static Level getMoreDifficultLevel(Level level) {
-    Level newLevel;
-    int newLevelIndex = level.levelIndex;
+    Level? newLevel;
+    int? newLevelIndex = level.levelIndex;
 
     /// avoid not implemented levels
     while (newLevel == null){
-      newLevelIndex++;
+      newLevelIndex = newLevelIndex !+ 1;
       /// max level -> return the same level
       if (level.levelIndex == levels.last.levelIndex ) return level;
       newLevel = getLevelByLevelIndex(newLevelIndex);
@@ -307,12 +308,12 @@ class LevelTree {
 
   /// returns less difficult level if there is any
   static Level getLessDifficultLevel(Level level) {
-    int newLevelIndex = level.levelIndex;
-    Level newLevel;
+    int? newLevelIndex = level.levelIndex;
+    Level? newLevel;
 
     /// avoid not implemented levels
     while (newLevel == null){
-      newLevelIndex--;
+      newLevelIndex = newLevelIndex !- 1;
       /// min level -> return the same level
       if (newLevelIndex == 0) return level;
       newLevel = getLevelByLevelIndex(newLevelIndex);
@@ -335,7 +336,7 @@ class LevelTree {
   /// or of the closest lower possible index, if the given index is not found
   /// in the mapping table
   static List<int> getSchoolClasses(int levelIndex) {
-    var result = List<int>();
+    var result = <int>[];
 
     for (int yIndex = 0; yIndex < schoolClassToLevelMap.length; yIndex++) {
       var y = schoolClassToLevelMap[yIndex];

@@ -15,7 +15,7 @@ import 'dart:math';
 /// ```
 abstract class LevelBlueprint {
   /// index of the level within LevelTree
-  final int index;
+  final int? index;
 
   /// Unique external ID
   ///
@@ -24,7 +24,7 @@ abstract class LevelBlueprint {
   /// scope of uniqueness is among the levels of particular task
   /// therefore only 3 characters should be enough
   /// Is defined forever - does not change, while internal index might change
-  final String xid;
+  final String? xid;
 
   /// initializes index for subclasses
   const LevelBlueprint({this.index, this.xid});

@@ -4,12 +4,12 @@ import './shaderoverlay.dart';
 /// Overlay screen when successful submission (incl. buttons to navigate next)
 class DoneSuccessOverlay extends StatelessWidget {
   const DoneSuccessOverlay(
-      {Key key, this.onNextUpLevel, this.onNextSameLevel, this.onBack})
+      {Key? key, this.onNextUpLevel, this.onNextSameLevel, this.onBack})
       : super(key: key);
 
-  final VoidCallback onNextUpLevel;
-  final VoidCallback onNextSameLevel;
-  final VoidCallback onBack;
+  final VoidCallback? onNextUpLevel;
+  final VoidCallback? onNextSameLevel;
+  final VoidCallback? onBack;
 
   @override
   Widget build(BuildContext context) {

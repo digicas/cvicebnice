@@ -20,22 +20,22 @@ final List<String> schoolMonths = [
 /// Calls onPlay callback with selected level index
 class LevelSelect extends StatefulWidget {
   const LevelSelect({
-    Key key,
+    Key? key,
     this.onPlay,
     this.onCheckLevelExists,
     this.onSchoolClassToLevelIndex,
   }) : super(key: key);
 
   /// Callback function when "Start" button is pressed
-  final void Function(int levelIndex) onPlay;
+  final void Function(int levelIndex)? onPlay;
 
   /// Callback function for checking whether level with int index exists
   ///
   /// Shall return true if exists or false if not
-  final bool Function(int levelIndex) onCheckLevelExists;
+  final bool Function(int levelIndex)? onCheckLevelExists;
 
   /// Callback function to get the level index based on school year and month
-  final int Function(int schoolYear, int schoolMonth) onSchoolClassToLevelIndex;
+  final int Function(int schoolYear, int schoolMonth)? onSchoolClassToLevelIndex;
 
   @override
   _LevelSelectState createState() => _LevelSelectState();
@@ -49,7 +49,7 @@ class _LevelSelectState extends State<LevelSelect> {
   double schoolMonth = 0;
   int levelIndex = 0;
 
-  TextEditingController levelFieldController;
+  late TextEditingController levelFieldController;
 
   @override
   void initState() {
@@ -90,7 +90,7 @@ class _LevelSelectState extends State<LevelSelect> {
                     setState(() {
                       var newSchoolYear = index + 1;
                       if (schoolYear != newSchoolYear)
-                        levelIndex = widget.onSchoolClassToLevelIndex(
+                        levelIndex = widget.onSchoolClassToLevelIndex!(
                             newSchoolYear, schoolMonth.toInt());
                       schoolYear = newSchoolYear;
                     });
@@ -131,7 +131,7 @@ class _LevelSelectState extends State<LevelSelect> {
                         onChanged: (newValue) {
                           setState(() {
                             if (schoolMonth.toInt() != newValue.toInt())
-                              levelIndex = widget.onSchoolClassToLevelIndex(
+                              levelIndex = widget.onSchoolClassToLevelIndex!(
                                   schoolYear.toInt(), newValue.toInt());
                             schoolMonth = newValue;
                           });
@@ -173,9 +173,9 @@ class LevelNumberSelector extends StatelessWidget {
   final Function(int newIndex) onIndexChange;
 
   const LevelNumberSelector({
-    Key key,
+    Key? key,
     this.levelIndex = 789,
-    @required this.onIndexChange,
+    required this.onIndexChange,
   }) : super(key: key);
 
   @override
@@ -227,7 +227,7 @@ Future enterNumberDialog(BuildContext context, Function onIndexChange) {
               enableInteractiveSelection: true,
               keyboardType: TextInputType.number,
 //                decoration: InputDecoration(hintText: "999"),
-              inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               cursorColor: Color(0xffa02b5f),
               autocorrect: false,
               maxLength: 3,
@@ -249,13 +249,13 @@ Future enterNumberDialog(BuildContext context, Function onIndexChange) {
 /// Widget to render the level number and open the Dialog for entering the new one
 class NumberDialogButton extends StatelessWidget {
   const NumberDialogButton({
-    Key key,
+    Key? key,
     this.levelIndex = 789,
-    @required this.onIndexChange,
+    required this.onIndexChange,
   }) : super(key: key);
 
   /// Current level number to be rendered
-  final int levelIndex;
+  final int? levelIndex;
 
   /// Callback with updated level number
   final Function(int newIndex) onIndexChange;
@@ -287,16 +287,16 @@ class NumberDialogButton extends StatelessWidget {
 /// IconButton for decreasing number down to 0
 class NumberDownButton extends StatelessWidget {
   const NumberDownButton({
-    Key key,
-    @required this.onIndexChange,
-    @required this.levelIndex,
+    Key? key,
+    required this.onIndexChange,
+    required this.levelIndex,
   }) : super(key: key);
 
   /// Callback with updated level number
   final Function(int newIndex) onIndexChange;
 
   /// Current level number for calculation
-  final int levelIndex;
+  final int? levelIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -304,7 +304,7 @@ class NumberDownButton extends StatelessWidget {
       icon: Icon(Icons.remove_circle_outline),
       color: Colors.white,
       onPressed: () {
-        onIndexChange((levelIndex > 0) ? levelIndex - 1 : 0);
+        onIndexChange((levelIndex! > 0) ? levelIndex! - 1 : 0);
       },
     );
   }
@@ -313,16 +313,16 @@ class NumberDownButton extends StatelessWidget {
 /// IconButton for increasing number
 class NumberUpButton extends StatelessWidget {
   const NumberUpButton({
-    Key key,
-    @required this.onIndexChange,
-    @required this.levelIndex,
+    Key? key,
+    required this.onIndexChange,
+    required this.levelIndex,
   }) : super(key: key);
 
   /// Callback with updated level number
   final Function(int newIndex) onIndexChange;
 
   /// Current level number for calculation
-  final int levelIndex;
+  final int? levelIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -330,7 +330,7 @@ class NumberUpButton extends StatelessWidget {
       icon: Icon(Icons.add_circle_outline),
       color: Colors.white,
       onPressed: () {
-        onIndexChange(levelIndex + 1);
+        onIndexChange(levelIndex! + 1);
       },
     );
   }
@@ -342,9 +342,9 @@ class NumberUpButton extends StatelessWidget {
 /// Currently not used as Xids dialog is initiated otherwise
 class LevelXidSelector extends StatelessWidget {
   const LevelXidSelector({
-    Key key,
+    Key? key,
     this.levelXid = "??????",
-    @required this.onSubmittedXid,
+    required this.onSubmittedXid,
   }) : super(key: key);
 
   /// Currently shown level xid
@@ -382,8 +382,8 @@ class LevelXidSelector extends StatelessWidget {
 /// Final validation must be done in the callback
 class EnterXidDialog extends StatelessWidget {
   const EnterXidDialog({
-    Key key,
-    @required this.onSubmittedXid,
+    Key? key,
+    required this.onSubmittedXid,
   }) : super(key: key);
 
   /// Callback with entered task xid
@@ -408,7 +408,7 @@ class EnterXidDialog extends StatelessWidget {
           enableInteractiveSelection: true,
           keyboardType: TextInputType.text,
           decoration: InputDecoration(hintText: "abcghi"),
-          inputFormatters: [WhitelistingTextInputFormatter(RegExp("[a-zA-Z]"))],
+          inputFormatters: [FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]"))],
           cursorColor: Color(0xffa02b5f),
           autocorrect: false,
           maxLength: 6,

@@ -13,7 +13,7 @@ import 'package:firebase/firebase.dart' as WebFirebase;
 
 // Analytics, implements the abstract class in analytics_service and overrides the global factory
 class AnalyticsWeb implements Analytics {
-  WebFirebase.Analytics _analytics;
+  late WebFirebase.Analytics _analytics;
 
   AnalyticsWeb() {
     _analytics = WebFirebase.analytics();

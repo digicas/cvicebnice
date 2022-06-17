@@ -8,9 +8,9 @@ import 'package:flutter/material.dart';
 ///
 /// Discussion: https://www.reddit.com/r/FlutterDev/comments/8ao6ty/how_to_make_bottom_appbar_that_sticks_to_the_top/
 class StickToBottom extends StatelessWidget {
-  final Widget child;
+  final Widget? child;
 
-  const StickToBottom({Key key, this.child}) : super(key: key);
+  const StickToBottom({Key? key, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

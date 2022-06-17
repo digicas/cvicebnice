@@ -15,16 +15,16 @@ Future<void> launchURL(LinkableElement link) async {
 
 class TextWithLinks extends StatelessWidget {
   const TextWithLinks(this.text, {
-    Key key,
+    Key? key,
     this.style, this.linkStyle,
   }) : super(key: key);
 
   final String text;
-  final TextStyle style;
-  final TextStyle linkStyle;
+  final TextStyle? style;
+  final TextStyle? linkStyle;
 
   @override
   Widget build(BuildContext context) {
-    return Linkify(onOpen: (link) => launchURL(link), text: text, style: style, linkStyle: linkStyle,);
+    return Linkify(onOpen: (link) => launchURL(link), text: text, style: style!, linkStyle: linkStyle!,);
   }
 }
