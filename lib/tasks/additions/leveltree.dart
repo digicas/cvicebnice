@@ -2158,6 +2158,51 @@ class LevelTree extends LevelTreeBlueprint {
 
 // //////////////////////////////////////////////////////////////////// Level 150+
 
+       Level(
+        index: 150,
+        xid: "fpq",
+        onGenerate: () {
+          int y = (random(7) + 1) * 1000;
+          int x = random(8999 - y) + 1000;
+          return [x, y, x + y];
+        },
+        masks: ["x+Y=z"],
+        valueRange: [0, 9999],
+        description:
+        "1. sčítanec je 4 ciferné číslo, 2. sčítanec je 4 ciferné číslo dělitelné 1000, součet je < 10000.",
+        example: "4321 + ? = 6321",
+      ),
+
+      Level(
+        index: 151,
+        xid: "bvf",
+        onGenerate: () {
+          int y = (random(7) + 1) * 1000;
+          int x = random(8999 - y) + 1000;
+          return [x, y, x + y];
+        },
+        masks: ["X+y=z"],
+        valueRange: [0, 9999],
+        description:
+        "1. sčítanec je 4 ciferné číslo, 2. sčítanec je 4 ciferné číslo dělitelné 1000, součet je < 10000.",
+        example: "? + 2000 = 6321",
+      ),
+
+      Level(
+        index: 152,
+        xid: "bta",
+        onGenerate: () {
+          int y = (random(7) + 1) * 1000;
+          int x = random(8999 - y) + 1000;
+          return [x, y, x + y];
+        },
+        masks: ["x+Y=z", "X+y=z"],
+        valueRange: [0, 9999],
+        description:
+        "1. sčítanec je 4 ciferné číslo, 2. sčítanec je 4 ciferné číslo dělitelné 1000, součet je < 10000.",
+        example: "4321 + ? = 6321, nebo ? + 2000 = 6321",
+      ),
+
       Level(
         index: 153,
         xid: "fnz",
@@ -2186,6 +2231,48 @@ class LevelTree extends LevelTreeBlueprint {
       ),
 
       Level(
+        index: 154,
+        xid: "fzk",
+        onGenerate: () => getLevelByIndex(153)!.onGenerate(),
+        masks: ["x+Y=z"],
+        valueRange: [0, 9999],
+        description:
+       "Všechna čísla z úlohy jsou 4 cif. čísla, "
+            "dvě z jejich cifer jsou vždy 0 - buď řády J+S nebo D + S a to tak, "
+            "že součet čísel sčítanců v daných řádech je vždy ≤ 9, "
+            "celkový součet je < 10000.",
+        example: "4005 + ? = 7009",
+      ),
+
+      Level(
+        index: 155,
+        xid: "esx",
+        onGenerate: () => getLevelByIndex(153)!.onGenerate(),
+        masks: ["X+y=z"],
+        valueRange: [0, 9999],
+        description:
+       "Všechna čísla z úlohy jsou 4 cif. čísla, "
+            "dvě z jejich cifer jsou vždy 0 - buď řády J+S nebo D + S a to tak, "
+            "že součet čísel sčítanců v daných řádech je vždy ≤ 9, "
+            "celkový součet je < 10000.",
+        example: "? + 3004 = 7009",
+      ),
+
+      Level(
+        index: 156,
+        xid: "fdk",
+        onGenerate: () => getLevelByIndex(153)!.onGenerate(),
+        masks: ["x+Y=z", "X+y=z"],
+        valueRange: [0, 9999],
+        description:
+       "Všechna čísla z úlohy jsou 4 cif. čísla, "
+            "dvě z jejich cifer jsou vždy 0 - buď řády J+S nebo D + S a to tak, "
+            "že součet čísel sčítanců v daných řádech je vždy ≤ 9, "
+            "celkový součet je < 10000.",
+        example: "4005 + ? = 7009, nebo ? 3004 + ? = 7009",
+      ),
+
+      Level(
         index: 157,
         xid: "csn",
         onGenerate: () {
@@ -2209,13 +2296,738 @@ class LevelTree extends LevelTreeBlueprint {
         example: "1200 + 1300 = ?",
       ),
 
+      Level(
+        index: 158,
+        xid: "gam",
+        onGenerate: () => getLevelByIndex(157)!.onGenerate(),
+        masks: ["x+Y=z"],
+        valueRange: [0, 9999],
+        description:
+       "Všechna čísla z úlohy jsou 4 cif. čísla, "
+            "dvě z jejich cifer v řádech jednotek a desítek jsou 0 a to tak, "
+            "že součet čísel sčítanců v daných řádech je vždy ≤ 9, "
+            "celkový součet je < 10000.",
+        example: "1200 + ? = 2500",
+      ),
+
+      Level(
+        index: 159,
+        xid: "aru",
+        onGenerate: () => getLevelByIndex(157)!.onGenerate(),
+        masks: ["X+y=z"],
+        valueRange: [0, 9999],
+        description:
+       "Všechna čísla z úlohy jsou 4 cif. čísla, "
+            "dvě z jejich cifer v řádech jednotek a desítek jsou 0 a to tak, "
+            "že součet čísel sčítanců v daných řádech je vždy ≤ 9, "
+            "celkový součet je < 10000.",
+        example: "? + 1300 = 2500",
+      ),
+
 // //////////////////////////////////////////////////////////////////// Level 160+
+
+      Level(
+        index: 160,
+        xid: "ecj",
+        onGenerate: () => getLevelByIndex(157)!.onGenerate(),
+        masks: ["x+Y=z", "X+y=z"],
+        valueRange: [0, 9999],
+        description:
+       "Všechna čísla z úlohy jsou 4 cif. čísla, "
+            "dvě z jejich cifer v řádech jednotek a desítek jsou 0 a to tak, "
+            "že součet čísel sčítanců v daných řádech je vždy ≤ 9, "
+            "celkový součet je < 10000.",
+        example: "1200 + ? = 2500, nebo ? + 1300 = 2500",
+      ),
+
+      Level(
+        index: 165,
+        xid: "apf",
+        onGenerate: () {
+          int xt = randomMinMax(1, 8);
+          int yt = randomMinMax(1, 9 - xt);
+
+          int xh = randomMinMax(1, 9);
+          int yh = 10 - xh;
+
+          int x = xt * 1000 + xh * 100;
+          int y = yt * 1000 + yh * 100;
+
+          return [x, y, x + y];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 9999],
+        description: "Všechna čísla z úlohy jsou 4 cif. čísla, "
+            "dvě z jejich cifer v řádech jednotek a desítek jsou 0 a to tak, "
+            "že součet čísel sčítanců v řádech stovek je = 10, "
+            "celkový součet je < 10000.",
+        example: "3300 + 3700 = ?",
+      ),
+
+      Level(
+        index: 166,
+        xid: "cju",
+        onGenerate: () => getLevelByIndex(165)!.onGenerate(),
+        masks: ["x+Y=z"],
+        valueRange: [0, 9999],
+        description:
+       "Všechna čísla z úlohy jsou 4 cif. čísla, "
+            "dvě z jejich cifer v řádech jednotek a desítek jsou 0 a to tak, "
+            "že součet čísel sčítanců v řádech stovek je = 10, "
+            "celkový součet je < 10000.",
+        example: "3300 + ? = 7000",
+      ),
+
+      Level(
+        index: 167,
+        xid: "byf",
+        onGenerate: () => getLevelByIndex(165)!.onGenerate(),
+        masks: ["X+y=z"],
+        valueRange: [0, 9999],
+        description:
+       "Všechna čísla z úlohy jsou 4 cif. čísla, "
+            "dvě z jejich cifer v řádech jednotek a desítek jsou 0 a to tak, "
+            "že součet čísel sčítanců v řádech stovek je = 10, "
+            "celkový součet je < 10000.",
+        example: "? + 3700 = 7000",
+      ),
+
+      Level(
+        index: 168,
+        xid: "aam",
+        onGenerate: () => getLevelByIndex(165)!.onGenerate(),
+        masks: ["x+Y=z", "X+y=z"],
+        valueRange: [0, 9999],
+        description:
+       "Všechna čísla z úlohy jsou 4 cif. čísla, "
+            "dvě z jejich cifer v řádech jednotek a desítek jsou 0 a to tak, "
+            "že součet čísel sčítanců v řádech stovek je = 10, "
+            "celkový součet je < 10000.",
+        example: "3300 + ? = 7000, nebo ? + 3700 = 7000",
+      ),
+
+      Level(
+        index: 169,
+        xid: "dvn",
+        onGenerate: () {
+          int xt = randomMinMax(1, 7);
+          int yt = randomMinMax(1, 8 - xt);
+
+          int xh = randomMinMax(2, 9);
+          int yh = randomMinMax(11 - xh, 9);
+
+          int x = xt * 1000 + xh * 100;
+          int y = yt * 1000 + yh * 100;
+
+          return [x, y, x + y];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 9999],
+        description: "Všechna čísla z úlohy jsou 4 cif. čísla, "
+            "dvě z jejich cifer v řádech jednotek a desítek jsou 0 a to tak, "
+            "že součet čísel sčítanců v řádech stovek je > 10, "
+            "celkový součet je < 10000.",
+        example: "3600 + 3700 = ?",
+      ),
 
 // //////////////////////////////////////////////////////////////////// Level 170+
 
+      Level(
+        index: 170,
+        xid: "cjm",
+        onGenerate: () => getLevelByIndex(169)!.onGenerate(),
+        masks: ["x+Y=z"],
+        valueRange: [0, 9999],
+        description:
+       "Všechna čísla z úlohy jsou 4 cif. čísla, "
+            "dvě z jejich cifer v řádech jednotek a desítek jsou 0 a to tak, "
+            "že součet čísel sčítanců v řádech stovek je > 10, "
+            "celkový součet je < 10000.",
+        example: "3600 + ? = 7300",
+      ),
+
+      Level(
+        index: 171,
+        xid: "fbf",
+        onGenerate: () => getLevelByIndex(169)!.onGenerate(),
+        masks: ["X+y=z"],
+        valueRange: [0, 9999],
+        description:
+       "Všechna čísla z úlohy jsou 4 cif. čísla, "
+            "dvě z jejich cifer v řádech jednotek a desítek jsou 0 a to tak, "
+            "že součet čísel sčítanců v řádech stovek je > 10, "
+            "celkový součet je < 10000.",
+        example: "? + 3700 = 7300",
+      ),
+
+      Level(
+        index: 172,
+        xid: "cxf",
+        onGenerate: () => getLevelByIndex(169)!.onGenerate(),
+        masks: ["x+Y=z", "X+y=z"],
+        valueRange: [0, 9999],
+        description:
+       "Všechna čísla z úlohy jsou 4 cif. čísla, "
+            "dvě z jejich cifer v řádech jednotek a desítek jsou 0 a to tak, "
+            "že součet čísel sčítanců v řádech stovek je > 10, "
+            "celkový součet je < 10000.",
+        example: "3600 + ? = 7300, nebo ? + 3700 = 7300",
+      ),
+
+      Level(
+        index: 173,
+        xid: "ete",
+        onGenerate: () {
+          int xt = randomMinMax(1, 8);
+          int yt = randomMinMax(1, 9 - xt);
+
+          int xh = randomMinMax(1, 8);
+          int yh = randomMinMax(1, 9 - xh);
+
+          int xd = randomMinMax(1, 8);
+          int yd = randomMinMax(1, 9 - xd);
+
+          int xo = randomMinMax(1, 8);
+          int yo = randomMinMax(1, 9 - xo);
+
+          
+          int x = xt * 1000 + xh * 100 + xd * 10 + xo * 1;
+          int y = yt * 1000 + yh * 100 + yd * 10 + yo * 1;
+
+          return [x, y, x + y];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 9999],
+        description: "Všechna čísla z úlohy jsou 4 cif. čísla a to tak,"
+            "že součet čísel sčítanců ve všech řádech je ≤ 9"
+            "celkový součet je < 10000.",
+        example: "3252 + 3731 = ?",
+      ),
+
+      Level(
+        index: 174,
+        xid: "ebk",
+        onGenerate: () => getLevelByIndex(173)!.onGenerate(),
+        masks: ["x+Y=z"],
+        valueRange: [0, 9999],
+        description:
+       "Všechna čísla z úlohy jsou 4 cif. čísla a to tak, "
+            "že součet čísel sčítanců ve všech řádech je ≤ 9"
+            "celkový součet je < 10000.",
+        example: "3252 + ? = 6983",
+      ),
+
+      Level(
+        index: 175,
+        xid: "abt",
+        onGenerate: () => getLevelByIndex(173)!.onGenerate(),
+        masks: ["X+y=z"],
+        valueRange: [0, 9999],
+        description:
+       "Všechna čísla z úlohy jsou 4 cif. čísla a to tak, "
+            "že součet čísel sčítanců ve všech řádech je ≤ 9"
+            "celkový součet je < 10000.",
+        example: "? + 3731 = 6983",
+      ),
+
+      Level(
+        index: 176,
+        xid: "dib",
+        onGenerate: () => getLevelByIndex(173)!.onGenerate(),
+        masks: ["x+Y=z", "X+y=z"],
+        valueRange: [0, 9999],
+        description:
+       "Všechna čísla z úlohy jsou 4 cif. čísla a to tak, "
+            "že součet čísel sčítanců ve všech řádech je ≤ 9"
+            "celkový součet je < 10000.",
+        example: "3252 + ? = 6983, nebo ? + 3731 = 6983",
+      ),
+
+      Level(
+        index: 177,
+        xid: "akg",
+        onGenerate: () {
+          int xdt = randomMinMax(1, 8);
+          int ydt = randomMinMax(1, 9 - xdt);
+  
+          int x = xdt * 10000;
+          int y = ydt * 10000;
+
+          return [x, y, x + y];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 99999],
+        description: "Všechna čísla z úlohy jsou 5 cif. čísla,"
+            "čtyři z jejich cifer v řádech T, S, D a J jsou 0 a to tak, "
+            "že součet čísel sčítanců v řádech desetitisíců je ≤ 9"
+            "celkový součet je < 100000.",
+        example: "40000 + 20000 = ?",
+      ),
+
+      Level(
+        index: 178,
+        xid: "acn",
+        onGenerate: () {
+          int xdt = randomMinMax(1, 8);
+          int ydt = randomMinMax(1, 9 - xdt);
+  
+          int x = xdt * 10000;
+          int y = ydt * 10000;
+
+          return [x, y, x + y];
+        },
+        masks: ["x+Y=z"],
+        valueRange: [0, 99999],
+        description: "Všechna čísla z úlohy jsou 5 cif. čísla,"
+            "čtyři z jejich cifer v řádech T, S, D a J jsou 0 a to tak, "
+            "že součet čísel sčítanců v řádech desetitisíců je ≤ 9"
+            "celkový součet je < 100000.",
+        example: "40000 + ? = 60000",
+      ),
+
+      Level(
+        index: 179,
+        xid: "exc",
+        onGenerate: () {
+          int xdt = randomMinMax(1, 8);
+          int ydt = randomMinMax(1, 9 - xdt);
+  
+          int x = xdt * 10000;
+          int y = ydt * 10000;
+
+          return [x, y, x + y];
+        },
+        masks: ["X+y=z"],
+        valueRange: [0, 99999],
+        description: "Všechna čísla z úlohy jsou 5 cif. čísla,"
+            "čtyři z jejich cifer v řádech T, S, D a J jsou 0 a to tak, "
+            "že součet čísel sčítanců v řádech desetitisíců je ≤ 9"
+            "celkový součet je < 100000.",
+        example: "? + 20000 = 60000",
+      ),
+
 // //////////////////////////////////////////////////////////////////// Level 180+
 
+      Level(
+        index: 180,
+        xid: "ekc",
+        onGenerate: () {
+          int xdt = randomMinMax(1, 8);
+          int ydt = randomMinMax(1, 9 - xdt);
+  
+          int x = xdt * 10000;
+          int y = ydt * 10000;
+
+          return [x, y, x + y];
+        },
+        masks: ["x+Y=z", "X+y=z"],
+        valueRange: [0, 99999],
+        description: "Všechna čísla z úlohy jsou 5 cif. čísla,"
+            "čtyři z jejich cifer v řádech T, S, D a J jsou 0 a to tak, "
+            "že součet čísel sčítanců v řádech desetitisíců je ≤ 9"
+            "celkový součet je < 100000.",
+        example: "40000 + ? = 60000, nebo ? + 20000 = 60000",
+      ),
+
+      Level(
+        index: 181,
+        xid: "bhu",
+        onGenerate: () {
+          int xdt = randomMinMax(1, 8);
+          int ydt = randomMinMax(1, 9 - xdt);
+
+          int xt = randomMinMax(1, 8);
+          int yt = randomMinMax(1, 9 - xt);
+
+          int yesorno = randomMinMax(0, 1);
+
+          int yh = randomMinMax(1, 9);
+          int yd = randomMinMax(1, 9);
+          int yo = randomMinMax(1, 9);
+  
+          int x = xdt * 10000 + xt * 1000;
+          int y = ydt * 10000 + yt * 1000 + yesorno * (yh * 100 + yd * 10 + yo * 1);
+
+          return [x, y, x + y];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 99999],
+        description: "Všechna čísla z úlohy jsou 5 cif. čísla,"
+            "jedno nebo obě čísla mají cifry v řádech S, D a J = 0 a to tak, "
+            "že součet čísel sčítanců v řádech tisíců je ≤ 9"
+            "celkový součet je < 100000.",
+        example: "34000 + 23000 = ?,  nebo 56000 + 12345 = ?",
+      ),
+
+      Level(
+        index: 182,
+        xid: "fau",
+        onGenerate: () {
+          int xdt = randomMinMax(1, 8);
+          int ydt = randomMinMax(1, 9 - xdt);
+
+          int xt = randomMinMax(1, 8);
+          int yt = randomMinMax(1, 9 - xt);
+
+          int yesorno = randomMinMax(0, 1);
+
+          int yh = randomMinMax(1, 9);
+          int yd = randomMinMax(1, 9);
+          int yo = randomMinMax(1, 9);
+  
+          int x = xdt * 10000 + xt * 1000;
+          int y = ydt * 10000 + yt * 1000 + yesorno * (yh * 100 + yd * 10 + yo * 1);
+
+          return [x, y, x + y];
+        },
+        masks: ["x+Y=z", "X+y=z"],
+        valueRange: [0, 99999],
+        description: "Všechna čísla z úlohy jsou 5 cif. čísla,"
+            "jedno nebo obě čísla mají cifry v řádech S, D a J = 0 a to tak, "
+            "že součet čísel sčítanců v řádech tisíců je ≤ 9"
+            "celkový součet je < 100000.",
+        example: "34000 + ? = 57000,  nebo ? + 12345 = 68345",
+      ),
+
+      Level(
+        index: 183,
+        xid: "fnm",
+        onGenerate: () {
+          int xdt = randomMinMax(1, 8);
+          int ydt = randomMinMax(1, 9 - xdt);
+
+          int xt = randomMinMax(1, 9);
+          int yt = 10 - xt;
+  
+          int x = xdt * 10000 + xt * 1000;
+          int y = ydt * 10000 + yt * 1000;
+
+          return [x, y, x + y];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 99999],
+        description: "Všechna čísla z úlohy jsou 5 cif. čísla,"
+            "obě čísla mají cifry v řádech S, D a J = 0 a to tak, "
+            "že součet čísel sčítanců v řádech tisíců je = 10"
+            "celkový součet je < 100000.",
+        example: "34000 + 26000 = ?",
+      ),
+
+      Level(
+        index: 184,
+        xid: "cio",
+        onGenerate: () {
+          int xdt = randomMinMax(1, 8);
+          int ydt = randomMinMax(1, 9 - xdt);
+
+          int xt = randomMinMax(1, 9);
+          int yt = 10 - xt;
+  
+          int x = xdt * 10000 + xt * 1000;
+          int y = ydt * 10000 + yt * 1000;
+
+          return [x, y, x + y];
+        },
+        masks: ["x+Y=z", "X+y=z"],
+        valueRange: [0, 99999],
+        description: "Všechna čísla z úlohy jsou 5 cif. čísla,"
+            "obě čísla mají cifry v řádech S, D a J = 0 a to tak, "
+            "že součet čísel sčítanců v řádech tisíců je = 10"
+            "celkový součet je < 100000.",
+        example: "34000 + ? = 60000, nebo ? + 26000 = 60000",
+      ),
+
+      Level(
+        index: 185,
+        xid: "dnb",
+        onGenerate: () {
+          int xdt = randomMinMax(1, 7);
+          int ydt = randomMinMax(1, 8 - xdt);
+
+          int xt = randomMinMax(2, 9);
+          int yt = randomMinMax(11 - xt, 9);
+  
+          int x = xdt * 10000 + xt * 1000;
+          int y = ydt * 10000 + yt * 1000;
+
+          return [x, y, x + y];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 99999],
+        description: "Všechna čísla z úlohy jsou 5 cif. čísla,"
+            "obě čísla mají cifry v řádech S, D a J = 0 a to tak, "
+            "že součet čísel sčítanců v řádech tisíců je > 10"
+            "celkový součet je < 100000.",
+        example: "37000 + 26000 = ?",
+      ),
+
+      Level(
+        index: 186,
+        xid: "deo",
+        onGenerate: () {
+          int xdt = randomMinMax(1, 7);
+          int ydt = randomMinMax(1, 8 - xdt);
+
+          int xt = randomMinMax(2, 9);
+          int yt = randomMinMax(11 - xt, 9);
+  
+          int x = xdt * 10000 + xt * 1000;
+          int y = ydt * 10000 + yt * 1000;
+
+          return [x, y, x + y];
+        },
+        masks: ["x+Y=z", "X+y=z"],
+        valueRange: [0, 99999],
+        description: "Všechna čísla z úlohy jsou 5 cif. čísla,"
+            "obě čísla mají cifry v řádech S, D a J = 0 a to tak, "
+            "že součet čísel sčítanců v řádech tisíců je > 10"
+            "celkový součet je < 100000.",
+        example: "37000 + ? = 63000, nebo ? + 26000 = 63000",
+      ),
+
+      Level(
+        index: 187,
+        xid: "cyz",
+        onGenerate: () {
+          int xht = randomMinMax(1, 8);
+          int yht = randomMinMax(1, 9 - xht);
+  
+          int x = xht * 100000;
+          int y = yht * 100000;
+
+          return [x, y, x + y];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 999999],
+        description: "Všechna čísla z úlohy jsou 6 cif. čísla,"
+            "je dána cifra pouze v řádu statisíců a to tak, "
+            "že součet čísel sčítanců v řádech statisíců je ≤ 9"
+            "celkový součet je < 1000000.",
+        example: "500000 + 200000 = ?",
+      ),
+
+      Level(
+        index: 188,
+        xid: "fop",
+        onGenerate: () {
+          int xht = randomMinMax(1, 8);
+          int yht = randomMinMax(1, 9 - xht);
+  
+          int x = xht * 100000;
+          int y = yht * 100000;
+
+          return [x, y, x + y];
+        },
+        masks: ["x+Y=z", "X+y=z"],
+        valueRange: [0, 999999],
+        description: "Všechna čísla z úlohy jsou 6 cif. čísla,"
+            "je dána cifra pouze v řádu statisíců a to tak, "
+            "že součet čísel sčítanců v řádech statisíců je ≤ 9"
+            "celkový součet je < 1000000.",
+        example: "500000 + ? = 700000, nebo ? + 200000 = 700000",
+      ),
+
+      Level(
+        index: 189,
+        xid: "fte",
+        onGenerate: () {
+          int xht = randomMinMax(1, 9);
+
+          int ydt = randomMinMax(1, 9);
+          int yt = randomMinMax(1, 9);
+          int yh = randomMinMax(1, 9);
+          int yd = randomMinMax(1, 9);
+          int yo = randomMinMax(1, 9);
+  
+          int x = xht * 100000;
+          int y = ydt * 10000 + yt * 1000 + yh * 100 + yd * 10 + yo *1;
+
+          return [x, y, x + y];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 999999],
+        description: "První číslo z úlohy je 6 ciferné číslo dělitelné 100000,"
+            "druhé číslo je libovolné 5 ciferné číslo,"
+            "celkový součet je < 1000000.",
+        example: "400000 + 45765 = ?",
+      ),
+
 // //////////////////////////////////////////////////////////////////// Level 190+
+
+       Level(
+        index: 190,
+        xid: "evb",
+        onGenerate: () {
+          int xht = randomMinMax(1, 9);
+
+          int ydt = randomMinMax(1, 9);
+          int yt = randomMinMax(1, 9);
+          int yh = randomMinMax(1, 9);
+          int yd = randomMinMax(1, 9);
+          int yo = randomMinMax(1, 9);
+  
+          int x = xht * 100000;
+          int y = ydt * 10000 + yt * 1000 + yh * 100 + yd * 10 + yo *1;
+
+          return [x, y, x + y];
+        },
+        masks: ["x+Y=z", "X+y=z"],
+        valueRange: [0, 999999],
+        description: "První číslo z úlohy je 6 ciferné číslo dělitelné 100000,"
+            "druhé číslo je libovolné 5 ciferné číslo,"
+            "celkový součet je < 1000000.",
+        example: "400000 + ? = 445765, nebo ? + 45765 = 445765",
+      ),
+
+      Level(
+        index: 191,
+        xid: "bjw",
+        onGenerate: () {
+          int xht = randomMinMax(1, 8);
+          int yht = randomMinMax(1, 9 - xht);
+
+          int xdt = randomMinMax(1, 8);
+          int ydt = randomMinMax(1, 9 - xdt);
+         
+          int x = xht * 100000 + xdt * 10000;
+          int y = yht * 100000 + ydt * 10000;
+
+          return [x, y, x + y];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 999999],
+        description: "Všechna čísla z úlohy jsou 6 ciferná čísla,"
+            "jsou dány cifry pouze v řádech ST a DT a to tak,"
+            "že součet v jednotlivých řádech ≤ 9"
+            "celkový součet je < 1000000.",
+        example: "540000 + 230000 = ?",
+      ),
+
+      Level(
+        index: 192,
+        xid: "die",
+        onGenerate: () {
+          int xht = randomMinMax(1, 8);
+          int yht = randomMinMax(1, 9 - xht);
+
+          int xdt = randomMinMax(1, 8);
+          int ydt = randomMinMax(1, 9 - xdt);
+         
+          int x = xht * 100000 + xdt * 10000;
+          int y = yht * 100000 + ydt * 10000;
+
+          return [x, y, x + y];
+        },
+        masks: ["x+Y=z", "X+y=z"],
+        valueRange: [0, 999999],
+        description: "Všechna čísla z úlohy jsou 6 ciferná čísla,"
+            "jsou dány cifry pouze v řádech ST a DT a to tak,"
+            "že součet v jednotlivých řádech ≤ 9"
+            "celkový součet je < 1000000.",
+        example: "540000 + ? = 770000, nebo ? + 230000 = ?",
+      ),
+
+      Level(
+        index: 193,
+        xid: "cfw",
+        onGenerate: () {
+          int xht = randomMinMax(1, 7);
+          int yht = randomMinMax(1, 8 - xht);
+
+          int xdt = randomMinMax(2, 9);
+          int ydt = randomMinMax(11 - xdt, 9);
+         
+          int x = xht * 100000 + xdt * 10000;
+          int y = yht * 100000 + ydt * 10000;
+
+          return [x, y, x + y];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 999999],
+        description: "Všechna čísla z úlohy jsou 6 ciferná čísla,"
+            "jsou dány cifry pouze v řádech ST a DT a to tak,"
+            "že součet v řádech desetitisíců je > 10"
+            "celkový součet je < 1000000.",
+        example: "560000 + 270000 = ?",
+      ),
+
+      Level(
+        index: 194,
+        xid: "ehf",
+        onGenerate: () {
+          int xht = randomMinMax(1, 7);
+          int yht = randomMinMax(1, 8 - xht);
+
+          int xdt = randomMinMax(2, 9);
+          int ydt = randomMinMax(11 - xdt, 9);
+         
+          int x = xht * 100000 + xdt * 10000;
+          int y = yht * 100000 + ydt * 10000;
+
+          return [x, y, x + y];
+        },
+        masks: ["x+Y=z", "X+y=z"],
+        valueRange: [0, 999999],
+        description: "Všechna čísla z úlohy jsou 6 ciferná čísla,"
+            "jsou dány cifry pouze v řádech ST a DT a to tak,"
+            "že součet v řádech desetitisíců je > 10"
+            "celkový součet je < 1000000.",
+        example: "560000 + ? = 830000, nebo ? + 270000 = 830000",
+      ),
+
+      Level(
+        index: 195,
+        xid: "cue",
+        onGenerate: () {
+          int xht = randomMinMax(1, 8);
+          int yht = randomMinMax(1, 9 - xht);
+
+          int xdt = randomMinMax(1, 8);
+          int ydt = randomMinMax(1, 9 - xdt);
+
+          int xt = randomMinMax(1, 8);
+          int yt = randomMinMax(1, 9 - xt);
+         
+          int x = xht * 100000 + xdt * 10000 + xt * 1000;
+          int y = yht * 100000 + ydt * 10000 + yt * 1000;
+
+          return [x, y, x + y];
+        },
+        masks: ["x+y=Z"],
+        valueRange: [0, 999999],
+        description: "Všechna čísla z úlohy jsou 6 ciferná čísla,"
+            "jsou dány cifry pouze v řádech ST, DT a T a to tak,"
+            "že součet ve všech řádech je ≤ 9"
+            "celkový součet je < 1000000.",
+        example: "543000 + 232000 = ?",
+      ),
+
+      Level(
+        index: 196,
+        xid: "ezc",
+        onGenerate: () {
+          int xht = randomMinMax(1, 8);
+          int yht = randomMinMax(1, 9 - xht);
+
+          int xdt = randomMinMax(1, 8);
+          int ydt = randomMinMax(1, 9 - xdt);
+
+          int xt = randomMinMax(1, 8);
+          int yt = randomMinMax(1, 9 - xt);
+         
+          int x = xht * 100000 + xdt * 10000 + xt * 1000;
+          int y = yht * 100000 + ydt * 10000 + yt * 1000;
+
+          return [x, y, x + y];
+        },
+        masks: ["x+Y=z", "X+y=z"],
+        valueRange: [0, 999999],
+        description: "Všechna čísla z úlohy jsou 6 ciferná čísla,"
+            "jsou dány cifry pouze v řádech ST, DT a T a to tak,"
+            "že součet ve všech řádech je ≤ 9"
+            "celkový součet je < 1000000.",
+        example: "543000 + ? = 775000, nebo ? + 232000 = 775000",
+      ),
 
 // //////////////////////////////////////////////////////////////////// Level 200+
 
