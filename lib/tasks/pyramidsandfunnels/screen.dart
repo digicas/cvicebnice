@@ -6,9 +6,9 @@ import '../../screens/overlays/donewrongoverlay.dart';
 import '../../screens/overlays/optionsoverlay.dart';
 
 
-import 'package:flutter/cupertino.dart';
+//import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+//import 'package:flutter/rendering.dart';
 import 'triangle_levels.dart';
 import '../../widgets/small_numeric_keyboard.dart';
 //import 'package:zoom_widget/zoom_widget.dart';
@@ -21,7 +21,7 @@ import 'package:security_keyboard/keyboard_media_query.dart';
 
 /// Triangles ... matematicke prostredi: souctove trojuhelniky
 class TaskScreen extends StatefulWidget {
-  final Level level;
+  final Level? level;
   final TriangleTaskType taskType;
 
   TaskScreen({this.level, this.taskType = TriangleTaskType.Funnel});
@@ -31,13 +31,13 @@ class TaskScreen extends StatefulWidget {
 }
 
 class _TaskScreenState extends State<TaskScreen> {
-  bool _hintOn;
-  bool _showBackground;
-  bool taskSubmitted;
-  bool optionsRequested;
-  Level _level;
+  bool? _hintOn;
+  bool? _showBackground;
+  bool? taskSubmitted;
+  bool? optionsRequested;
+  Level? _level;
 
-  SubmissionController submissionController;
+  SubmissionController? submissionController;
 
   @override
   void initState() {
@@ -53,9 +53,9 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 
   void levelInit() {
-    _level.generate();
+    _level!.generate();
     submissionController = SubmissionController(level: _level);
-    submissionController.addListener(_checkSolution);
+    submissionController!.addListener(_checkSolution);
     taskSubmitted = false;
     optionsRequested = false;
   }
@@ -68,13 +68,13 @@ class _TaskScreenState extends State<TaskScreen> {
 
   _checkSolution() {
     print(
-        "Submission: ${submissionController.toString()} : solved: ${submissionController.isSolved}");
+        "Submission: ${submissionController.toString()} : solved: ${submissionController!.isSolved}");
     setState(() {});
   }
 
   @override
   void dispose() {
-    submissionController.dispose();
+    submissionController!.dispose();
     super.dispose();
   }
 
@@ -139,7 +139,7 @@ class _TaskScreenState extends State<TaskScreen> {
                     ),
 
                     /// edu guide and its speech / buttons over task screen
-                    (optionsRequested || taskSubmitted)
+                    (optionsRequested! || taskSubmitted!)
 
                         /// do not show Guide layer, when overlay is above
                         ? Container()
@@ -167,7 +167,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                   ),
 //                          Container(width: 20),
 
-                                  submissionController.isFilled
+                                  submissionController!.isFilled
                                       ? RaisedButton(
                                           shape: StadiumBorder(),
                                           child: Text("HOTOVO?"),
@@ -191,19 +191,19 @@ class _TaskScreenState extends State<TaskScreen> {
                     ///
                     /// Overlay for options and task submission
                     ///
-                    !taskSubmitted
+                    !taskSubmitted!
 
                         /// task is not submitted -> check if option overlay was requested
-                        ? !optionsRequested
+                        ? !optionsRequested!
 
                             /// no shade overlay needed
                             ? Container()
 
                             /// Options menu requested
                             : OptionsOverlay(
-                                canDecreaseLevel: (_level.levelIndex > 2),
+                                canDecreaseLevel: (_level!.levelIndex! > 2),
                                 levelInfoText:
-                                    _level.levelIndex.toString() + " ze 100",
+                                    _level!.levelIndex.toString() + " ze 100",
                                 showBackground: _showBackground,
                                 onBackToLevel: () {
                                   setState(() {
@@ -215,34 +215,34 @@ class _TaskScreenState extends State<TaskScreen> {
                                 },
                                 onRestartLevel: () {
                                   setState(() {
-                                    submissionController
-                                        .initiateForLevel(_level);
+                                    submissionController!
+                                        .initiateForLevel(_level!);
                                     optionsRequested = false;
                                   });
                                 },
                                 onSwitchBackgroundImage: () {
                                   setState(() {
-                                    _showBackground = !_showBackground;
+                                    _showBackground = !_showBackground!;
                                     optionsRequested = false;
                                   });
                                 },
                                 onDecreaseLevel: () {
                                   setState(() {
                                     _level =
-                                        LevelTree.getLessDifficultLevel(_level);
+                                        LevelTree.getLessDifficultLevel(_level!);
                                     levelRegenerate();
                                     optionsRequested = false;
                                   });
                                 },
                               )
-                        : submissionController.isSolved
+                        : submissionController!.isSolved
 
                             /// task is submitted and solved successfully
                             ? DoneSuccessOverlay(
                                 onNextUpLevel: () {
                                   setState(() {
                                     _level =
-                                        LevelTree.getMoreDifficultLevel(_level);
+                                        LevelTree.getMoreDifficultLevel(_level!);
                                     levelRegenerate();
                                   });
                                 },
@@ -300,16 +300,16 @@ enum TriangleTaskType { Pyramid, Funnel }
 
 /// renders the pyramid or funnel widget based on the RenderType
 class Funnel extends StatelessWidget {
-  final Level level;
-  final SubmissionController submissionController;
-  final bool hint;
-  final bool showBackground;
+  final Level? level;
+  final SubmissionController? submissionController;
+  final bool? hint;
+  final bool? showBackground;
 
   /// task type to render (RenderType.Pyramid or RenderType.Funnel)
   final TriangleTaskType renderType;
 
   Funnel(
-      {Key key,
+      {Key? key,
       this.level,
       this.submissionController,
       this.hint,
@@ -321,18 +321,18 @@ class Funnel extends StatelessWidget {
   Widget build(BuildContext context) {
 //    print(level);
 
-    const List<int> _rowStartIndex = [null, 0, 1, 3, 6, 10];
+    const List<int?> _rowStartIndex = [null, 0, 1, 3, 6, 10];
 
     List<Widget> renderRows = [];
 
-    for (int row = 1; row <= level.solutionRows; row++) {
+    for (int row = 1; row <= level!.solutionRows; row++) {
       List<Cell> cells = [];
 
-      for (int i = _rowStartIndex[row]; i < _rowStartIndex[row] + row; i++) {
+      for (int i = _rowStartIndex[row]!; i < _rowStartIndex[row]! + row; i++) {
         cells.add(Cell(
-          value: level.solution[i],
-          textController: submissionController.cells[i],
-          masked: !level.solutionMask.mask[i],
+          value: level!.solution![i],
+          textController: submissionController!.cells[i],
+          masked: !level!.solutionMask.mask[i],
           hint: hint,
           cellType: renderType == TriangleTaskType.Funnel
               ? CellType.Bubble
@@ -367,7 +367,7 @@ class Funnel extends StatelessWidget {
 //              color: Color(0xff9C4D82),
               padding: EdgeInsets.fromLTRB(0, 64, 0, 0),
               child: CustomPaint(
-                painter: showBackground ? FunnelPainter() : null,
+                painter: showBackground! ? FunnelPainter() : null,
                 child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                     child: Column(
@@ -386,7 +386,7 @@ class Funnel extends StatelessWidget {
             child: CustomPaint(
               // https://api.flutter.dev/flutter/widgets/CustomPaint-class.html
 //              size: Size(200,200),
-              painter: showBackground ? PyramidPainter() : null,
+              painter: showBackground! ? PyramidPainter() : null,
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
                 child: Column(
@@ -405,8 +405,8 @@ class Funnel extends StatelessWidget {
 
 /// background painting for Pyramid
 class PyramidPainter extends CustomPainter {
-  Paint _paintL;
-  Paint _paintR;
+  late Paint _paintL;
+  late Paint _paintR;
 
   PyramidPainter() {
     _paintL = Paint()
@@ -441,7 +441,7 @@ class PyramidPainter extends CustomPainter {
 
 /// Background painting for Funnel
 class FunnelPainter extends CustomPainter {
-  Paint _paint;
+  late Paint _paint;
   final double factor;
 
   FunnelPainter({this.factor = 1}) {
@@ -476,14 +476,14 @@ enum CellType { Box, Bubble }
 class Cell extends StatelessWidget {
   final int value;
   final bool masked;
-  final bool hint;
+  final bool? hint;
   final CellType cellType;
 
-  final TextEditingController textController;
+  final TextEditingController? textController;
 
   Cell(
-      {Key key,
-      @required this.value,
+      {Key? key,
+      required this.value,
       this.masked = false,
       this.hint,
       this.textController,
@@ -532,7 +532,7 @@ class Cell extends StatelessWidget {
                         keyboardType: SmallNumericKeyboard.text,
 //                  keyboardType: TextInputType.number,
                         inputFormatters: [
-                          WhitelistingTextInputFormatter.digitsOnly
+                          FilteringTextInputFormatter.digitsOnly
                         ],
                         controller: textController,
                         cursorColor: Color(0xffa02b5f),
@@ -548,9 +548,9 @@ class Cell extends StatelessWidget {
                         // hide length counter and underline
                         decoration: null,
                         buildCounter: (BuildContext context,
-                                {int currentLength,
-                                int maxLength,
-                                bool isFocused}) =>
+                                {int? currentLength,
+                                int? maxLength,
+                                bool? isFocused}) =>
                             null,
                       ),
 
@@ -598,7 +598,7 @@ class Cell extends StatelessWidget {
 //                  enableInteractiveSelection: false,
                   keyboardType: SmallNumericKeyboard.text,
 //                  keyboardType: TextInputType.number,
-                  inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   controller: textController,
                   cursorColor: Color(0xffa02b5f),
                   autocorrect: false,
@@ -613,7 +613,7 @@ class Cell extends StatelessWidget {
                   // hide length counter and underline
                   decoration: null,
                   buildCounter: (BuildContext context,
-                          {int currentLength, int maxLength, bool isFocused}) =>
+                          {int? currentLength, int? maxLength, bool? isFocused}) =>
                       null,
                 ),
 

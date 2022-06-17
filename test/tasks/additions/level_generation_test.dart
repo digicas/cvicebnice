@@ -16,17 +16,17 @@ void main() {
           //        print("level ${level.index}: ${level.solution}");
           print(level);
           expect(
-              level.solution[0],
+              level.solution![0],
               inInclusiveRange(level.valueRange[0],
                   level.valueRange[1])); // test min and max range of x
           expect(
-              level.solution[1],
+              level.solution![1],
               inInclusiveRange(level.valueRange[0],
                   level.valueRange[1])); // test min and max range of y
 
-          if (level.solution.length > 3) {
+          if (level.solution!.length > 3) {
             expect(
-                level.solution[3],
+                level.solution![3],
                 inInclusiveRange(level.valueRange[0],
                     level.valueRange[1])); // test min and max range of z
           }
@@ -37,7 +37,7 @@ void main() {
     test("Levels have implemented submission check of the mask:", () {
       levelTree.levels.forEach((level) {
         level.generate();
-        level.masks.forEach((mask) {
+        level.masks!.forEach((mask) {
           expect(() => Level.checkSubmission(level.solution, [1], mask),
               returnsNormally);
         });
@@ -47,7 +47,7 @@ void main() {
     test("Level is mapped to school year and month:", () {
       levelTree.levels.forEach((level) {
         print(level.index);
-        expect(() => LevelTree.getMinimumSchoolClassAndMonth(level.index),
+        expect(() => LevelTree.getMinimumSchoolClassAndMonth(level.index!),
             returnsNormally);
       });
     });

@@ -6,7 +6,7 @@ import './shaderoverlay.dart';
 /// To be used in [Stack]; uses [ShaderOverlay] as a base widget
 class OptionsOverlay extends StatelessWidget {
   const OptionsOverlay({
-    Key key,
+    Key? key,
     this.levelInfoText,
     this.showBackground,
     this.onBackToLevel,
@@ -19,21 +19,21 @@ class OptionsOverlay extends StatelessWidget {
   }) : super(key: key);
 
   /// Callback when getting back from this options overlay
-  final VoidCallback onBackToLevel;
+  final VoidCallback? onBackToLevel;
   /// Callback when getting out of the taskscreen back "parent" screen
-  final VoidCallback onBack;
+  final VoidCallback? onBack;
   /// Callback to clean and de facto restart the task screen
-  final VoidCallback onRestartLevel;
+  final VoidCallback? onRestartLevel;
   /// Callback to restart with lower level
-  final VoidCallback onDecreaseLevel;
+  final VoidCallback? onDecreaseLevel;
   /// Callback when background button was touched
-  final VoidCallback onSwitchBackgroundImage;
+  final VoidCallback? onSwitchBackgroundImage;
 
   /// text (typically number) to show
-  final String levelInfoText;
+  final String? levelInfoText;
 
   /// Visibility for image in background
-  final bool showBackground;
+  final bool? showBackground;
 
   /// Whether to show button to decrease level
   final bool canDecreaseLevel;
@@ -84,7 +84,7 @@ class OptionsOverlay extends StatelessWidget {
             shape: StadiumBorder(),
             onPressed: onBackToLevel,
           ),
-          showBackground
+          showBackground!
               ? RaisedButton.icon(
             autofocus: true,
             label: Text("VYPNOUT OBRÁZEK"),

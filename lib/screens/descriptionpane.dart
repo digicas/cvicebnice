@@ -1,4 +1,4 @@
-import 'dart:ui';
+//import 'dart:ui';
 
 import 'package:cvicebnice/widgets/launchurl.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +8,11 @@ import '../tasksregister.dart';
 /// Pane with description (and ideally preview :) of the particular task level
 class DescriptionPane extends StatelessWidget {
   const DescriptionPane({
-    Key key,
-    @required this.taskSelectedIndex,
-    @required this.levelSelectedIndex,
-    @required this.canPlayLevel,
-    @required this.onHideDescriptionPane,
+    Key? key,
+    required this.taskSelectedIndex,
+    required this.levelSelectedIndex,
+    required this.canPlayLevel,
+    required this.onHideDescriptionPane,
   }) : super(key: key);
 
   /// Currently selected task type index (for labels, etc.)

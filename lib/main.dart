@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:cvicebnice/tasksregister.dart';
-import 'package:flutter/cupertino.dart';
+//import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -61,13 +61,13 @@ class TaskListScreen extends StatefulWidget {
 
 class _TaskListScreenState extends State<TaskListScreen> {
   /// Togglebuttons current selection - tasks list
-  int taskSelectedIndex;
+  int taskSelectedIndex = 0;
 
   /// Currently selected level index
-  int levelSelectedIndex;
+  int levelSelectedIndex = 0;
 
   /// Currently selected xid of the particular task level
-  String levelXid;
+  String levelXid = "";
 
   /// Indicator for the visibility of description pane in bottom appbar
   bool descriptionPaneVisible = false;
@@ -167,14 +167,14 @@ class _TaskListScreenState extends State<TaskListScreen> {
                               tasksRegister.getTaskTypeIndexFromXid(newXid);
                           print("Task Type index: $newTaskTypeIndex");
 
-                          int newLevelIndex = -1;
+                          int? newLevelIndex = -1;
                           if (newTaskTypeIndex > -1) {
                             newLevelIndex = tasksRegister[newTaskTypeIndex]
                                 .getLevelIndexFromXid(newXid);
                             print("Task's selected index: $newLevelIndex");
                             setState(() {
                               taskSelectedIndex = newTaskTypeIndex;
-                              if (newLevelIndex > -1)
+                              if (newLevelIndex! > -1)
                                 levelSelectedIndex = newLevelIndex;
                             });
                           }
@@ -520,13 +520,13 @@ class _TaskListScreenState extends State<TaskListScreen> {
               title: Text("Jak nasdílet vybranou úlohu?"),
               content: Text("Pošlete text:\n\n" + text),
               actions: [
-                FlatButton.icon(
+                TextButton.icon(
                   icon: Icon(Icons.content_copy),
                   label: Text("Zkopírovat"),
                   onPressed: () {
                     Clipboard.setData(ClipboardData(text: text)).then((_) {
                       Navigator.of(context).pop();
-                      globalTaskListScaffoldKey.currentState.showSnackBar(
+                      globalTaskListScaffoldKey.currentState!.showSnackBar(
                           SnackBar(
                               duration: Duration(seconds: 3),
                               content: Text("Zkopírováno!")));

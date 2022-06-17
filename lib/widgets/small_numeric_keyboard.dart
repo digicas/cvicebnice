@@ -19,10 +19,10 @@ enum SecurityKeyboardType { text }
 
 class SmallNumericKeyboard extends StatefulWidget {
   ///Controller for keyboard output
-  final KeyboardController controller;
+  final KeyboardController? controller;
 
   ///Keyboard type - default is text
-  final SecurityKeyboardType keyboardType;
+  final SecurityKeyboardType? keyboardType;
 
   const SmallNumericKeyboard({this.controller, this.keyboardType});
 
@@ -57,7 +57,7 @@ class SmallNumericKeyboard extends StatefulWidget {
   }
 
   ///Keyboard type
-  SecurityKeyboardType get _keyboardType => keyboardType;
+  SecurityKeyboardType? get _keyboardType => keyboardType;
 
   ///Method to get the height based on keyboard type
   static double getHeight(SecurityKeyboardType securityKeyboardType) {
@@ -70,7 +70,7 @@ class SmallNumericKeyboard extends StatefulWidget {
 
 class _SmallNumericKeyboardState extends State<SmallNumericKeyboard> {
   ///Holds and broadcasts actual keyboard type
-  SecurityKeyboardType currentKeyboardType;
+  SecurityKeyboardType? currentKeyboardType;
 
   @override
   void initState() {
@@ -111,7 +111,7 @@ class _SmallNumericKeyboardState extends State<SmallNumericKeyboard> {
                       buildKeyboardButton('0'),
                       buildKeyboardButton("X",
                           icon: Icon(Icons.backspace),
-                          onTapAction: widget.controller.deleteOne),
+                          onTapAction: widget.controller!.deleteOne),
                     ],
                   )),
             )));
@@ -124,9 +124,9 @@ class _SmallNumericKeyboardState extends State<SmallNumericKeyboard> {
   ///   default is addText(value)
   Widget buildKeyboardButton(
     String label, {
-    String value,
-    Icon icon,
-    Function onTapAction,
+    String? value,
+    Icon? icon,
+    Function? onTapAction,
   }) {
     value ??= label;
     return Container(
@@ -144,7 +144,7 @@ class _SmallNumericKeyboardState extends State<SmallNumericKeyboard> {
         ),
         onTap: () {
           onTapAction == null
-              ? widget.controller.addText(value)
+              ? widget.controller!.addText(value!)
               : onTapAction();
         },
       ),
@@ -165,10 +165,10 @@ void removeEditableFocus(BuildContext context) {
 /// Initializes custom keyboard and attaches to the system channel
 /// TextInput can than use keyboardType: SmallNumericKeyboard.text
 class CustomKeyboardCovered extends StatelessWidget {
-  final Widget child;
+  final Widget? child;
 
   const CustomKeyboardCovered({
-    Key key, this.child,
+    Key? key, this.child,
   }) : super(key: key);
 
   @override
@@ -179,7 +179,7 @@ class CustomKeyboardCovered extends StatelessWidget {
         child: Builder(
           builder: (context) {
             KeyboardManager.init(context);
-            return child;
+            return child!;
           },
         ),
       ),

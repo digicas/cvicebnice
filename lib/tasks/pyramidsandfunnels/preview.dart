@@ -12,15 +12,15 @@ Widget getLevelPreviewPyramid(int levelIndex) {
   if (level == null) return FaIcon(FontAwesomeIcons.handsHelping, size: 48);
   level.generate();
 
-  const List<int> _rowStartIndex = [null, 0, 1, 3, 6, 10];
+  const List<int?> _rowStartIndex = [null, 0, 1, 3, 6, 10];
   List<Widget> renderRows = [];
 
   for (int row = 1; row <= level.solutionRows; row++) {
     List<Widget> cells = [];
 
-    for (int i = _rowStartIndex[row]; i < _rowStartIndex[row] + row; i++) {
+    for (int i = _rowStartIndex[row]!; i < _rowStartIndex[row]! + row; i++) {
       var masked = !level.solutionMask.mask[i];
-      var value = level.solution[i];
+      var value = level.solution![i];
       cells.add(Padding(
         padding: const EdgeInsets.all(2.0),
         child: Container(
@@ -85,15 +85,15 @@ Widget getLevelPreviewFunnel(int levelIndex) {
   if (level == null) return FaIcon(FontAwesomeIcons.handsHelping, size: 48);
   level.generate();
 
-  const List<int> _rowStartIndex = [null, 0, 1, 3, 6, 10];
+  const List<int?> _rowStartIndex = [null, 0, 1, 3, 6, 10];
   List<Widget> renderRows = [];
 
   for (int row = 1; row <= level.solutionRows; row++) {
     List<Widget> cells = [];
 
-    for (int i = _rowStartIndex[row]; i < _rowStartIndex[row] + row; i++) {
+    for (int i = _rowStartIndex[row]!; i < _rowStartIndex[row]! + row; i++) {
       var masked = !level.solutionMask.mask[i];
-      var value = level.solution[i];
+      var value = level.solution![i];
       cells.add(Padding(
         padding: const EdgeInsets.fromLTRB(2, 0, 2, 0),
         child: Container(

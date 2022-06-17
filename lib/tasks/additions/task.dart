@@ -66,7 +66,7 @@ String getLevelDescription(int index) {
   return text;
 }
 
-String getLevelXid(int index) {
+String? getLevelXid(int index) {
   var levelTree = LevelTree();
   var level = levelTree.getLevelByIndex(index);
   if (level == null) return "!!!";
@@ -77,7 +77,7 @@ String getLevelXid(int index) {
 /// Gets the levelIndex in [LevelTree] based on whole xid "abcghi"
 ///
 /// Returns -1 if levelIndex is not found.
-int getLevelIndexFromXid(String wholeXid) {
+int? getLevelIndexFromXid(String wholeXid) {
   var levelTree = LevelTree();
   return levelTree.getLevelIndexFromXid(wholeXid);
 }

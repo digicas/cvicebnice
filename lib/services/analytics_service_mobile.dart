@@ -15,7 +15,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 
 // Analytics, implements the abstract class in analytics_service and overrides the global factory
 class AnalyticsMobile implements Analytics {
-  FirebaseAnalytics _analytics;
+  late FirebaseAnalytics _analytics;
 
   AnalyticsMobile() {
     _analytics = FirebaseAnalytics();
