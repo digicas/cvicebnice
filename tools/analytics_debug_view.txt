@@ -1,7 +1,0 @@
-Enable Debug View for firebase analytics:
-
-run 
-
-adb shell setprop debug.firebase.analytics.app cz.edukids.matikadokapsy
-
-https://firebase.google.com/docs/flutter/setup?platform=android#analytics-enabled

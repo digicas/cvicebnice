@@ -1,5 +1,3 @@
-// app-wide constants
-
 import 'package:flutter/material.dart';
 
 const Color kColorAction = Color(0xffa02b5f);
@@ -12,20 +10,20 @@ const Color kColorTaskBackground = Color(0xffECE6E9);
 final int kARGBTaskBackground = kColorTaskBackground.value;
 
 const List<String> kMonths = [
-  "září",
-  "říjen",
-  "listopad",
-  "prosinec",
-  "leden",
-  "únor",
-  "březen",
-  "duben",
-  "květen",
-  "červen",
-  "červenec",
-  "srpen"
+  'září',
+  'říjen',
+  'listopad',
+  'prosinec',
+  'leden',
+  'únor',
+  'březen',
+  'duben',
+  'květen',
+  'červen',
+  'červenec',
+  'srpen'
 ];
 
-const double kPreviewBarHeight = 256.0;
+const double kPreviewBarHeight = 256;
 
 const double kFABSizeRatio = 0.236;

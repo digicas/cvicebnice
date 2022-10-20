@@ -1,63 +1,102 @@
-import 'package:cvicebnice/tasks/additions/level.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:cvicebnice/tasks/additions/leveltree.dart';
+// import 'package:cvicebnice/data/tasks/pyramid_funnels/triangle_levels.dart';
+// import 'package:cvicebnice/tasks/additions/level.dart';
+// import 'package:flutter_test/flutter_test.dart';
+// import 'package:cvicebnice/tasks/additions/leveltree.dart';
 
-/// tests using matchers: http://dartdoc.takyam.com/articles/dart-unit-tests/#matchers
+// /// tests using matchers: http://dartdoc.takyam.com/articles/dart-unit-tests/#matchers
+
+import 'dart:developer';
+
+import 'package:cvicebnice/data/tasks/additions/level.dart';
+import 'package:cvicebnice/data/tasks/additions/level_tree.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group("When generating levels", () {
-    LevelTree levelTree = LevelTree();
+  group(
+    'Levels generation',
+    () {
+      final levelTree = LevelTree();
+      test(
+        'Generated Values in range',
+        () {
+          for (final level in levelTree.levels) {
+            for (var i = 0; i < 2; i++) {
+              level.generate();
 
-    test("Generated values should be in range:", () {
-      levelTree.levels.forEach((level) {
-//        var level = LevelTree.getLevelByIndex(135);
-        for (var i = 0; i < 2; i++) {
-          level.generate();
-          //        print("level ${level.index}: ${level.solution}");
-          print(level);
-          expect(
-              level.solution[0],
-              inInclusiveRange(level.valueRange[0],
-                  level.valueRange[1])); // test min and max range of x
-          expect(
-              level.solution[1],
-              inInclusiveRange(level.valueRange[0],
-                  level.valueRange[1])); // test min and max range of y
+              expect(
+                level.solution![0],
+                inInclusiveRange(
+                  level.valueRange[0],
+                  level.valueRange[1],
+                ),
+              );
 
-          if (level.solution.length > 3) {
-            expect(
-                level.solution[3],
-                inInclusiveRange(level.valueRange[0],
-                    level.valueRange[1])); // test min and max range of z
+              expect(
+                level.solution![1],
+                inInclusiveRange(
+                  level.valueRange[0],
+                  level.valueRange[1],
+                ),
+              );
+
+              if ((level.solution?.length ?? 0) > 3) {
+                expect(
+                  level.solution![1],
+                  inInclusiveRange(
+                    level.valueRange[0],
+                    level.valueRange[1],
+                  ),
+                );
+              }
+            }
           }
-        }
-      });
-    });
+        },
+      );
 
-    test("Levels have implemented submission check of the mask:", () {
-      levelTree.levels.forEach((level) {
-        level.generate();
-        level.masks.forEach((mask) {
-          expect(() => Level.checkSubmission(level.solution, [1], mask),
-              returnsNormally);
-        });
-      });
-    });
+      test(
+        'Levels masks check',
+        () {
+          for (final level in levelTree.levels) {
+            level.generate();
+            for (final mask in level.masks) {
+              log('${level.index}');
+              log('${Level.checkSubmission(level.solution!, [1], mask)}');
+              expect(
+                () => Level.checkSubmission(level.solution!, [1], mask),
+                returnsNormally,
+              );
+            }
+          }
+        },
+      );
 
-    test("Level is mapped to school year and month:", () {
-      levelTree.levels.forEach((level) {
-        print(level.index);
-        expect(() => LevelTree.getMinimumSchoolClassAndMonth(level.index),
-            returnsNormally);
-      });
-    });
+      test(
+        'Level school year & month mapping',
+        () {
+          for (final level in levelTree.levels) {
+            expect(
+              () => LevelTree.getMinimumSchoolClassAndMonth(level.index),
+              returnsNormally,
+              reason: '$level.index',
+            );
+          }
+        },
+      );
 
-    test("All levels should have unique xid", () {
-      var allXids = levelTree.levels.map((el) => el.xid);
-      var uniqueXids = allXids.toSet().toList();
-      for (var xid in uniqueXids) {
-        expect(allXids.where((el) => el == xid).length, equals(1), reason: "Duplicate: $xid");
-      }
-    });
-  });
+      test(
+        'Unique Xids only',
+        () {
+          final xids = levelTree.levels.map((l) => l.xid);
+          final uniqueXids = xids.toSet().toList();
+          for (final xid in uniqueXids) {
+            expect(
+              xids.where((x) => x == xid).length,
+              equals(1),
+              reason: 'Duplicate xid: $xid',
+            );
+          }
+        },
+      );
+    },
+  );
 }

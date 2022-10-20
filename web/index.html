@@ -1,64 +1,70 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-    <meta name="description" content="Aplikace pro procvičování matematiky - www.edukids.cz">
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="Aplikace pro procvičování matematiky - www.edukids.cz">
 
-    <!-- iOS meta tags & icons -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="myproject">
-    <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <!-- iOS meta tags & icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="myproject">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
-    <!-- Favicon -->
-    <link rel="shortcut icon" type="image/png" href="favicon.png"/>
+  <!-- Favicon -->
+  <link rel="shortcut icon" type="image/png" href="favicon.png" />
 
-    <title>EduKids: Matika do kapsy</title>
-    <link rel="manifest" href="manifest.json">
+  <title>EduKids: Matika do kapsy</title>
+  <link rel="manifest" href="manifest.json">
 </head>
+
 <body>
-<!-- This script installs service_worker.js to provide PWA functionality to
+  <!-- This script installs service_worker.js to provide PWA functionality to
      application. For more information, see:
      https://developers.google.com/web/fundamentals/primers/service-workers -->
-<script>
+  <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
         navigator.serviceWorker.register('flutter_service_worker.js');
       });
     }
 
-</script>
-<script src="https://www.gstatic.com/firebasejs/7.14.5/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.14.5/firebase-analytics.js"></script>
-<script>
-  var firebaseConfig = {
-    apiKey: "AIzaSyA5OPDbs90l-g0vmde6kKqlyYayVjDuNEc",
-    authDomain: "matika-do-kapsy.firebaseapp.com",
-    databaseURL: "https://matika-do-kapsy.firebaseio.com",
-    projectId: "matika-do-kapsy",
-    storageBucket: "matika-do-kapsy.appspot.com",
-    messagingSenderId: "841079430508",
-    appId: "1:841079430508:web:521d6918094b2296a46749",
-    measurementId: "G-ECEK87Z17G"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  firebase.analytics();
-</script>
+  </script>
+  <script src="https://www.gstatic.com/firebasejs/7.14.5/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.14.5/firebase-analytics.js"></script>
+  <script>
+    var firebaseConfig = {
+      apiKey: "AIzaSyA5OPDbs90l-g0vmde6kKqlyYayVjDuNEc",
+      authDomain: "matika-do-kapsy.firebaseapp.com",
+      databaseURL: "https://matika-do-kapsy.firebaseio.com",
+      projectId: "matika-do-kapsy",
+      storageBucket: "matika-do-kapsy.appspot.com",
+      messagingSenderId: "841079430508",
+      appId: "1:841079430508:web:521d6918094b2296a46749",
+      measurementId: "G-ECEK87Z17G"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+  </script>
 
-<script>
+  <script>
     function upgradeApp() {
-    if ('serviceWorker' in navigator) {
-       navigator.serviceWorker.getRegistration().then(swr => {swr.unregister().then(
-         () => {location.reload(true)}
-       )});
-    } else {location.reload(true)}
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistration().then(swr => {
+          swr.unregister().then(
+            () => { location.reload(true) }
+          )
+        });
+      } else { location.reload(true) }
 
-    // window.location.href = window.location.href;
-    console.log("reloaded?");}
-</script>
+      // window.location.href = window.location.href;
+      console.log("reloaded?");
+    }
+  </script>
 
-<script src="main.dart.js" type="application/javascript"></script>
+  <script src="main.dart.js" type="application/javascript"></script>
 </body>
+
 </html>
