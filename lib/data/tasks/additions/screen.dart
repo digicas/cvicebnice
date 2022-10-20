@@ -373,97 +373,122 @@ class Question extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (mask == 'x+y=Z') {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          QText('${solution[0]}', preview: preview),
-          QText('+', preview: preview),
-          QText('${solution[1]}', preview: preview),
-          QText('=', preview: preview),
-          QuestionInputField(
-            // textController: textController,
-            value: value,
-            isFocused: isFocused,
-            preview: preview,
-            onSelected: onSelected,
-          ),
-        ],
+      return Container(
+        constraints: const BoxConstraints(
+          maxHeight: 150,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            QText('${solution[0]}', preview: preview),
+            QText('+', preview: preview, isOperator: true),
+            QText('${solution[1]}', preview: preview),
+            QText('=', preview: preview, isOperator: true),
+            QuestionInputField(
+              // textController: textController,
+              value: value,
+              isFocused: isFocused,
+              preview: preview,
+              onSelected: onSelected,
+            ),
+          ],
+        ),
       );
     }
 
     if (mask == 'X+y=z') {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          QuestionInputField(
-            value: value,
-            isFocused: isFocused,
-            preview: preview,
-            onSelected: onSelected,
-          ),
-          QText('+', preview: preview),
-          QText('${solution[1]}', preview: preview),
-          QText('=', preview: preview),
-          QText('${solution[2]}', preview: preview),
-        ],
+      return Container(
+        constraints: const BoxConstraints(
+          maxHeight: 150,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            QuestionInputField(
+              value: value,
+              isFocused: isFocused,
+              preview: preview,
+              onSelected: onSelected,
+            ),
+            QText('+', preview: preview, isOperator: true),
+            QText('${solution[1]}', preview: preview),
+            QText('=', preview: preview, isOperator: true),
+            QText('${solution[2]}', preview: preview),
+          ],
+        ),
       );
     }
 
     if (mask == 'x+Y=z') {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          QText('${solution[0]}', preview: preview),
-          QText('+', preview: preview),
-          QuestionInputField(
-            value: value,
-            isFocused: isFocused,
-            preview: preview,
-            onSelected: onSelected,
-          ),
-          QText('=', preview: preview),
-          QText('${solution[2]}', preview: preview),
-        ],
+      return Container(
+        constraints: const BoxConstraints(
+          maxHeight: 150,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            QText('${solution[0]}', preview: preview),
+            QText('+', preview: preview, isOperator: true),
+            QuestionInputField(
+              value: value,
+              isFocused: isFocused,
+              preview: preview,
+              onSelected: onSelected,
+            ),
+            QText('=', preview: preview, isOperator: true),
+            QText('${solution[2]}', preview: preview),
+          ],
+        ),
       );
     }
 
     if (mask == 'x+y+w=ZZ') {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          QText('${solution[0]}', preview: preview),
-          QText('+', preview: preview),
-          QText('${solution[1]}', preview: preview),
-          QText('+', preview: preview),
-          QText('${solution[2]}', preview: preview),
-          QText('=', preview: preview),
-          QuestionInputField(
-            value: value,
-            isFocused: isFocused,
-            preview: preview,
-            length: 2,
-            onSelected: onSelected,
-          ),
-        ],
+      return Container(
+        constraints: const BoxConstraints(
+          maxHeight: 150,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            QText('${solution[0]}', preview: preview),
+            QText('+', preview: preview, isOperator: true),
+            QText('${solution[1]}', preview: preview),
+            QText('+', preview: preview, isOperator: true),
+            QText('${solution[2]}', preview: preview),
+            QText('=', preview: preview, isOperator: true),
+            QuestionInputField(
+              value: value,
+              isFocused: isFocused,
+              preview: preview,
+              length: 2,
+              onSelected: onSelected,
+            ),
+          ],
+        ),
       );
     }
 
     if (mask == '100=k+X') {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          QText('100', preview: preview),
-          QText('=', preview: preview),
-          QText('${solution[0]}', preview: preview),
-          QText('+', preview: preview),
-          QuestionInputField(
-            value: value,
-            isFocused: isFocused,
-            preview: preview,
-            length: 2,
-            onSelected: onSelected,
-          ),
-        ],
+      return Container(
+        constraints: const BoxConstraints(
+          maxHeight: 150,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            QText('100', preview: preview),
+            QText('=', preview: preview, isOperator: true),
+            QText('${solution[0]}', preview: preview),
+            QText('+', preview: preview, isOperator: true),
+            QuestionInputField(
+              value: value,
+              isFocused: isFocused,
+              preview: preview,
+              length: 2,
+              onSelected: onSelected,
+            ),
+          ],
+        ),
       );
     }
 
@@ -478,16 +503,19 @@ class QText extends StatelessWidget {
     this.text, {
     super.key,
     this.preview = false,
+    this.isOperator = false,
   });
 
   final String text;
-
+  final bool isOperator;
   final bool preview;
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Center(
+      flex: isOperator ? 1 : 2,
+      child: FittedBox(
+        fit: isOperator ? BoxFit.none : BoxFit.scaleDown,
         child: Text(
           text,
           style: TextStyle(fontSize: !preview ? 32 : 14),
@@ -521,60 +549,71 @@ class QuestionInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     if (preview) {
-      return Expanded(
-        child: Container(
-          width: 20,
-          height: 16,
-          alignment: Alignment.center,
-          decoration: const BoxDecoration(
-            color: Color(0x109C4D82),
-          ),
-          child: const Center(
-            child: Text(
-              '?',
-              style: TextStyle(fontSize: 12),
-            ),
+      return Container(
+        width: 20,
+        height: 16,
+        alignment: Alignment.center,
+        decoration: const BoxDecoration(
+          color: Color(0x109C4D82),
+        ),
+        child: const FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            '?',
+            style: TextStyle(fontSize: 12),
           ),
         ),
       );
     }
+
     return Expanded(
-      child: Center(
-        child: Container(
-          constraints: const BoxConstraints(
-            minWidth: 100,
-            maxWidth: 250,
-          ),
-          height: 50,
-          decoration: BoxDecoration(
-            color: const Color(0x109C4D82),
-            border: Border.all(
-              width: 2,
-              color: isFocused ? const Color(0xff96365f) : Colors.transparent,
-            ),
-          ),
-          child: GestureDetector(
-            onTap: onSelected,
+      flex: screenWidth > 576 ? 2 : 3,
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
             child: MouseRegion(
               cursor: SystemMouseCursors.click,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    value != null ? '$value' : '',
-                    style: const TextStyle(
-                      fontSize: 32,
-                      color: Colors.black,
+              child: GestureDetector(
+                onTap: onSelected,
+                child: Container(
+                  width: 150,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: const Color(0x109C4D82),
+                    border: Border.all(
+                      width: 2,
+                      color: isFocused
+                          ? const Color(0xff96365f)
+                          : Colors.transparent,
                     ),
                   ),
-                  if (isFocused) const BlinkingCursor(),
-                ],
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (value != null)
+                        Text(
+                          '$value',
+                          style: const TextStyle(
+                            fontSize: 32,
+                            color: Colors.black,
+                          ),
+                        ),
+                      if (isFocused) const BlinkingCursor(),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
-        ),
+          if (screenWidth > 576)
+            const Expanded(
+              child: SizedBox(),
+            ),
+        ],
       ),
     );
   }
