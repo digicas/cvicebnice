@@ -1,0 +1,48 @@
+name: BUILD & DEPLOY
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1
+        with:
+          flutter-version: "3.3.4"
+          channel: "stable"
+      - run: echo // This is generated file. > ./lib/git_info.g.dart
+      - run: echo -n String shortSHA = \" >> ./lib/git_info.g.dart
+      - run: git rev-parse --short HEAD | tr -d '\n' >> ./lib/git_info.g.dart
+      - run: echo \"\; >> ./lib/git_info.g.dart
+      - run: flutter --version
+      - run: flutter config --enable-web
+      - run: flutter build web --target "./lib/main_development.dart"
+      - uses: actions/upload-artifact@master
+        with:
+          name: flutter-build
+          path: ./build/web
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@master
+        with:
+          name: flutter-build
+          path: ./build/web
+      - uses: nwtgck/actions-netlify@v1.2
+        with:
+          publish-dir: "./build/web"
+          production-branch: master
+          github-token: ${{ secrets.MY_GITHUB_SECRET }}
+          deploy-message: "Deploy from GitHub Actions"
+          enable-pull-request-comment: false
+          enable-commit-comment: true
+          overwrites-pull-request-comment: true
+    env:
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+    timeout-minutes: 1
