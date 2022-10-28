@@ -9,19 +9,31 @@ environment:
 
 dependencies:
   cvicebnice_overlays:
-    path: packages/cvicebnice_overlays
+    git:
+      url: https://github.com/digicas/flutter_cognitive_training_screens.git
+      path: cvicebnice_overlays
+      ref: master
   firebase_analytics: ^9.3.8
   firebase_core: ^1.24.0
   flutter:
     sdk: flutter
+  flutter_cognitive_training_screens:
+    git:
+      url: https://github.com/digicas/flutter_cognitive_training_screens.git
+      path: flutter_cognitive_training_screens
+      ref: master
   flutter_linkify: ^5.0.2
   font_awesome_flutter: ^10.2.1
   google_fonts: ^3.0.1
   intl: ^0.17.0
-  pyramids_funnels:
-    path: packages/pyramids_funnels
-  software_keyboard:
-    path: packages/software_keyboard
+  levels_dart_pyramid_funnels:
+    git:
+      url: https://github.com/digicas/levels_dart_pyramid_funnels.git
+      ref: master
+  on_screen_keyboard:
+    git:
+      url: https://github.com/digicas/flutter_minimalistic_onscreen_keyboard.git
+      ref: master
   url_launcher: ^6.1.6
 
 dev_dependencies:

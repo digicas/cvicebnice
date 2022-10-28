@@ -4,10 +4,9 @@ import 'dart:developer';
 
 import 'package:cvicebnice/data/tasks/additions/task.dart' as additions;
 import 'package:flutter/material.dart';
+import 'package:flutter_cognitive_training_screens/flutter_cognitive_training_screens.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:pyramid_funnel_levels/utils.dart';
-import 'package:pyramids_funnels/utils.dart';
-import 'package:pyramids_funnels/widgets/previews/index.dart';
+import 'package:levels_dart_pyramid_funnels/utils.dart';
 
 final List<TaskRegisterItem> tasksRegister = [
   TaskRegisterItem(

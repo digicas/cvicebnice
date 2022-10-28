@@ -102,9 +102,11 @@ packages:
   cvicebnice_overlays:
     dependency: "direct main"
     description:
-      path: "packages/cvicebnice_overlays"
-      relative: true
-    source: path
+      path: cvicebnice_overlays
+      ref: master
+      resolved-ref: "29c437fa4537d981a605034b5cb534aa2e68cdb4"
+      url: "https://github.com/digicas/flutter_cognitive_training_screens.git"
+    source: git
     version: "0.0.1"
   fake_async:
     dependency: transitive
@@ -174,6 +176,15 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_cognitive_training_screens:
+    dependency: "direct main"
+    description:
+      path: flutter_cognitive_training_screens
+      ref: master
+      resolved-ref: "29c437fa4537d981a605034b5cb534aa2e68cdb4"
+      url: "https://github.com/digicas/flutter_cognitive_training_screens.git"
+    source: git
+    version: "0.0.1"
   flutter_linkify:
     dependency: "direct main"
     description:
@@ -261,6 +272,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.4"
+  levels_dart_pyramid_funnels:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: master
+      resolved-ref: "884cae6983828c82d0bf68f5ebbedaa33ff00e47"
+      url: "https://github.com/digicas/levels_dart_pyramid_funnels.git"
+    source: git
+    version: "0.0.1"
   linkify:
     dependency: transitive
     description:
@@ -317,6 +337,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  on_screen_keyboard:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: master
+      resolved-ref: "4b836a350002107b0f9713dcce9f72615d435396"
+      url: "https://github.com/digicas/flutter_minimalistic_onscreen_keyboard.git"
+    source: git
+    version: "0.0.1"
   package_config:
     dependency: transitive
     description:
@@ -415,20 +444,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.1"
-  pyramid_funnel_levels:
-    dependency: transitive
-    description:
-      path: "packages/pyramid_funnel_levels"
-      relative: true
-    source: path
-    version: "0.0.1"
-  pyramids_funnels:
-    dependency: "direct main"
-    description:
-      path: "packages/pyramids_funnels"
-      relative: true
-    source: path
-    version: "0.0.1"
   shelf:
     dependency: transitive
     description:
@@ -462,13 +477,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
-  software_keyboard:
-    dependency: "direct main"
-    description:
-      path: "packages/software_keyboard"
-      relative: true
-    source: path
-    version: "0.0.1"
   source_map_stack_trace:
     dependency: transitive
     description:
