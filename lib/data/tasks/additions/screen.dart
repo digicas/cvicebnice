@@ -11,6 +11,7 @@ import 'package:cvicebnice/utils/overlays/done_success_overlay.dart';
 import 'package:cvicebnice/utils/overlays/done_wrong_overlay.dart';
 import 'package:cvicebnice/utils/overlays/options_overlay.dart';
 import 'package:cvicebnice/utils/utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class TaskScreen extends StatefulWidget {
@@ -75,7 +76,9 @@ class TaskScreenState extends State<TaskScreen> {
 
   List<int> generateMaxLengths() {
     return List<int>.generate(questions.length, (index) {
-      print(levelTree.getLevelByIndex(selectedLevelIndex)?.index);
+      if (kDebugMode) {
+        print(levelTree.getLevelByIndex(selectedLevelIndex)?.index);
+      }
       if ((levelTree.getLevelByIndex(selectedLevelIndex)?.index ?? 0) > 150) {
         return 6;
       }

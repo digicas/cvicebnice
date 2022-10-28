@@ -1,17 +1,7 @@
-// Encapsulation / namespacing of the tasks code
-//
-// Serves as the unifying proxy to methods calls
-//export 'screen.dart';
-//export 'triangle_levels.dart';
-
 import 'dart:developer' as dev;
 import 'dart:math';
 
-import 'package:cvicebnice/data/tasks/pyramid_funnels/screen.dart';
-import 'package:cvicebnice/data/tasks/pyramid_funnels/triangle_levels.dart';
-import 'package:flutter/material.dart';
-
-export 'preview.dart'; // for getLevelPreview()
+import 'package:pyramid_funnel_levels/models/level_tree/level_tree.dart';
 
 /// Returns the number of implemented levels
 int levelsCount() {
@@ -41,22 +31,8 @@ num questionsCount() {
 
 /// Gets Information whether particular level with index is implemented
 bool isLevelImplemented(int index) {
+  dev.log('Checking if pyramid level is implemented $index');
   return LevelTree.getLevelByLevelIndex(index) != null;
-}
-
-/// Gets the task screen for Pyramids
-Widget openPyramidsTaskScreen(int selectedLevelIndex) {
-  return TaskScreen(
-    level: LevelTree.getLevelByLevelIndex(selectedLevelIndex)!,
-    taskType: TriangleTaskType.pyramid,
-  );
-}
-
-/// Gets the task screen for Funnels
-Widget openFunnelsTaskScreen(int selectedLevelIndex) {
-  return TaskScreen(
-    level: LevelTree.getLevelByLevelIndex(selectedLevelIndex)!,
-  );
 }
 
 /// Obtain the level index based on the school year and month

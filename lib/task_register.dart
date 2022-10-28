@@ -1,37 +1,40 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:developer';
 
 import 'package:cvicebnice/data/tasks/additions/task.dart' as additions;
-import 'package:cvicebnice/data/tasks/pyramid_funnels/task.dart'
-    as pyramids_funnels;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pyramid_funnel_levels/utils.dart';
+import 'package:pyramids_funnels/utils.dart';
+import 'package:pyramids_funnels/widgets/previews/index.dart';
 
 final List<TaskRegisterItem> tasksRegister = [
   TaskRegisterItem(
     xid: 'prm',
     imageAssetName: 'assets/menu_pyramid.png',
     label: 'Pyramidy',
-    isLevelImplemented: pyramids_funnels.isLevelImplemented,
-    onOpenTaskScreen: pyramids_funnels.openPyramidsTaskScreen,
-    onSchoolClassToLevelIndex: pyramids_funnels.schoolClassToLevelIndex,
-    onLevelsCount: pyramids_funnels.levelsCount,
-    onMasksCount: pyramids_funnels.masksCount,
-    onQuestionsCount: pyramids_funnels.questionsCount,
-    getLevelPreview: pyramids_funnels.getLevelPreviewPyramid,
-    lastIndex: pyramids_funnels.lastIndex,
+    isLevelImplemented: isLevelImplemented,
+    onOpenTaskScreen: openPyramidsTaskScreen,
+    onSchoolClassToLevelIndex: schoolClassToLevelIndex,
+    onLevelsCount: levelsCount,
+    onMasksCount: masksCount,
+    onQuestionsCount: questionsCount,
+    getLevelPreview: getLevelPreviewPyramid,
+    lastIndex: lastIndex,
   ),
   TaskRegisterItem(
     xid: 'fnl',
     imageAssetName: 'assets/menu_funnel.png',
     label: 'Trychtýř',
-    isLevelImplemented: pyramids_funnels.isLevelImplemented,
-    onOpenTaskScreen: pyramids_funnels.openFunnelsTaskScreen,
-    onSchoolClassToLevelIndex: pyramids_funnels.schoolClassToLevelIndex,
-    onLevelsCount: pyramids_funnels.levelsCount,
-    onMasksCount: pyramids_funnels.masksCount,
-    onQuestionsCount: pyramids_funnels.questionsCount,
-    getLevelPreview: pyramids_funnels.getLevelPreviewFunnel,
-    lastIndex: pyramids_funnels.lastIndex,
+    isLevelImplemented: isLevelImplemented,
+    onOpenTaskScreen: openFunnelsTaskScreen,
+    onSchoolClassToLevelIndex: schoolClassToLevelIndex,
+    onLevelsCount: levelsCount,
+    onMasksCount: masksCount,
+    onQuestionsCount: questionsCount,
+    getLevelPreview: getLevelPreviewFunnel,
+    lastIndex: lastIndex,
   ),
   TaskRegisterItem(
     xid: 'cad',

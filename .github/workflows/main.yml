@@ -15,9 +15,9 @@ jobs:
           flutter-version: "3.3.4"
           channel: "stable"
       - run: echo // This is generated file. > ./lib/git_info.g.dart
-      - run: echo -n String shortSHA = \" >> ./lib/git_info.g.dart
+      - run: echo -n String shortSHA = \' >> ./lib/git_info.g.dart
       - run: git rev-parse --short HEAD | tr -d '\n' >> ./lib/git_info.g.dart
-      - run: echo \"\; >> ./lib/git_info.g.dart
+      - run: echo \'\; >> ./lib/git_info.g.dart
       - run: flutter --version
       - run: flutter config --enable-web
       - run: flutter build web --target "./lib/main_development.dart"

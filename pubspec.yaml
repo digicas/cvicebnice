@@ -8,20 +8,23 @@ environment:
   flutter: 3.3.3
 
 dependencies:
-  bloc: ^8.1.0
+  cvicebnice_overlays:
+    path: packages/cvicebnice_overlays
   firebase_analytics: ^9.3.8
   firebase_core: ^1.24.0
   flutter:
     sdk: flutter
-  flutter_bloc: ^8.1.1
   flutter_linkify: ^5.0.2
   font_awesome_flutter: ^10.2.1
   google_fonts: ^3.0.1
   intl: ^0.17.0
+  pyramids_funnels:
+    path: packages/pyramids_funnels
+  software_keyboard:
+    path: packages/software_keyboard
   url_launcher: ^6.1.6
 
 dev_dependencies:
-  bloc_test: ^9.1.0
   flutter_test:
     sdk: flutter
   mocktail: ^0.3.0

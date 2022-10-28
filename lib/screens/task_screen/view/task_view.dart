@@ -1,4 +1,3 @@
-import 'dart:developer' as dev;
 import 'dart:math';
 
 import 'package:cvicebnice/constants.dart';

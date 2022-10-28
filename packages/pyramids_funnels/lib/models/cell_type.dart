@@ -1,0 +1,1 @@
+enum CellType { box, bubble }

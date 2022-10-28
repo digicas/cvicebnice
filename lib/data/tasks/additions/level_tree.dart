@@ -3,8 +3,8 @@
 import 'dart:core';
 import 'dart:math';
 
+import 'package:cvicebnice/data/tasks/additions/i_level_tree.dart';
 import 'package:cvicebnice/data/tasks/additions/level.dart';
-import 'package:cvicebnice/data/tasks/core/level.dart';
 import 'package:flutter/foundation.dart';
 
 class LevelTree extends ILevelTree {

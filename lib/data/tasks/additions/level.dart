@@ -1,6 +1,7 @@
 import 'dart:math';
 
-import 'package:cvicebnice/data/tasks/core/level.dart';
+import 'package:cvicebnice/data/tasks/additions/i_level.dart';
+
 
 class Level extends ILevel {
   Level({

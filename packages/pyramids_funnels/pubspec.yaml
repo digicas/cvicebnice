@@ -1,0 +1,26 @@
+name: pyramids_funnels
+description: A new Flutter package project.
+version: 0.0.1
+homepage: https://github.com/digicas/cvicebnice
+publish_to: none
+
+environment:
+  sdk: ">=2.18.2 <3.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  pyramid_funnel_levels:
+    path: ../pyramid_funnel_levels
+  software_keyboard:
+    path: ../software_keyboard
+  cvicebnice_overlays:
+    path: ../cvicebnice_overlays
+  font_awesome_flutter: ^10.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+flutter:
